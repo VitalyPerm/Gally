@@ -38,3 +38,5 @@ out/
 ### OS specific
 Thumbs.db
 
+/keystore/key.jks
+/new_key.jks

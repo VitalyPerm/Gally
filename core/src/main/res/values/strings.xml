@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="yesterday">Вчера</string>
+    <string name="today">Сегодня</string>
+    <string name="date_unknown">Дата неизвестна</string>
+    <string name="setting_edge_to_edge">Полноэкранный скролл</string>
+    <string name="setting_theme">Тема</string>
+    <string name="setting_test2">Тест 2</string>
+    <string name="theme_system">Системная</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Темная</string>
+</resources>

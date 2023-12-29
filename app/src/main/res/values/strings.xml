@@ -1,6 +1,3 @@
 <resources>
     <string name="app_name">Gally</string>
-    <string name="root_photos">Фото</string>
-    <string name="root_favorite">Лайк</string>
-    <string name="root_settings">Настройки</string>
 </resources>
