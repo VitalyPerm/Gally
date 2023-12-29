@@ -3,11 +3,7 @@ package ru.kvf.gally.feature.photos.data
 import android.content.ContentUris
 import android.content.Context
 import android.provider.MediaStore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.MutableStateFlow
 import ru.kvf.gally.feature.photos.domain.Folder
 import ru.kvf.gally.feature.photos.domain.Photo
 import ru.kvf.gally.feature.photos.domain.PhotosRepository
@@ -25,18 +21,13 @@ class PhotosRepositoryImpl(
         MediaStore.Images.Media.DATE_TAKEN,
         MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
     )
-    private var photos: List<Photo> = emptyList()
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
 
-    init {
-        scope.launch {
-            loadPhotos()
-        }
-    }
+    override val data: MutableStateFlow<Pair<List<Photo>, List<Folder>>> =
+        MutableStateFlow(emptyList<Photo>() to emptyList())
 
-    private suspend fun loadPhotos() = withContext(Dispatchers.IO) {
-        val accumulator = mutableListOf<Photo>()
+    override suspend fun fetch() {
+        val photosAccumulator = mutableListOf<Photo>()
         val query = context.contentResolver.query(
             collection,
             projection,
@@ -60,7 +51,7 @@ class PhotosRepositoryImpl(
                     id
                 )
                 val folder = cursor.getString(bucketColumn)
-                accumulator.add(
+                photosAccumulator.add(
                     Photo(
                         id = id,
                         name = name,
@@ -70,29 +61,16 @@ class PhotosRepositoryImpl(
                     )
                 )
             }
-            photos = accumulator
+            val folders = photosAccumulator.groupBy {
+                it.folder
+            }.map { (folder, photos) ->
+                Folder(
+                    id = photos.firstOrNull()?.id ?: 0,
+                    name = folder,
+                    photos = photos
+                )
+            }
+            data.value = photosAccumulator to folders
         }
-    }
-
-    override suspend fun getFolders(): List<Folder> {
-        if (photos.isEmpty()) {
-            loadPhotos()
-        }
-        return photos.groupBy {
-            it.folder
-        }.map { (folder, photos) ->
-            Folder(
-                id = photos.firstOrNull()?.id ?: 0,
-                name = folder,
-                photos = photos
-            )
-        }
-    }
-
-    override suspend fun getPhotos(): List<Photo> {
-        if (photos.isEmpty()) {
-            loadPhotos()
-        }
-        return photos
     }
 }

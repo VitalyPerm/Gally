@@ -1,7 +1,10 @@
 package ru.kvf.gally.feature.photos.domain
 
-interface PhotosRepository {
-    suspend fun getPhotos(): List<Photo>
+import kotlinx.coroutines.flow.StateFlow
 
-    suspend fun getFolders(): List<Folder>
+interface PhotosRepository {
+
+    val data: StateFlow<Pair<List<Photo>, List<Folder>>>
+
+    suspend fun fetch()
 }
