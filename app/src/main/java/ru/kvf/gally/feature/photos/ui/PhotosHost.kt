@@ -1,4 +1,4 @@
-package ru.kvf.gally.feature.photos
+package ru.kvf.gally.feature.photos.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.Modifier
@@ -7,17 +7,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import ru.kvf.gally.core.widgets.StubScreen
-import ru.kvf.gally.feature.photos.root.PhotosDestinations
+import ru.kvf.gally.feature.photos.ui.root.PhotosDestinations
+import ru.kvf.gally.feature.photos.ui.root.PhotosRootScreen
 
 fun NavGraphBuilder.PhotosHost(navController: NavHostController, route: String) {
     navigation(startDestination = PhotosDestinations.PhotosRoot.route, route = route) {
         composable(PhotosDestinations.PhotosRoot.route) {
-            StubScreen(
-                text = "Photos",
-                modifier = Modifier.clickable {
-                    navController.navigate(PhotosDestinations.PhotoDetails.route)
-                }
-            )
+            PhotosRootScreen()
         }
 
         composable(PhotosDestinations.PhotoDetails.route) {

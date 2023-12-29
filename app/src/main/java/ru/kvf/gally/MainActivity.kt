@@ -1,9 +1,14 @@
 package ru.kvf.gally
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,8 +37,19 @@ import ru.kvf.gally.core.theme.GallyTheme
 import ru.kvf.gally.feature.root.RootHost
 
 class MainActivity : ComponentActivity() {
+
+    companion object {
+        private const val READ_PHOTO_PERMISSION = Manifest.permission.READ_MEDIA_IMAGES
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { granted ->
+        }
 
         setContent {
             val navController = rememberNavController()
@@ -41,73 +57,11 @@ class MainActivity : ComponentActivity() {
                 RootHost(navController)
             }
         }
-    }
-}
 
-@Composable
-fun A(
-    vm: AViewModel = koinViewModel(),
-    navController: NavHostController
-) {
-    val context = LocalContext.current
-    val state by vm.collectAsState()
+        val hasPhotoPermission = checkSelfPermission(READ_PHOTO_PERMISSION) == PackageManager.PERMISSION_GRANTED
 
-    vm.collectSideEffect {
-        when (it) {
-            is ASideEffect.Toast -> Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+        if (hasPhotoPermission.not()) {
+            permissionLauncher.launch(READ_PHOTO_PERMISSION)
         }
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = state.a.toString())
-
-        Button(onClick = vm::aClick) {
-            Text(text = "Increase A")
-        }
-
-        Button(onClick = vm::toast) {
-            Text(text = "Toast")
-        }
-
-        Button(onClick = { navController.navigate("B") }) {
-            Text(text = "Navigate")
-        }
-    }
-}
-
-data class AState(
-    val a: Int = 0
-)
-
-sealed interface ASideEffect {
-    data class Toast(val message: String) : ASideEffect
-}
-
-class AViewModel : ViewModel(), ContainerHost<AState, ASideEffect> {
-    override val container: Container<AState, ASideEffect> = container(AState())
-
-    fun aClick() = intent {
-        reduce {
-            state.copy(a = state.a + 1)
-        }
-    }
-
-    fun toast() = intent {
-        postSideEffect(ASideEffect.Toast("Hello"))
-    }
-}
-
-@Composable
-fun B() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
     }
 }

@@ -3,9 +3,8 @@ package ru.kvf.gally
 import android.app.Application
 import android.util.Log
 import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.context.startKoin
-import org.koin.dsl.module
+import ru.kvf.gally.di.appModule
 
 class App : Application() {
 
@@ -20,8 +19,4 @@ class App : Application() {
             modules(appModule)
         }
     }
-}
-
-val appModule = module {
-    viewModelOf(::AViewModel)
 }

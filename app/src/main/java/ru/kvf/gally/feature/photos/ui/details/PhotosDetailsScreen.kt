@@ -1,4 +1,4 @@
-package ru.kvf.gally.feature.photos.details
+package ru.kvf.gally.feature.photos.ui.details
 
 import androidx.compose.runtime.Composable
 import ru.kvf.gally.core.widgets.StubScreen
