@@ -4,6 +4,7 @@ package ru.kvf.gally.feature.photos.ui.root
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,20 +22,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.kvf.gally.App
+import ru.kvf.gally.core.utils.ImageWithLoader
 import ru.kvf.gally.feature.photos.domain.Folder
 import ru.kvf.gally.feature.photos.domain.Photo
 
@@ -116,14 +114,13 @@ private fun Photos(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        items(photos) { photo ->
-            AsyncImage(
+        items(photos, key = { item: Photo -> item.id }) { photo ->
+            ImageWithLoader(
                 model = photo.uri,
-                contentDescription = "photo",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .aspectRatio(1f)
-                    .padding(1.dp)
             )
         }
     }

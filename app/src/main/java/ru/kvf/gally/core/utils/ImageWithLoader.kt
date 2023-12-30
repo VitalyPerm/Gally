@@ -1,0 +1,28 @@
+package ru.kvf.gally.core.utils
+
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
+
+@Composable
+fun ImageWithLoader(
+    modifier: Modifier = Modifier,
+    contentScale: ContentScale = ContentScale.Fit,
+    size: Int = 250,
+    model: Any?
+) {
+    SubcomposeAsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(model)
+            .size(size)
+            .build(),
+        contentDescription = null,
+        contentScale = contentScale,
+        loading = { CircularProgressIndicator() },
+        modifier = modifier
+    )
+}
