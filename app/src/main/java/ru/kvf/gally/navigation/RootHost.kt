@@ -13,7 +13,9 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import ru.kvf.design.DesignScreen
 import ru.kvf.favorite.FavoriteHost
 import ru.kvf.gally.Config
 import ru.kvf.settings.SettingsHost
@@ -25,15 +27,18 @@ fun RootHost(navController: NavHostController) {
         bottomBar = {
             BottomBar(navController = navController)
         }
-    ) {
+    ) {_ ->
         NavHost(
-            modifier = Modifier.padding(it),
+            modifier = Modifier,
             navController = navController,
             startDestination = RootDestinations.Photos.route
         ) {
             PhotosNavigation(navController, RootDestinations.Photos.route)
             FavoriteHost(navController, RootDestinations.Favorite.route)
             SettingsHost(navController, RootDestinations.Settings.route)
+            composable(RootDestinations.Design.route) {
+                DesignScreen()
+            }
         }
     }
 }
