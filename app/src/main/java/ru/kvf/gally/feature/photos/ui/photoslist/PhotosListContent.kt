@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
-import ru.kvf.gally.core.utils.ImageWithLoader
-import ru.kvf.gally.feature.photos.domain.Photo
+import ru.kvf.core.widgets.ImageWithLoader
+import ru.kvf.core.domain.Photo
 
 @Composable
 fun PhotosList(

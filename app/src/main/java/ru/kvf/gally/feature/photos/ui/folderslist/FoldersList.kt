@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import ru.kvf.gally.feature.photos.domain.Folder
+import ru.kvf.core.domain.Folder
 
 @Composable
 fun FoldersList(

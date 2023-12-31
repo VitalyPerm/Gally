@@ -6,7 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import ru.kvf.gally.core.widgets.StubScreen
+import ru.kvf.core.widgets.StubScreen
 
 fun NavGraphBuilder.FavoriteHost(navController: NavHostController, route: String) {
     navigation(startDestination = "fav", route = route) {

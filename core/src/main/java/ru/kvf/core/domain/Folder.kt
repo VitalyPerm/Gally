@@ -1,4 +1,4 @@
-package ru.kvf.gally.feature.photos.domain
+package ru.kvf.core.domain
 
 data class Folder(
     val id: Long,

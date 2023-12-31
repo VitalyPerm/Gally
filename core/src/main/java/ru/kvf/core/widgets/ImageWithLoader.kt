@@ -1,4 +1,4 @@
-package ru.kvf.gally.core.utils
+package ru.kvf.core.widgets
 
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable

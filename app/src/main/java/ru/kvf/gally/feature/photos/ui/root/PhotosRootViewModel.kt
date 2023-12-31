@@ -10,9 +10,9 @@ import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
-import ru.kvf.gally.feature.photos.domain.Folder
-import ru.kvf.gally.feature.photos.domain.Photo
-import ru.kvf.gally.feature.photos.domain.PhotosRepository
+import ru.kvf.core.domain.Folder
+import ru.kvf.core.domain.Photo
+import ru.kvf.core.domain.PhotosRepository
 
 class PhotosRootViewModel(
     private val photosRepository: PhotosRepository

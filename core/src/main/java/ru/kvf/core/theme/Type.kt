@@ -1,4 +1,4 @@
-package ru.kvf.gally.core.theme
+package ru.kvf.core.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,4 +1,4 @@
-package ru.kvf.gally.feature.photos.domain
+package ru.kvf.core.domain
 
 import kotlinx.coroutines.flow.StateFlow
 

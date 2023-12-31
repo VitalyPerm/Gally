@@ -1,7 +1,7 @@
 package ru.kvf.gally.feature.photos.ui.root
 
-import ru.kvf.gally.feature.photos.domain.Folder
-import ru.kvf.gally.feature.photos.domain.Photo
+import ru.kvf.core.domain.Folder
+import ru.kvf.core.domain.Photo
 
 data class PhotosState(
     val photos: List<Photo> = emptyList(),

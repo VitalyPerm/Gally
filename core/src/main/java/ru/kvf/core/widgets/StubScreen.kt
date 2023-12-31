@@ -1,4 +1,4 @@
-package ru.kvf.gally.core.widgets
+package ru.kvf.core.widgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
