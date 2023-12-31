@@ -1,10 +1,11 @@
 package ru.kvf.gally.navigation
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -18,18 +19,17 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.kvf.design.DesignScreen
 import ru.kvf.favorite.FavoriteHost
 import ru.kvf.gally.Config
-import ru.kvf.settings.SettingsHost
 import ru.kvf.photos.navigation.PhotosNavigation
+import ru.kvf.settings.SettingsHost
 
 @Composable
 fun RootHost(navController: NavHostController) {
-    Scaffold(
-        bottomBar = {
-            BottomBar(navController = navController)
-        }
-    ) {_ ->
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         NavHost(
-            modifier = Modifier,
+            modifier = Modifier.weight(1f),
             navController = navController,
             startDestination = RootDestinations.Photos.route
         ) {
@@ -40,6 +40,7 @@ fun RootHost(navController: NavHostController) {
                 DesignScreen()
             }
         }
+        BottomBar(navController = navController)
     }
 }
 
