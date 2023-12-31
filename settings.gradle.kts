@@ -88,3 +88,5 @@ rootProject.name = "Gally"
 include(":app")
 include(":core")
 include(":photos")
+include(":favorite")
+include(":settings")

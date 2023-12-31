@@ -1,4 +1,4 @@
-package ru.kvf.gally.feature.settings
+package ru.kvf.settings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.Modifier

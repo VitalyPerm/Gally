@@ -1,26 +1,18 @@
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    kotlin("plugin.serialization")
-    kotlin("plugin.parcelize")
 }
 
 android {
     val minSdkVersion: Int by rootProject.extra
-    namespace = "ru.kvf.gally"
+    namespace = "ru.kvf.settings"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "ru.kvf.gally"
         minSdk = minSdkVersion
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -30,11 +22,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-
-            debug {
-                isMinifyEnabled = false
-                isDebuggable = true
-            }
         }
     }
     compileOptions {
@@ -50,19 +37,12 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.7"
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
 }
 
 dependencies {
     implementation(project(":core"))
-    implementation(project(":photos"))
-    implementation(project(":favorite"))
-    implementation(project(":settings"))
-    implementation(libs.bundles.koin)
     implementation(libs.bundles.compose)
     implementation(libs.bundles.android)
+    implementation(libs.bundles.orbit)
+    debugImplementation(libs.compose.debug.ui.tooling)
 }

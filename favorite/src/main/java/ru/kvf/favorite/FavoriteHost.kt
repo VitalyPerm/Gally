@@ -1,4 +1,4 @@
-package ru.kvf.gally.feature.favorite
+package ru.kvf.favorite
 
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.Modifier

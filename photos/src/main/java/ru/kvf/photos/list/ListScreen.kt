@@ -23,11 +23,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.kvf.core.domain.Folder
 import ru.kvf.core.widgets.ImageWithLoader
 import ru.kvf.core.domain.Photo
+import ru.kvf.core.widgets.StubScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,6 +74,12 @@ fun ViewModelIcon(
             )
         }
     }
+}
+
+@Preview(showSystemUi = true, showBackground = true)
+@Composable
+private fun Preview() {
+    StubScreen(text = "hello")
 }
 
 @Composable

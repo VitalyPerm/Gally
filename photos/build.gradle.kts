@@ -45,4 +45,5 @@ dependencies {
     implementation(libs.bundles.android)
     implementation(libs.bundles.koin)
     implementation(libs.bundles.orbit)
+    debugImplementation(libs.compose.debug.ui.tooling)
 }

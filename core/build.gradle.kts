@@ -44,8 +44,8 @@ android {
 }
 
 dependencies {
-
     implementation(libs.bundles.compose)
     implementation(libs.bundles.android)
     implementation(libs.coil)
+    debugImplementation(libs.compose.debug.ui.tooling)
 }

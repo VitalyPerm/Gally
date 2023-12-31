@@ -14,8 +14,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
-import ru.kvf.gally.feature.favorite.FavoriteHost
-import ru.kvf.gally.feature.settings.SettingsHost
+import ru.kvf.favorite.FavoriteHost
+import ru.kvf.settings.SettingsHost
 import ru.kvf.photos.navigation.PhotosNavigation
 
 @Composable
