@@ -17,8 +17,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -27,11 +25,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.kvf.core.domain.Folder
-import ru.kvf.core.widgets.ImageWithLoader
 import ru.kvf.core.domain.Photo
+import ru.kvf.core.widgets.ImageWithLoader
 import ru.kvf.core.widgets.StubScreen
+import ru.kvf.core.widgets.TopBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListScreen(
     vm: ListViewModel = koinViewModel()
@@ -42,8 +40,8 @@ fun ListScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        TopAppBar(
-            title = { Text(text = "Фото", style = MaterialTheme.typography.headlineLarge) },
+        TopBar(
+            title = "Фото",
             actions = {
                 ViewModelIcon(
                     showFolders = state.showFolders,
@@ -70,7 +68,8 @@ fun ViewModelIcon(
         IconButton(onClick = onClick) {
             Icon(
                 imageVector = if (folders) Icons.Filled.Image else Icons.Filled.Folder,
-                contentDescription = null
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onPrimary
             )
         }
     }
