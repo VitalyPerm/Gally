@@ -1,4 +1,4 @@
-package ru.kvf.gally.feature.photos.ui.root
+package ru.kvf.photos.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,8 +13,10 @@ import org.orbitmvi.orbit.viewmodel.container
 import ru.kvf.core.domain.Folder
 import ru.kvf.core.domain.Photo
 import ru.kvf.core.domain.PhotosRepository
+import ru.kvf.photos.list.PhotosSideEffect
+import ru.kvf.photos.list.PhotosState
 
-class PhotosRootViewModel(
+class ListViewModel(
     private val photosRepository: PhotosRepository
 ) : ViewModel(), ContainerHost<PhotosState, PhotosSideEffect> {
 

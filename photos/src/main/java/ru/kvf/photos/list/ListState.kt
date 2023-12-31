@@ -1,4 +1,4 @@
-package ru.kvf.gally.feature.photos.ui.root
+package ru.kvf.photos.list
 
 import ru.kvf.core.domain.Folder
 import ru.kvf.core.domain.Photo

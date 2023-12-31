@@ -4,9 +4,9 @@ import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 import ru.kvf.core.data.PhotosRepositoryImpl
 import ru.kvf.core.domain.PhotosRepository
-import ru.kvf.gally.feature.photos.ui.root.PhotosRootViewModel
+import ru.kvf.photos.list.ListViewModel
 
 val appModule = module {
     single<PhotosRepository> { PhotosRepositoryImpl(get()) }
-    viewModelOf(::PhotosRootViewModel)
+    viewModelOf(::ListViewModel)
 }

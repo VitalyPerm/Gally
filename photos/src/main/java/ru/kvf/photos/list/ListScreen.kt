@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package ru.kvf.gally.feature.photos.ui.root
+package ru.kvf.photos.list
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
@@ -25,15 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
+import ru.kvf.core.domain.Folder
 import ru.kvf.core.widgets.ImageWithLoader
 import ru.kvf.core.domain.Photo
-import ru.kvf.gally.feature.photos.ui.folderslist.FoldersList
-import ru.kvf.gally.feature.photos.ui.photoslist.PhotosList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PhotosRootScreen(
-    vm: PhotosRootViewModel = koinViewModel()
+fun ListScreen(
+    vm: ListViewModel = koinViewModel()
 ) {
     val state by vm.collectAsState()
 
@@ -75,10 +74,8 @@ fun ViewModelIcon(
     }
 }
 
-
-
 @Composable
-private fun Photos(
+fun PhotosList(
     photos: List<Photo>
 ) {
     LazyVerticalGrid(
@@ -89,6 +86,27 @@ private fun Photos(
         items(photos, key = { item: Photo -> item.id }) { photo ->
             ImageWithLoader(
                 model = photo.uri,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+            )
+        }
+    }
+}
+
+@Composable
+fun FoldersList(
+    folders: List<Folder>
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(4),
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        items(folders) { folder ->
+            ImageWithLoader(
+                model = folder.photos.firstOrNull()?.uri,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()

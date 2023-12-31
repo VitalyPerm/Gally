@@ -1,4 +1,4 @@
-package ru.kvf.gally.feature.root
+package ru.kvf.gally.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -15,8 +15,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.kvf.gally.feature.favorite.FavoriteHost
-import ru.kvf.gally.feature.photos.ui.PhotosHost
 import ru.kvf.gally.feature.settings.SettingsHost
+import ru.kvf.photos.navigation.PhotosNavigation
 
 @Composable
 fun RootHost(navController: NavHostController) {
@@ -30,7 +30,7 @@ fun RootHost(navController: NavHostController) {
             navController = navController,
             startDestination = RootDestinations.Photos.route
         ) {
-            PhotosHost(navController, RootDestinations.Photos.route)
+            PhotosNavigation(navController, RootDestinations.Photos.route)
             FavoriteHost(navController, RootDestinations.Favorite.route)
             SettingsHost(navController, RootDestinations.Settings.route)
         }

@@ -1,4 +1,4 @@
-package ru.kvf.gally.feature.root
+package ru.kvf.gally.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons

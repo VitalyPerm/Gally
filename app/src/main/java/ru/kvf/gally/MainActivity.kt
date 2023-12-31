@@ -10,7 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.navigation.compose.rememberNavController
 import ru.kvf.core.theme.GallyTheme
-import ru.kvf.gally.feature.root.RootHost
+import ru.kvf.gally.navigation.RootHost
 
 class MainActivity : ComponentActivity() {
 
