@@ -44,8 +44,10 @@ android {
 }
 
 dependencies {
-    implementation(libs.bundles.compose)
-    implementation(libs.bundles.android)
-    implementation(libs.coil)
+    api(libs.bundles.compose)
+    api(libs.bundles.android)
+    api(libs.coil)
+    api(libs.bundles.orbit)
+    api(libs.bundles.koin)
     debugImplementation(libs.compose.debug.ui.tooling)
 }

@@ -6,8 +6,10 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import ru.kvf.core.theme.GallyTheme
 import ru.kvf.gally.navigation.RootHost
@@ -18,9 +20,10 @@ class MainActivity : ComponentActivity() {
         private const val READ_PHOTO_PERMISSION = Manifest.permission.READ_MEDIA_IMAGES
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
+        enableEdgeToEdge()
 
         val permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()

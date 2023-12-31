@@ -1,2 +1,2 @@
 
-val minSdkVersion by extra(30)
+val minSdkVersion by extra(33)

@@ -36,6 +36,7 @@ dependencyResolutionManagement {
             val immutableCollectionsVersion = "0.3.6"
             val composeVersion = "1.5.4"
             val composeMaterial3Version = "1.1.2"
+            val splashVersion = "1.0.0"
 
             library("orbit-viewmodel", "org.orbit-mvi:orbit-viewmodel:$orbitVersion")
             library("orbit-compose", "org.orbit-mvi:orbit-compose:$orbitVersion")
@@ -80,6 +81,8 @@ dependencyResolutionManagement {
                 )
             )
             library("compose-debug-ui-tooling", "androidx.compose.ui:ui-tooling:$composeVersion")
+
+            library("splash", "androidx.core:core-splashscreen:$splashVersion")
         }
     }
 }

@@ -13,8 +13,6 @@ import org.orbitmvi.orbit.viewmodel.container
 import ru.kvf.core.domain.Folder
 import ru.kvf.core.domain.Photo
 import ru.kvf.core.domain.PhotosRepository
-import ru.kvf.photos.list.PhotosSideEffect
-import ru.kvf.photos.list.PhotosState
 
 class ListViewModel(
     private val photosRepository: PhotosRepository

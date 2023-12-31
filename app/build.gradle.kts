@@ -62,7 +62,5 @@ dependencies {
     implementation(project(":photos"))
     implementation(project(":favorite"))
     implementation(project(":settings"))
-    implementation(libs.bundles.koin)
-    implementation(libs.bundles.compose)
-    implementation(libs.bundles.android)
+    implementation(libs.splash)
 }

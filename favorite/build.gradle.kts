@@ -41,8 +41,5 @@ android {
 
 dependencies {
     implementation(project(":core"))
-    implementation(libs.bundles.compose)
-    implementation(libs.bundles.android)
-    implementation(libs.bundles.orbit)
     debugImplementation(libs.compose.debug.ui.tooling)
 }

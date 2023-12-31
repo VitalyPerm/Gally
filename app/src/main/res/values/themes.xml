@@ -2,4 +2,8 @@
 <resources>
 
     <style name="Theme.Gally" parent="android:Theme.Material.Light.NoActionBar"/>
+    <style name="Splash" parent="Theme.SplashScreen">
+        <item name="android:windowSplashScreenBackground">@color/splash_background</item>
+        <item name="postSplashScreenTheme">@style/Theme.Gally</item>
+    </style>
 </resources>
