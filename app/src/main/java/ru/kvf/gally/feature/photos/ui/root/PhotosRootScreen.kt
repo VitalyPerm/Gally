@@ -4,7 +4,6 @@ package ru.kvf.gally.feature.photos.ui.root
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,10 +30,11 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
-import ru.kvf.gally.App
 import ru.kvf.gally.core.utils.ImageWithLoader
 import ru.kvf.gally.feature.photos.domain.Folder
 import ru.kvf.gally.feature.photos.domain.Photo
+import ru.kvf.gally.feature.photos.ui.folderslist.FoldersList
+import ru.kvf.gally.feature.photos.ui.photoslist.PhotosList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,12 +56,11 @@ fun PhotosRootScreen(
                 )
             }
         )
-        App.log("folders = ${state.folders}")
         AnimatedContent(targetState = state.showFolders, label = "") { showFolders ->
             if (showFolders) {
-                Folders(state.folders)
+                FoldersList(state.folders)
             } else {
-                Photos(state.photos)
+                PhotosList(state.photos)
             }
         }
     }
@@ -82,28 +81,7 @@ fun ViewModelIcon(
     }
 }
 
-@Composable
-private fun Folders(
-    folders: List<Folder>
-) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(4),
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        items(folders) { folder ->
-            AsyncImage(
-                model = folder.photos.firstOrNull()?.uri,
-                contentDescription = "photo",
-                contentScale = ContentScale.Crop,
-                filterQuality = FilterQuality.Low,
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .padding(1.dp)
-            )
-        }
-    }
-}
+
 
 @Composable
 private fun Photos(

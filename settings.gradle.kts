@@ -4,12 +4,82 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+
+    val kotlinVersion = "1.9.21"
+    val androidPluginVersion = "8.2.0"
+
+    plugins {
+        id("com.android.application") version androidPluginVersion
+        id("org.jetbrains.kotlin.android") version kotlinVersion
+        kotlin("plugin.serialization") version kotlinVersion
+        kotlin("plugin.parcelize") version kotlinVersion
+    }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
+    }
+
+    versionCatalogs {
+        create("libs") {
+            val orbitVersion = "6.1.0"
+            val koinVersion = "3.5.0"
+            val coroutinesVersion = "1.7.3"
+            val coilVersion = "2.5.0"
+            val navigationVersion = "2.7.6"
+            val coreKtxVersion = "1.12.0"
+            val lifecycleKtx = "2.6.2"
+            val activityVersion = "1.8.2"
+            val immutableCollectionsVersion = "0.3.6"
+            val composeVersion = "1.5.4"
+            val composeMaterial3Version = "1.1.2"
+
+            library("orbit-viewmodel", "org.orbit-mvi:orbit-viewmodel:$orbitVersion")
+            library("orbit-compose", "org.orbit-mvi:orbit-compose:$orbitVersion")
+            library("orbit-core", "org.orbit-mvi:orbit-core:$orbitVersion")
+            bundle("orbit", listOf("orbit-viewmodel", "orbit-compose", "orbit-core"))
+
+            library("koin-core", "io.insert-koin:koin-core:$koinVersion")
+            library("koin-android", "io.insert-koin:koin-androidx-compose:$koinVersion")
+            bundle("koin", listOf("koin-core", "koin-android"))
+
+            library("coroutines-core", "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+            library("coroutines-android", "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+            bundle("coroutines", listOf("coroutines-core", "coroutines-android"))
+
+            library("coil", "io.coil-kt:coil-compose:$coilVersion")
+
+            library("android-core", "androidx.core:core-ktx:$coreKtxVersion")
+            library("android-lifecycle", "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleKtx")
+            library("android-activity", "androidx.activity:activity-compose:$activityVersion")
+            bundle("android", listOf("android-core", "android-lifecycle", "android-activity"))
+
+            library(
+                "immutable-collections",
+                "org.jetbrains.kotlinx:kotlinx-collections-immutable:$immutableCollectionsVersion"
+            )
+
+            library("compose-ui", "androidx.compose.ui:ui:$composeVersion")
+            library("compose-ui-graphics", "androidx.compose.ui:ui-graphics:$composeVersion")
+            library("compose-ui-tooling-preview", "androidx.compose.ui:ui-tooling-preview:$composeVersion")
+            library("compose-material3", "androidx.compose.material3:material3:$composeMaterial3Version")
+            library("compose-icons", "androidx.compose.material:material-icons-extended:$composeVersion")
+            library("compose-navigation", "androidx.navigation:navigation-compose:$navigationVersion")
+            bundle(
+                "compose",
+                listOf(
+                    "compose-ui",
+                    "compose-ui-graphics",
+                    "compose-ui-tooling-preview",
+                    "compose-material3",
+                    "compose-icons",
+                    "compose-navigation"
+                )
+            )
+            library("compose-debug-ui-tooling", "androidx.compose.ui:ui-tooling:$composeVersion")
+        }
     }
 }
 

@@ -1,40 +1,38 @@
-package ru.kvf.gally.feature.photos.ui.photoslist
+package ru.kvf.gally.feature.photos.ui.folderslist
 
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.tooling.preview.Preview
-import ru.kvf.gally.core.utils.ImageWithLoader
-import ru.kvf.gally.feature.photos.domain.Photo
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import ru.kvf.gally.feature.photos.domain.Folder
 
 @Composable
-fun PhotosList(
-    photos: List<Photo>
+fun FoldersList(
+    folders: List<Folder>
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
+        columns = GridCells.Fixed(4),
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        items(photos, key = { item: Photo -> item.id }) { photo ->
-            ImageWithLoader(
-                model = photo.uri,
+        items(folders) { folder ->
+            AsyncImage(
+                model = folder.photos.firstOrNull()?.uri,
+                contentDescription = "photo",
                 contentScale = ContentScale.Crop,
+                filterQuality = FilterQuality.Low,
                 modifier = Modifier
-                    .fillMaxWidth()
                     .aspectRatio(1f)
+                    .padding(1.dp)
             )
         }
     }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun Preview() {
-    PhotosList(photos = emptyList())
 }
