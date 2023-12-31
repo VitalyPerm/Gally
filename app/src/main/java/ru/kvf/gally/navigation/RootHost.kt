@@ -15,6 +15,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.kvf.favorite.FavoriteHost
+import ru.kvf.gally.Config
 import ru.kvf.settings.SettingsHost
 import ru.kvf.photos.navigation.PhotosNavigation
 
@@ -43,26 +44,29 @@ private fun BottomBar(navController: NavHostController) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
         RootDestinations.getAll().forEach { screen ->
-            NavigationBarItem(
-                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                icon = {
-                    Icon(
-                        imageVector = screen.icon,
-                        contentDescription = screen.route,
-                        modifier = Modifier
-                            .padding(12.dp)
-                    )
-                },
-                onClick = {
-                    navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+            val shouldDraw = screen !is RootDestinations.Design || Config.DESIGN_SYSTEM
+            if (shouldDraw) {
+                NavigationBarItem(
+                    selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                    icon = {
+                        Icon(
+                            imageVector = screen.icon,
+                            contentDescription = screen.route,
+                            modifier = Modifier
+                                .padding(12.dp)
+                        )
+                    },
+                    onClick = {
+                        navController.navigate(screen.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
                     }
-                }
-            )
+                )
+            }
         }
     }
 }

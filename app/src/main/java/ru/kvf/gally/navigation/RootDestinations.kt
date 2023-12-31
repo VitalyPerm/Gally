@@ -2,6 +2,7 @@ package ru.kvf.gally.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DesignServices
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.Settings
@@ -28,8 +29,13 @@ sealed class RootDestinations(
         nameRes = R.string.root_settings,
         icon = Icons.Filled.Settings
     )
+    data object Design : RootDestinations(
+        route = "deisgn",
+        nameRes = R.string.root_design,
+        icon = Icons.Filled.DesignServices
+    )
 
     companion object {
-        fun getAll() = listOf(Photos, Favorite, Settings)
+        fun getAll() = listOf(Photos, Favorite, Settings, Design)
     }
 }
