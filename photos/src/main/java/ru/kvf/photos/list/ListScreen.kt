@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
@@ -17,13 +18,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
+import coil.size.Size
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
+import ru.kvf.core.data.CustomDate
 import ru.kvf.core.domain.Folder
 import ru.kvf.core.domain.Photo
 import ru.kvf.core.widgets.ImageWithLoader
@@ -83,21 +87,30 @@ private fun Preview() {
 
 @Composable
 fun PhotosList(
-    photos: List<Photo>
+    photos: Map<CustomDate, List<Photo>>
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        items(photos, key = { item: Photo -> item.id }) { photo ->
-            ImageWithLoader(
-                model = photo.uri,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-            )
+        photos.forEach { (date, photos) ->
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Text(
+                    text = date.toString(),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+            items(photos, key = { item: Photo -> item.id }) { photo ->
+                ImageWithLoader(
+                    model = photo.uri,
+                    contentScale = ContentScale.Crop,
+                    size = Size(250, 250),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                )
+            }
         }
     }
 }
@@ -107,7 +120,7 @@ fun FoldersList(
     folders: List<Folder>
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(4),
+        columns = GridCells.Fixed(2),
         modifier = Modifier
             .fillMaxWidth()
     ) {
@@ -115,6 +128,7 @@ fun FoldersList(
             ImageWithLoader(
                 model = folder.photos.firstOrNull()?.uri,
                 contentScale = ContentScale.Crop,
+                size = Size(250, 250),
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)

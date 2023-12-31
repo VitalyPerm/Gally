@@ -10,6 +10,7 @@ import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import ru.kvf.core.data.CustomDate
 import ru.kvf.core.domain.Folder
 import ru.kvf.core.domain.Photo
 import ru.kvf.core.domain.PhotosRepository
@@ -30,7 +31,7 @@ class ListViewModel(
             }.launchIn(viewModelScope)
     }
 
-    private fun photosDataUpdated(photos: List<Photo>, folders: List<Folder>) = intent {
+    private fun photosDataUpdated(photos: Map<CustomDate, List<Photo>>, folders: List<Folder>) = intent {
         reduce {
             state.copy(
                 loading = false,

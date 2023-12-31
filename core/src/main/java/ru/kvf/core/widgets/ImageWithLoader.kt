@@ -7,12 +7,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import coil.size.Size
 
 @Composable
 fun ImageWithLoader(
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Fit,
-    size: Int = 250,
+    size: Size = Size.ORIGINAL,
     model: Any?
 ) {
     SubcomposeAsyncImage(

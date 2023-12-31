@@ -8,6 +8,8 @@ import ru.kvf.core.domain.Folder
 import ru.kvf.core.domain.Photo
 import ru.kvf.core.domain.PhotosRepository
 import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class PhotosRepositoryImpl(
@@ -23,8 +25,10 @@ class PhotosRepositoryImpl(
     )
     private val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
 
-    override val data: MutableStateFlow<Pair<List<Photo>, List<Folder>>> =
-        MutableStateFlow(emptyList<Photo>() to emptyList())
+//    override val data: MutableStateFlow<Pair<List<Photo>, List<Folder>>> =
+//        MutableStateFlow(emptyList<Photo>() to emptyList())
+    override val data: MutableStateFlow<Pair<Map<CustomDate, List<Photo>>, List<Folder>>> =
+        MutableStateFlow(emptyMap<CustomDate, List<Photo>>() to emptyList())
 
     override suspend fun fetch() {
         val photosAccumulator = mutableListOf<Photo>()
@@ -51,16 +55,21 @@ class PhotosRepositoryImpl(
                     id
                 )
                 val folder = cursor.getString(bucketColumn)
+                val calendar = Calendar.getInstance().apply {
+                    time = Date(date)
+                }
                 photosAccumulator.add(
                     Photo(
                         id = id,
                         name = name,
-                        date = date.toString(),
+                        date = CustomDate(calendar),
                         uri = uri,
                         folder = folder
                     )
                 )
             }
+            val sortedPhotos = photosAccumulator
+                .groupBy(Photo::date)
             val folders = photosAccumulator.groupBy {
                 it.folder
             }.map { (folder, photos) ->
@@ -70,7 +79,7 @@ class PhotosRepositoryImpl(
                     photos = photos
                 )
             }
-            data.value = photosAccumulator to folders
+            data.value = sortedPhotos to folders
         }
     }
 }
