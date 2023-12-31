@@ -38,3 +38,4 @@ out/
 ### OS specific
 Thumbs.db
 
+/keystore/key.jks
