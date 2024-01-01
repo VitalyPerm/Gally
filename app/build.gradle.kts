@@ -6,6 +6,15 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("/Users/vitalya/StudioProjects/Gally/new_key.jks")
+            storePassword = "123456"
+            keyAlias = "new_alias"
+            keyPassword = "123456"
+        }
+        // keytool -genkey -v -keystore new_keystore.jks -alias new_alias -keyalg RSA -keysize 2048 -validity 10000
+    }
     val minSdkVersion: Int by rootProject.extra
     namespace = "ru.kvf.gally"
     compileSdk = 34
@@ -25,16 +34,12 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-
-            debug {
-                isMinifyEnabled = false
-                isDebuggable = true
-            }
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
