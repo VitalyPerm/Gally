@@ -27,9 +27,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.size.Size
@@ -41,6 +43,7 @@ import ru.kvf.core.domain.Photo
 import ru.kvf.core.widgets.ImageWithLoader
 import ru.kvf.core.widgets.StubScreen
 import ru.kvf.core.widgets.TopBar
+import ru.kvf.photos.R
 
 @Composable
 fun ListScreen(
@@ -57,8 +60,11 @@ fun ListScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        val title = remember(state.showFolders) {
+            if (state.showFolders) R.string.folders else R.string.photos
+        }
         TopBar(
-            title = "Фото",
+            title = stringResource(title),
             actions = {
                 AnimatedVisibility(state.showFolders.not()) {
                     ReverseIcon(vm::onReverseIconClick)
