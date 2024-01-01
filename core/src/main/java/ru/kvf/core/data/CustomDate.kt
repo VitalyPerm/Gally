@@ -4,10 +4,13 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-
 class CustomDate(
     private val date: Calendar
-) {
+) : Comparable<CustomDate> {
+
+    override fun compareTo(other: CustomDate): Int {
+        return this.date.time.compareTo(other.date.time)
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

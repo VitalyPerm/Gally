@@ -69,7 +69,7 @@ class PhotosRepositoryImpl(
                 )
             }
             val sortedPhotos = photosAccumulator
-                .groupBy(Photo::date)
+                .groupBy(Photo::date).toSortedMap()
             val folders = photosAccumulator.groupBy {
                 it.folder
             }.map { (folder, photos) ->

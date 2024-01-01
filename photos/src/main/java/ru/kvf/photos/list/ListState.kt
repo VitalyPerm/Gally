@@ -9,7 +9,8 @@ data class PhotosState(
     val folders: List<Folder> = emptyList(),
     val loading: Boolean = false,
     val noPhotosFound: Boolean = false,
-    val showFolders: Boolean = false
+    val showFolders: Boolean = false,
+    val reversed: Boolean = false
 )
 
 sealed interface PhotosSideEffect

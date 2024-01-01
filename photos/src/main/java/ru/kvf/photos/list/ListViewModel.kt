@@ -35,7 +35,7 @@ class ListViewModel(
         reduce {
             state.copy(
                 loading = false,
-                photos = photos,
+                photos = if (state.reversed) photos else photos.reversed(),
                 folders = folders,
                 noPhotosFound = photos.isEmpty()
             )
@@ -53,4 +53,9 @@ class ListViewModel(
         reduce { state.copy(loading = true) }
         photosRepository.fetch()
     }
+
+    private fun Map<CustomDate, List<Photo>>.reversed(): Map<CustomDate, List<Photo>> =
+        sortedMapOf<CustomDate, List<Photo>>(Comparator.reverseOrder()).apply {
+            putAll(this@reversed)
+        }
 }
