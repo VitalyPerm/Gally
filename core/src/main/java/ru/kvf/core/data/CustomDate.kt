@@ -1,16 +1,18 @@
 package ru.kvf.core.data
 
+import android.annotation.SuppressLint
+import android.content.res.Resources
+import org.koin.java.KoinJavaComponent.inject
+import ru.kvf.core.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-private const val DATE_UNKNOWN = "Дата неизвестна"
-
 class CustomDate(
-    private val date: Calendar
+    val date: Calendar
 ) : Comparable<CustomDate> {
 
-    private val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    private val resources: Resources by inject(Resources::class.java)
 
     override fun compareTo(other: CustomDate): Int {
         return this.date.time.compareTo(other.date.time)
@@ -28,7 +30,7 @@ class CustomDate(
         val year = date.get(Calendar.YEAR)
         val dayOfYear = date.get(Calendar.DAY_OF_YEAR)
 
-        return !(otherYear != year && otherDayOfYear != dayOfYear)
+        return (otherYear == year && otherDayOfYear == dayOfYear)
     }
 
     override fun hashCode(): Int {
@@ -38,9 +40,9 @@ class CustomDate(
     }
 
     override fun toString(): String = when {
-        isUnknown() -> DATE_UNKNOWN
-        isToday() -> "Сегодня"
-        isYesterday() -> "Вчера"
+        isUnknown() -> resources.getString(R.string.date_unknown)
+        isToday() -> resources.getString(R.string.today)
+        isYesterday() -> resources.getString(R.string.yesterday)
         else -> sdf.format(date.time)
     }
 
@@ -49,6 +51,8 @@ class CustomDate(
     private fun isUnknown() = date.time.time == 0L
 }
 
+@SuppressLint("ConstantLocale")
+private val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 private val today = CustomDate(Calendar.getInstance())
 private val yesterday = CustomDate(
     Calendar.getInstance().apply {
