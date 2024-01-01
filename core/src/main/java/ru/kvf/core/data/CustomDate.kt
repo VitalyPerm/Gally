@@ -40,13 +40,18 @@ class CustomDate(
     override fun toString(): String = when {
         isUnknown() -> DATE_UNKNOWN
         isToday() -> "Сегодня"
-        isYestedday() -> "Вчера"
+        isYesterday() -> "Вчера"
         else -> sdf.format(date.time)
     }
 
-    private fun isToday() = date == Calendar.getInstance()
-    private fun isYestedday() = date == Calendar.getInstance().apply {
-        add(Calendar.DAY_OF_YEAR, -1)
-    }
+    private fun isToday() = this == today
+    private fun isYesterday() = this == yesterday
     private fun isUnknown() = date.time.time == 0L
 }
+
+private val today = CustomDate(Calendar.getInstance())
+private val yesterday = CustomDate(
+    Calendar.getInstance().apply {
+        add(Calendar.DAY_OF_YEAR, -1)
+    }
+)
