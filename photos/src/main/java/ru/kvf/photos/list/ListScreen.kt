@@ -9,17 +9,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.WifiProtectedSetup
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -30,6 +34,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import ru.kvf.core.data.CustomDate
 import ru.kvf.core.domain.Folder
 import ru.kvf.core.domain.Photo
+import ru.kvf.core.utils.log
 import ru.kvf.core.widgets.ImageWithLoader
 import ru.kvf.core.widgets.StubScreen
 import ru.kvf.core.widgets.TopBar
@@ -39,6 +44,13 @@ fun ListScreen(
     vm: ListViewModel = koinViewModel()
 ) {
     val state by vm.collectAsState()
+    val photosListGridState = rememberLazyGridState()
+
+    LaunchedEffect(key1 = state.reversed) {
+        photosListGridState.animateScrollToItem(0)
+    }
+    log("${state.photos.keys}")
+    log("${state.reversed}")
 
     Column(
         modifier = Modifier
@@ -51,20 +63,37 @@ fun ListScreen(
                     showFolders = state.showFolders,
                     onClick = vm::onChangeViewModeClick
                 )
+                ReverseIcon(vm::onReverseIconClick)
             }
         )
         AnimatedContent(targetState = state.showFolders, label = "") { showFolders ->
             if (showFolders) {
                 FoldersList(state.folders)
             } else {
-                PhotosList(state.photos)
+                PhotosList(
+                    photos = state.photos,
+                    gridState = photosListGridState
+                )
             }
         }
     }
 }
 
 @Composable
-fun ViewModelIcon(
+private fun ReverseIcon(
+    onClick: () -> Unit
+) {
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = Icons.Filled.WifiProtectedSetup,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onPrimary
+        )
+    }
+}
+
+@Composable
+private fun ViewModelIcon(
     showFolders: Boolean,
     onClick: () -> Unit
 ) {
@@ -87,9 +116,11 @@ private fun Preview() {
 
 @Composable
 fun PhotosList(
-    photos: Map<CustomDate, List<Photo>>
+    photos: Map<CustomDate, List<Photo>>,
+    gridState: LazyGridState
 ) {
     LazyVerticalGrid(
+        state = gridState,
         columns = GridCells.Fixed(3),
         modifier = Modifier
             .fillMaxWidth()

@@ -20,6 +20,8 @@ class ListViewModel(
 ) : ViewModel(), ContainerHost<PhotosState, PhotosSideEffect> {
 
     override val container: Container<PhotosState, PhotosSideEffect> = container(PhotosState())
+    private val normalPhotosMap = sortedMapOf<CustomDate, List<Photo>>(Comparator.reverseOrder())
+    private val reversedPhotosMap = sortedMapOf<CustomDate, List<Photo>>()
 
     init {
         viewModelScope.launch {
@@ -33,9 +35,11 @@ class ListViewModel(
 
     private fun photosDataUpdated(photos: Map<CustomDate, List<Photo>>, folders: List<Folder>) = intent {
         reduce {
+            normalPhotosMap.putAll(photos)
+            reversedPhotosMap.putAll(photos)
             state.copy(
                 loading = false,
-                photos = if (state.reversed) photos else photos.reversed(),
+                photos = if (state.reversed) reversedPhotosMap else normalPhotosMap,
                 folders = folders,
                 noPhotosFound = photos.isEmpty()
             )
@@ -54,8 +58,12 @@ class ListViewModel(
         photosRepository.fetch()
     }
 
-    private fun Map<CustomDate, List<Photo>>.reversed(): Map<CustomDate, List<Photo>> =
-        sortedMapOf<CustomDate, List<Photo>>(Comparator.reverseOrder()).apply {
-            putAll(this@reversed)
+    fun onReverseIconClick() = intent {
+        reduce {
+            state.copy(
+                reversed = state.reversed.not(),
+                photos = if (state.reversed.not()) reversedPhotosMap else normalPhotosMap,
+            )
         }
+    }
 }
