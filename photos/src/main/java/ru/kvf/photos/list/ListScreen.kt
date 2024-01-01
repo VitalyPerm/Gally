@@ -3,10 +3,12 @@
 package ru.kvf.photos.list
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -26,15 +28,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import coil.size.Size
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.kvf.core.data.CustomDate
 import ru.kvf.core.domain.Folder
 import ru.kvf.core.domain.Photo
-import ru.kvf.core.utils.log
 import ru.kvf.core.widgets.ImageWithLoader
 import ru.kvf.core.widgets.StubScreen
 import ru.kvf.core.widgets.TopBar
@@ -47,10 +50,8 @@ fun ListScreen(
     val photosListGridState = rememberLazyGridState()
 
     LaunchedEffect(key1 = state.reversed) {
-        photosListGridState.animateScrollToItem(0)
+        photosListGridState.scrollToItem(0)
     }
-    log("${state.photos.keys}")
-    log("${state.reversed}")
 
     Column(
         modifier = Modifier
@@ -59,11 +60,13 @@ fun ListScreen(
         TopBar(
             title = "Фото",
             actions = {
+                AnimatedVisibility(state.showFolders.not()) {
+                    ReverseIcon(vm::onReverseIconClick)
+                }
                 ViewModelIcon(
                     showFolders = state.showFolders,
                     onClick = vm::onChangeViewModeClick
                 )
-                ReverseIcon(vm::onReverseIconClick)
             }
         )
         AnimatedContent(targetState = state.showFolders, label = "") { showFolders ->
@@ -129,21 +132,31 @@ fun PhotosList(
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Text(
                     text = date.toString(),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.headlineMedium,
+                    modifier = Modifier
+                        .padding(10.dp)
                 )
             }
             items(photos, key = { item: Photo -> item.id }) { photo ->
-                ImageWithLoader(
-                    model = photo.uri,
-                    contentScale = ContentScale.Crop,
-                    size = Size(250, 250),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
-                )
+                PhotoItem(photo.uri)
             }
         }
     }
+}
+
+@Composable
+private fun PhotoItem(
+    model: Any
+) {
+    ImageWithLoader(
+        model = model,
+        contentScale = ContentScale.Crop,
+        size = Size(250, 250),
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1f)
+            .padding(1.dp)
+    )
 }
 
 @Composable
@@ -156,14 +169,38 @@ fun FoldersList(
             .fillMaxWidth()
     ) {
         items(folders) { folder ->
-            ImageWithLoader(
-                model = folder.photos.firstOrNull()?.uri,
-                contentScale = ContentScale.Crop,
-                size = Size(250, 250),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
+            FolderItem(
+                uri = folder.photos.firstOrNull()?.uri,
+                name = folder.name
             )
         }
+    }
+}
+
+@Composable
+fun FolderItem(
+    uri: Any?,
+    name: String
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        ImageWithLoader(
+            model = uri,
+            contentScale = ContentScale.Crop,
+            size = Size(250, 250),
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f)
+                .padding(6.dp)
+                .clip(MaterialTheme.shapes.medium)
+        )
+
+        Text(
+            text = name,
+            modifier = Modifier
+                .padding(vertical = 4.dp, horizontal = 6.dp)
+        )
     }
 }

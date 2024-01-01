@@ -4,9 +4,13 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+private const val DATE_UNKNOWN = "Дата неизвестна"
+
 class CustomDate(
     private val date: Calendar
 ) : Comparable<CustomDate> {
+
+    private val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
     override fun compareTo(other: CustomDate): Int {
         return this.date.time.compareTo(other.date.time)
@@ -33,6 +37,16 @@ class CustomDate(
         return year.hashCode() + dayOfYear.hashCode()
     }
 
-    override fun toString(): String = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-        .run { format(date.time) }
+    override fun toString(): String = when {
+        isUnknown() -> DATE_UNKNOWN
+        isToday() -> "Сегодня"
+        isYestedday() -> "Вчера"
+        else -> sdf.format(date.time)
+    }
+
+    private fun isToday() = date == Calendar.getInstance()
+    private fun isYestedday() = date == Calendar.getInstance().apply {
+        add(Calendar.DAY_OF_YEAR, -1)
+    }
+    private fun isUnknown() = date.time.time == 0L
 }
