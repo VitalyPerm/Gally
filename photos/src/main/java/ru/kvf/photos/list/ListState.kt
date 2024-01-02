@@ -15,4 +15,6 @@ data class PhotosState(
     val reversed: Boolean = false
 )
 
-sealed interface PhotosSideEffect
+sealed interface PhotosSideEffect {
+    data object ScrollUp : PhotosSideEffect
+}

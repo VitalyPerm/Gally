@@ -1,11 +1,11 @@
 package ru.kvf.photos.list
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import ru.kvf.core.data.CustomDate
 import ru.kvf.core.domain.Folder
@@ -61,5 +61,6 @@ class ListViewModel(
                 photos = if (state.reversed.not()) reversedPhotosMap else normalPhotosMap,
             )
         }
+        postSideEffect(PhotosSideEffect.ScrollUp)
     }
 }

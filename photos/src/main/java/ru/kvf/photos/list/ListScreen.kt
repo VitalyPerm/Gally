@@ -26,7 +26,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -38,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import coil.size.Size
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.kvf.core.data.CustomDate
 import ru.kvf.core.domain.Folder
 import ru.kvf.core.domain.Photo
@@ -54,8 +54,10 @@ fun ListScreen(
     val state by vm.collectAsState()
     val photosListGridState = rememberLazyGridState()
 
-    LaunchedEffect(key1 = state.reversed) {
-        photosListGridState.animateScrollToItem(0)
+    vm.collectSideEffect {
+        when (it) {
+            PhotosSideEffect.ScrollUp -> photosListGridState.animateScrollToItem(0)
+        }
     }
 
     Column(

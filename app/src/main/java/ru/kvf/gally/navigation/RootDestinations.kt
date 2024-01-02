@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import ru.kvf.gally.R
+import ru.kvf.photos.navigation.Destinations
 
 sealed class RootDestinations(
     val route: String,
@@ -37,5 +38,11 @@ sealed class RootDestinations(
 
     companion object {
         fun getAll() = listOf(Photos, Favorite, Settings, Design)
+        fun getVisibleNavBarDestinations() = listOf(
+            Destinations.List.route,
+            "fav",
+            "set",
+            "deisgn"
+        )
     }
 }
