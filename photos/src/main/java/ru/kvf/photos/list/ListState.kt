@@ -8,6 +8,7 @@ import ru.kvf.core.domain.Photo
 @Stable
 data class PhotosState(
     val photos: Map<CustomDate, List<Photo>> = emptyMap(),
+    val likedPhotos: List<Long> = emptyList(),
     val folders: List<Folder> = emptyList(),
     val loading: Boolean = false,
     val noPhotosFound: Boolean = false,

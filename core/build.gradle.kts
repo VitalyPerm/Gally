@@ -49,5 +49,7 @@ dependencies {
     api(libs.coil)
     api(libs.bundles.orbit)
     api(libs.bundles.koin)
+    api(libs.proto)
+    implementation(libs.kotlin.serialization)
     debugImplementation(libs.compose.debug.ui.tooling)
 }

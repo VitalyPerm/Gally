@@ -99,8 +99,10 @@ fun ListScreen(
             } else {
                 PhotosList(
                     photos = state.photos,
+                    likedPhotos = state.likedPhotos,
                     gridState = photosListGridState,
-                    onPhotoClick = navigateToDetails
+                    onPhotoClick = navigateToDetails,
+                    onLikedClick = vm::onLikeClick
                 )
             }
         }
@@ -145,8 +147,10 @@ private fun Preview() {
 @Composable
 fun PhotosList(
     photos: Map<CustomDate, List<Photo>>,
+    likedPhotos: List<Long>,
     gridState: LazyGridState,
-    onPhotoClick: (Long) -> Unit
+    onPhotoClick: (Long) -> Unit,
+    onLikedClick: (Long) -> Unit
 ) {
     LazyVerticalGrid(
         state = gridState,
@@ -166,7 +170,9 @@ fun PhotosList(
             items(photos, key = { item: Photo -> item.id }) { photo ->
                 PhotoItem(
                     model = photo.uri,
-                    onClick = { onPhotoClick(photo.id) }
+                    liked = photo.id in likedPhotos,
+                    onClick = { onPhotoClick(photo.id) },
+                    onLiked = { onLikedClick(photo.id) }
                 )
             }
         }
@@ -176,9 +182,10 @@ fun PhotosList(
 @Composable
 private fun PhotoItem(
     model: Any,
+    liked: Boolean,
     onClick: () -> Unit,
+    onLiked: () -> Unit
 ) {
-    var liked by remember { mutableStateOf(false) }
     var showLike by remember { mutableStateOf(false) }
     val hearSize by animateFloatAsState(targetValue = if (showLike) 100f else 0f, label = "")
     LaunchedEffect(key1 = showLike, block = {
@@ -203,7 +210,7 @@ private fun PhotoItem(
                     detectTapGestures(
                         onDoubleTap = {
                             showLike = true
-                            liked = liked.not()
+                            onLiked()
                             log("double tap detected")
                         },
                         onTap = {

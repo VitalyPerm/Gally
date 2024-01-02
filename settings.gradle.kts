@@ -37,6 +37,8 @@ dependencyResolutionManagement {
             val composeVersion = "1.5.4"
             val composeMaterial3Version = "1.1.2"
             val splashVersion = "1.0.0"
+            val protoVersion = "1.0.0"
+            val kotlinSerializationVersion = "1.6.0"
 
             library("orbit-viewmodel", "org.orbit-mvi:orbit-viewmodel:$orbitVersion")
             library("orbit-compose", "org.orbit-mvi:orbit-compose:$orbitVersion")
@@ -83,6 +85,13 @@ dependencyResolutionManagement {
             library("compose-debug-ui-tooling", "androidx.compose.ui:ui-tooling:$composeVersion")
 
             library("splash", "androidx.core:core-splashscreen:$splashVersion")
+
+            library("proto", "androidx.datastore:datastore-preferences:$protoVersion")
+
+            library(
+                "kotlin-serialization",
+                "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion"
+            )
         }
     }
 }

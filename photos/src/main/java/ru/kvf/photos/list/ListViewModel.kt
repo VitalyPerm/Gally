@@ -3,24 +3,35 @@ package ru.kvf.photos.list
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import ru.kvf.core.data.CustomDate
 import ru.kvf.core.domain.Folder
+import ru.kvf.core.domain.LikesRepository
 import ru.kvf.core.domain.Photo
 import ru.kvf.core.domain.PhotosRepository
 import ru.kvf.core.ui.VM
 
 class ListViewModel(
     private val photosRepository: PhotosRepository,
+    private val likesRepository: LikesRepository
 ) : VM<PhotosState, PhotosSideEffect>(PhotosState()) {
 
     private val normalPhotosMap = sortedMapOf<CustomDate, List<Photo>>(Comparator.reverseOrder())
     private val reversedPhotosMap = sortedMapOf<CustomDate, List<Photo>>()
 
     init {
+        likesRepository.getLikedListFlow()
+            .onEach { likeList ->
+                intent {
+                    reduce {
+                        state.copy(likedPhotos = likeList)
+                    }
+                }
+            }.launchIn(viewModelScope)
         viewModelScope.launch {
             photosRepository.fetch()
         }
@@ -49,6 +60,11 @@ class ListViewModel(
             }
         }
     }
+
+    fun onLikeClick(id: Long) = intent {
+        likesRepository.addToLikedList(id)
+    }
+
     fun reload() = intent {
         reduce { state.copy(loading = true) }
         photosRepository.fetch()

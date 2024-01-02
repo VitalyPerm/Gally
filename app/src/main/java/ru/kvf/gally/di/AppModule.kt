@@ -2,14 +2,20 @@ package ru.kvf.gally.di
 
 import android.content.Context
 import android.content.res.Resources
-import org.koin.androidx.viewmodel.dsl.viewModelOf
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import org.koin.dsl.module
-import ru.kvf.core.data.PhotosRepositoryImpl
-import ru.kvf.core.domain.PhotosRepository
-import ru.kvf.photos.details.DetailsViewModel
-import ru.kvf.photos.list.ListViewModel
+
+private const val DATA_STORE_NAME = "data_store"
 
 val appModule = module {
-    single<PhotosRepository> { PhotosRepositoryImpl(get()) }
     single<Resources> { get<Context>().resources }
+    single<DataStore<Preferences>> {
+        val context = get<Context>()
+        PreferenceDataStoreFactory.create {
+            context.preferencesDataStoreFile(DATA_STORE_NAME)
+        }
+    }
 }
