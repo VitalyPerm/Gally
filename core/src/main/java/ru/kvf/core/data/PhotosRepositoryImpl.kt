@@ -24,7 +24,7 @@ class PhotosRepositoryImpl(
 
     override val foldersFlow: MutableStateFlow<List<Folder>> = MutableStateFlow(emptyList())
     override val photosSortedByDateFlow: MutableStateFlow<Map<CustomDate, List<Photo>>> = MutableStateFlow(emptyMap())
-    override val photos: MutableStateFlow<List<Photo>> = MutableStateFlow(emptyList())
+    override val photosFlow: MutableStateFlow<List<Photo>> = MutableStateFlow(emptyList())
 
     override suspend fun fetch() {
         val photosAccumulator = mutableListOf<Photo>()
@@ -64,7 +64,7 @@ class PhotosRepositoryImpl(
                     )
                 )
             }
-            photos.value = photosAccumulator.reversed()
+            photosFlow.value = photosAccumulator.reversed()
             val sortedPhotos = photosAccumulator.reversed()
                 .groupBy(Photo::date).toSortedMap()
             photosSortedByDateFlow.value = sortedPhotos

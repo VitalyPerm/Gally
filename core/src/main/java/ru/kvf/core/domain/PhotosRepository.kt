@@ -7,7 +7,7 @@ interface PhotosRepository {
 
     val photosSortedByDateFlow: StateFlow<Map<CustomDate, List<Photo>>>
     val foldersFlow: StateFlow<List<Folder>>
-    val photos: StateFlow<List<Photo>>
+    val photosFlow: StateFlow<List<Photo>>
 
     suspend fun fetch()
 }

@@ -1,4 +1,4 @@
-package ru.kvf.photos.details
+package ru.kvf.core.ui.details
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.launchIn
@@ -9,12 +9,12 @@ import ru.kvf.core.domain.PhotosRepository
 import ru.kvf.core.ui.VM
 import ru.kvf.core.utils.log
 
-class DetailsViewModel(
+class PhotoDetailsViewModel(
     photosRepository: PhotosRepository,
-) : VM<DetailsState, DetailsSideEffect>(DetailsState()) {
+) : VM<PhotoDetailsState, DetailsSideEffect>(PhotoDetailsState()) {
 
     init {
-        photosRepository.photos
+        photosRepository.photosFlow
             .onEach { photos ->
                 intent {
                     reduce {

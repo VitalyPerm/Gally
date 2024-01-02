@@ -1,6 +1,7 @@
 package ru.kvf.photos.list
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -62,6 +63,7 @@ class ListViewModel(
     }
 
     fun onLikeClick(id: Long) = intent {
+        delay(1000)
         likesRepository.addToLikedList(id)
     }
 
