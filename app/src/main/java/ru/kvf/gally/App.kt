@@ -9,6 +9,7 @@ import coil.request.CachePolicy
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import ru.kvf.gally.di.appModule
+import ru.kvf.photos.photosModule
 
 class App : Application(), ImageLoaderFactory {
 
@@ -16,7 +17,7 @@ class App : Application(), ImageLoaderFactory {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(appModule)
+            modules(listOf(appModule, photosModule))
         }
     }
 

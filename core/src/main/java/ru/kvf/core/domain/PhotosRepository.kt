@@ -5,7 +5,9 @@ import ru.kvf.core.data.CustomDate
 
 interface PhotosRepository {
 
-    val data: StateFlow<Pair<Map<CustomDate, List<Photo>>, List<Folder>>>
+    val photosSortedByDateFlow: StateFlow<Map<CustomDate, List<Photo>>>
+    val foldersFlow: StateFlow<List<Folder>>
+    val photos: StateFlow<List<Photo>>
 
     suspend fun fetch()
 }

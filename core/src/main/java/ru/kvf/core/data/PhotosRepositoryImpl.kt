@@ -7,10 +7,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import ru.kvf.core.domain.Folder
 import ru.kvf.core.domain.Photo
 import ru.kvf.core.domain.PhotosRepository
-import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
-import java.util.Locale
 
 class PhotosRepositoryImpl(
     private val context: Context
@@ -23,12 +21,10 @@ class PhotosRepositoryImpl(
         MediaStore.Images.Media.DATE_TAKEN,
         MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
     )
-    private val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
 
-//    override val data: MutableStateFlow<Pair<List<Photo>, List<Folder>>> =
-//        MutableStateFlow(emptyList<Photo>() to emptyList())
-    override val data: MutableStateFlow<Pair<Map<CustomDate, List<Photo>>, List<Folder>>> =
-        MutableStateFlow(emptyMap<CustomDate, List<Photo>>() to emptyList())
+    override val foldersFlow: MutableStateFlow<List<Folder>> = MutableStateFlow(emptyList())
+    override val photosSortedByDateFlow: MutableStateFlow<Map<CustomDate, List<Photo>>> = MutableStateFlow(emptyMap())
+    override val photos: MutableStateFlow<List<Photo>> = MutableStateFlow(emptyList())
 
     override suspend fun fetch() {
         val photosAccumulator = mutableListOf<Photo>()
@@ -68,8 +64,10 @@ class PhotosRepositoryImpl(
                     )
                 )
             }
-            val sortedPhotos = photosAccumulator
+            photos.value = photosAccumulator.reversed()
+            val sortedPhotos = photosAccumulator.reversed()
                 .groupBy(Photo::date).toSortedMap()
+            photosSortedByDateFlow.value = sortedPhotos
             val folders = photosAccumulator.groupBy {
                 it.folder
             }.map { (folder, photos) ->
@@ -79,7 +77,8 @@ class PhotosRepositoryImpl(
                     photos = photos
                 )
             }
-            data.value = sortedPhotos to folders
+            foldersFlow.value = folders
+
         }
     }
 }

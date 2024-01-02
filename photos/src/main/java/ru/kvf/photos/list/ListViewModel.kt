@@ -1,25 +1,22 @@
 package ru.kvf.photos.list
 
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
-import org.orbitmvi.orbit.viewmodel.container
 import ru.kvf.core.data.CustomDate
 import ru.kvf.core.domain.Folder
 import ru.kvf.core.domain.Photo
 import ru.kvf.core.domain.PhotosRepository
+import ru.kvf.core.ui.VM
 
 class ListViewModel(
-    private val photosRepository: PhotosRepository
-) : ViewModel(), ContainerHost<PhotosState, PhotosSideEffect> {
+    private val photosRepository: PhotosRepository,
+) : VM<PhotosState, PhotosSideEffect>(PhotosState()) {
 
-    override val container: Container<PhotosState, PhotosSideEffect> = container(PhotosState())
     private val normalPhotosMap = sortedMapOf<CustomDate, List<Photo>>(Comparator.reverseOrder())
     private val reversedPhotosMap = sortedMapOf<CustomDate, List<Photo>>()
 
@@ -27,10 +24,9 @@ class ListViewModel(
         viewModelScope.launch {
             photosRepository.fetch()
         }
-        photosRepository.data
-            .onEach { (photos, folders) ->
-                photosDataUpdated(photos, folders)
-            }.launchIn(viewModelScope)
+        combine(photosRepository.foldersFlow, photosRepository.photosSortedByDateFlow) { folders, photos ->
+            photosDataUpdated(photos, folders)
+        }.launchIn(viewModelScope)
     }
 
     private fun photosDataUpdated(photos: Map<CustomDate, List<Photo>>, folders: List<Folder>) = intent {

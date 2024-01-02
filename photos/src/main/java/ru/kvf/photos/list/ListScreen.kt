@@ -4,6 +4,7 @@ package ru.kvf.photos.list
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -47,13 +48,14 @@ import ru.kvf.photos.R
 
 @Composable
 fun ListScreen(
-    vm: ListViewModel = koinViewModel()
+    vm: ListViewModel = koinViewModel(),
+    navigateToDetails: (Long) -> Unit
 ) {
     val state by vm.collectAsState()
     val photosListGridState = rememberLazyGridState()
 
     LaunchedEffect(key1 = state.reversed) {
-        photosListGridState.scrollToItem(0)
+        photosListGridState.animateScrollToItem(0)
     }
 
     Column(
@@ -81,7 +83,8 @@ fun ListScreen(
             } else {
                 PhotosList(
                     photos = state.photos,
-                    gridState = photosListGridState
+                    gridState = photosListGridState,
+                    onPhotoClick = navigateToDetails
                 )
             }
         }
@@ -126,7 +129,8 @@ private fun Preview() {
 @Composable
 fun PhotosList(
     photos: Map<CustomDate, List<Photo>>,
-    gridState: LazyGridState
+    gridState: LazyGridState,
+    onPhotoClick: (Long) -> Unit
 ) {
     LazyVerticalGrid(
         state = gridState,
@@ -144,7 +148,10 @@ fun PhotosList(
                 )
             }
             items(photos, key = { item: Photo -> item.id }) { photo ->
-                PhotoItem(photo.uri)
+                PhotoItem(
+                    model = photo.uri,
+                    onClick = { onPhotoClick(photo.id) }
+                )
             }
         }
     }
@@ -152,7 +159,8 @@ fun PhotosList(
 
 @Composable
 private fun PhotoItem(
-    model: Any
+    model: Any,
+    onClick: () -> Unit,
 ) {
     ImageWithLoader(
         model = model,
@@ -162,6 +170,7 @@ private fun PhotoItem(
             .fillMaxWidth()
             .aspectRatio(1f)
             .padding(1.dp)
+            .clickable(onClick = onClick)
     )
 }
 
