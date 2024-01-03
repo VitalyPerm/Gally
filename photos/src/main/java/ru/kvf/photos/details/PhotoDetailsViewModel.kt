@@ -1,37 +1,27 @@
 package ru.kvf.photos.details
 
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
-import ru.kvf.core.domain.repository.PhotosRepository
+import ru.kvf.core.domain.usecase.GetAllPhotosUseCase
 import ru.kvf.core.ui.VM
-import ru.kvf.core.utils.log
 
 class PhotoDetailsViewModel(
-    photosRepository: PhotosRepository,
+    getAllPhotosUseCase: GetAllPhotosUseCase,
+    photoId: Long,
 ) : VM<PhotoDetailsState, DetailsSideEffect>(PhotoDetailsState()) {
 
     init {
-        photosRepository.photosFlow
-            .onEach { photos ->
-                intent {
-                    reduce {
-                        state.copy(photos = photos)
-                    }
+        collectFlow(getAllPhotosUseCase()) { photos ->
+            val index = photos.indexOfFirst { it.id == photoId }.takeIf { it != -1 } ?: 0
+            intent {
+                reduce {
+                    state.copy(
+                        photos = photos,
+                        startIndex = index,
+                        loading = false
+                    )
                 }
-            }.launchIn(viewModelScope)
-    }
-
-    fun start(photoId: Long) = intent {
-        val index = state.photos.indexOfFirst { it.id == photoId }.takeIf { it != -1 } ?: 0
-        log("index = $index")
-        reduce {
-            state.copy(
-                startIndex = index,
-                loading = false
-            )
+            }
         }
     }
 }
