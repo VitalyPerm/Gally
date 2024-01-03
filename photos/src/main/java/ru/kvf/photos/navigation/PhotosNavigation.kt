@@ -14,13 +14,14 @@ import ru.kvf.photos.list.PhotosListScreen
 fun NavGraphBuilder.photosNavigation(
     navController: NavHostController,
     route: String,
-    isScrollInProgress: MutableState<Boolean>
+    isScrollInProgress: MutableState<Boolean>,
+    edgeToEdgeDisable: Boolean
 ) {
     navigation(startDestination = PhotosDestinations.List.route, route = route) {
         composable(PhotosDestinations.List.route) {
-
             PhotosListScreen(
                 isScrollInProgress = isScrollInProgress,
+                edgeToEdgeDisable = edgeToEdgeDisable,
                 navigateToPhotoDetails = {
                     navController.navigate(PhotosDestinations.PhotoDetails.createRoute(it))
                 },
