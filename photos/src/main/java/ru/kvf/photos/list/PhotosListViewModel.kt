@@ -16,10 +16,10 @@ import ru.kvf.core.domain.Photo
 import ru.kvf.core.domain.PhotosRepository
 import ru.kvf.core.ui.VM
 
-class ListViewModel(
+class PhotosListViewModel(
     private val photosRepository: PhotosRepository,
     private val likesRepository: LikesRepository
-) : VM<PhotosState, PhotosSideEffect>(PhotosState()) {
+) : VM<PhotosListState, PhotosListSideEffect>(PhotosListState()) {
 
     private val normalPhotosMap = sortedMapOf<CustomDate, List<Photo>>(Comparator.reverseOrder())
     private val reversedPhotosMap = sortedMapOf<CustomDate, List<Photo>>()
@@ -79,6 +79,6 @@ class ListViewModel(
                 photos = if (state.reversed.not()) reversedPhotosMap else normalPhotosMap,
             )
         }
-        postSideEffect(PhotosSideEffect.ScrollUp)
+        postSideEffect(PhotosListSideEffect.ScrollUp)
     }
 }

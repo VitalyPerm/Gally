@@ -6,7 +6,7 @@ import ru.kvf.core.domain.Folder
 import ru.kvf.core.domain.Photo
 
 @Stable
-data class PhotosState(
+data class PhotosListState(
     val photos: Map<CustomDate, List<Photo>> = emptyMap(),
     val likedPhotos: List<Long> = emptyList(),
     val folders: List<Folder> = emptyList(),
@@ -16,6 +16,6 @@ data class PhotosState(
     val reversed: Boolean = false
 )
 
-sealed interface PhotosSideEffect {
-    data object ScrollUp : PhotosSideEffect
+sealed interface PhotosListSideEffect {
+    data object ScrollUp : PhotosListSideEffect
 }

@@ -1,4 +1,4 @@
-package ru.kvf.core.ui.details
+package ru.kvf.favorite.ui.details
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -20,8 +20,8 @@ import ru.kvf.core.widgets.ImageWithLoader
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PhotosDetailsScreen(
-    viewModel: PhotoDetailsViewModel = koinViewModel(),
+fun FavoriteDetailsScreen(
+    viewModel: FavoriteDetailsViewModel = koinViewModel(),
     photoId: Long
 ) {
     LaunchedEffect(key1 = Unit, block = { viewModel.start(photoId) })

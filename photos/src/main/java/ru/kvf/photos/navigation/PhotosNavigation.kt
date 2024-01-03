@@ -6,28 +6,28 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import ru.kvf.core.ui.details.PhotosDetailsScreen
-import ru.kvf.photos.list.ListScreen
+import ru.kvf.photos.list.PhotosListScreen
+import ru.kvf.photos.details.PhotosDetailsScreen
 
 fun NavGraphBuilder.PhotosNavigation(navController: NavHostController, route: String) {
-    navigation(startDestination = Destinations.List.route, route = route) {
-        composable(Destinations.List.route) {
-            ListScreen(
+    navigation(startDestination = PhotosDestinations.List.route, route = route) {
+        composable(PhotosDestinations.List.route) {
+            PhotosListScreen(
                 navigateToDetails = {
-                    navController.navigate(Destinations.PhotoDetails.createRoute(it))
+                    navController.navigate(PhotosDestinations.PhotoDetails.createRoute(it))
                 }
             )
         }
 
         composable(
-            route = Destinations.PhotoDetails.route,
+            route = PhotosDestinations.PhotoDetails.route,
             arguments = listOf(
-                navArgument(Destinations.PhotoDetails.argument) {
+                navArgument(PhotosDestinations.PhotoDetails.argument) {
                     type = NavType.LongType
                 }
             )
         ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getLong(Destinations.PhotoDetails.argument) ?: 0
+            val id = backStackEntry.arguments?.getLong(PhotosDestinations.PhotoDetails.argument) ?: 0
             PhotosDetailsScreen(photoId = id)
         }
     }

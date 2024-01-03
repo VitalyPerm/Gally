@@ -22,8 +22,8 @@ import ru.kvf.core.widgets.TopBar
 import ru.kvf.favorite.R
 
 @Composable
-fun ListScreen(
-    vm: ListViewModel = koinViewModel(),
+fun FavoriteListScreen(
+    vm: FavoriteListViewModel = koinViewModel(),
     navigateToDetails: (Long) -> Unit
 ) {
     val state by vm.collectAsState()
@@ -31,7 +31,7 @@ fun ListScreen(
 
     vm.collectSideEffect {
         when (it) {
-            PhotosSideEffect.ScrollUp -> photosListGridState.animateScrollToItem(0)
+            FavoriteListSideEffect.ScrollUp -> photosListGridState.animateScrollToItem(0)
         }
     }
 

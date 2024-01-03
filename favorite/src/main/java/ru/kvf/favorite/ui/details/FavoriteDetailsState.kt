@@ -1,4 +1,4 @@
-package ru.kvf.core.ui.details
+package ru.kvf.favorite.ui.details
 
 import androidx.compose.runtime.Stable
 import ru.kvf.core.domain.Photo

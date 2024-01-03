@@ -4,11 +4,11 @@ import androidx.compose.runtime.Stable
 import ru.kvf.core.domain.Photo
 
 @Stable
-data class PhotosState(
+data class FavoriteListState(
     val photos: List<Photo> = emptyList(),
     val noPhotosFound: Boolean = false
 )
 
-sealed interface PhotosSideEffect {
-    data object ScrollUp : PhotosSideEffect
+sealed interface FavoriteListSideEffect {
+    data object ScrollUp : FavoriteListSideEffect
 }

@@ -13,9 +13,8 @@ private const val DATA_STORE_NAME = "data_store"
 val appModule = module {
     single<Resources> { get<Context>().resources }
     single<DataStore<Preferences>> {
-        val context = get<Context>()
         PreferenceDataStoreFactory.create {
-            context.preferencesDataStoreFile(DATA_STORE_NAME)
+            get<Context>().preferencesDataStoreFile(DATA_STORE_NAME)
         }
     }
 }

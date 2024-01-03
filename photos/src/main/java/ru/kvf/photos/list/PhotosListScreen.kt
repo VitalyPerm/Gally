@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -27,7 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -47,8 +45,8 @@ import ru.kvf.core.widgets.TopBar
 import ru.kvf.photos.R
 
 @Composable
-fun ListScreen(
-    vm: ListViewModel = koinViewModel(),
+fun PhotosListScreen(
+    vm: PhotosListViewModel = koinViewModel(),
     navigateToDetails: (Long) -> Unit
 ) {
     val state by vm.collectAsState()
@@ -56,7 +54,7 @@ fun ListScreen(
 
     vm.collectSideEffect {
         when (it) {
-            PhotosSideEffect.ScrollUp -> photosListGridState.animateScrollToItem(0)
+            PhotosListSideEffect.ScrollUp -> photosListGridState.animateScrollToItem(0)
         }
     }
 

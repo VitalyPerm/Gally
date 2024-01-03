@@ -13,10 +13,10 @@ import ru.kvf.core.ui.VM
 import ru.kvf.core.widgets.PHOTO_ITEM_LIKE_DURATION
 import ru.kvf.favorite.domain.GetLikedPhotosUseCase
 
-class ListViewModel(
+class FavoriteListViewModel(
     getLikedPhotosUseCase: GetLikedPhotosUseCase,
     private val likesRepository: LikesRepository
-) : VM<PhotosState, PhotosSideEffect>(PhotosState()) {
+) : VM<FavoriteListState, FavoriteListSideEffect>(FavoriteListState()) {
 
     init {
         getLikedPhotosUseCase.get()
@@ -45,6 +45,6 @@ class ListViewModel(
                 photos = state.photos.reversed(),
             )
         }
-        postSideEffect(PhotosSideEffect.ScrollUp)
+        postSideEffect(FavoriteListSideEffect.ScrollUp)
     }
 }

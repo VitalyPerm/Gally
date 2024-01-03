@@ -1,4 +1,4 @@
-package ru.kvf.core.ui.details
+package ru.kvf.favorite.ui.details
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.launchIn
@@ -9,7 +9,7 @@ import ru.kvf.core.domain.PhotosRepository
 import ru.kvf.core.ui.VM
 import ru.kvf.core.utils.log
 
-class PhotoDetailsViewModel(
+class FavoriteDetailsViewModel(
     photosRepository: PhotosRepository,
 ) : VM<PhotoDetailsState, DetailsSideEffect>(PhotoDetailsState()) {
 
