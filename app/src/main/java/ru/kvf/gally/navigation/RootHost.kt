@@ -24,8 +24,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
+import ru.kvf.core.utils.Constants
 import ru.kvf.design.DesignScreen
 import ru.kvf.favorite.ui.navigation.favoriteNavigation
 import ru.kvf.gally.BuildConfig
@@ -40,7 +42,7 @@ fun RootHost(
 ) {
     val state by vm.collectAsState()
     val backStackEntry by navController.currentBackStackEntryAsState()
-    var edgeToEdgeDisable by remember {
+    var navBarVisible by remember {
         mutableStateOf(true)
     }
     val navBarVisibleDestinations = remember {
@@ -48,8 +50,10 @@ fun RootHost(
     }
     LaunchedEffect(backStackEntry, isScrollInProgress.value, state.edgeToEdgeEnable) {
         val currentRoute = backStackEntry?.destination?.route
-        val scrolling = state.edgeToEdgeEnable && isScrollInProgress.value
-        edgeToEdgeDisable = currentRoute in navBarVisibleDestinations && scrolling.not()
+        val value = currentRoute in navBarVisibleDestinations &&
+            (state.edgeToEdgeEnable && isScrollInProgress.value).not()
+        if (value) delay(Constants.EDGE_TO_EDGE_DELAY)
+        navBarVisible = value
     }
 
     Column(
@@ -65,7 +69,7 @@ fun RootHost(
                 navController = navController,
                 route = RootDestinations.Photos.route,
                 isScrollInProgress = isScrollInProgress,
-                edgeToEdgeDisable = edgeToEdgeDisable
+                navBarVisible = navBarVisible
             )
             favoriteNavigation(navController, RootDestinations.Favorite.route)
             settingsNavigation(navController, RootDestinations.Settings.route)
@@ -73,7 +77,7 @@ fun RootHost(
                 DesignScreen()
             }
         }
-        AnimatedVisibility(edgeToEdgeDisable) {
+        AnimatedVisibility(navBarVisible) {
             BottomBar(navController = navController)
         }
     }

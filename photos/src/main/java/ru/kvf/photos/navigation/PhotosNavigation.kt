@@ -15,13 +15,13 @@ fun NavGraphBuilder.photosNavigation(
     navController: NavHostController,
     route: String,
     isScrollInProgress: MutableState<Boolean>,
-    edgeToEdgeDisable: Boolean
+    navBarVisible: Boolean
 ) {
     navigation(startDestination = PhotosDestinations.List.route, route = route) {
         composable(PhotosDestinations.List.route) {
             PhotosListScreen(
                 isScrollInProgress = isScrollInProgress,
-                edgeToEdgeDisable = edgeToEdgeDisable,
+                navBarVisible = navBarVisible,
                 navigateToPhotoDetails = {
                     navController.navigate(PhotosDestinations.PhotoDetails.createRoute(it))
                 },

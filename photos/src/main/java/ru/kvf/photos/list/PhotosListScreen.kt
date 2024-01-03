@@ -48,7 +48,7 @@ import ru.kvf.photos.R
 fun PhotosListScreen(
     vm: PhotosListViewModel = koinViewModel(),
     isScrollInProgress: MutableState<Boolean>,
-    edgeToEdgeDisable: Boolean,
+    navBarVisible: Boolean,
     navigateToPhotoDetails: (Long) -> Unit,
     navigateToFolderDetails: (String) -> Unit
 ) {
@@ -72,7 +72,9 @@ fun PhotosListScreen(
         val title = remember(state.showFolders) {
             if (state.showFolders) R.string.folders else R.string.photos
         }
-        AnimatedVisibility(edgeToEdgeDisable) {
+        AnimatedVisibility(
+            visible = navBarVisible,
+        ) {
             TopBar(
                 title = stringResource(title),
                 actions = {
