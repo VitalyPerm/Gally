@@ -24,10 +24,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import ru.kvf.core.utils.log
 import ru.kvf.design.DesignScreen
 import ru.kvf.favorite.ui.navigation.favoriteNavigation
-import ru.kvf.gally.Config
+import ru.kvf.gally.BuildConfig
 import ru.kvf.photos.navigation.photosNavigation
 import ru.kvf.settings.SettingsHost
 
@@ -82,7 +81,7 @@ private fun BottomBar(navController: NavHostController) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
         RootDestinations.getAll().forEach { screen ->
-            val shouldDraw = screen !is RootDestinations.Design || Config.DESIGN_SYSTEM
+            val shouldDraw = screen !is RootDestinations.Design || BuildConfig.DEBUG
             if (shouldDraw) {
                 NavigationBarItem(
                     selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
