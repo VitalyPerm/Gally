@@ -26,6 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
+import ru.kvf.core.utils.log
 import ru.kvf.design.DesignScreen
 import ru.kvf.favorite.ui.navigation.favoriteNavigation
 import ru.kvf.gally.BuildConfig
@@ -46,14 +47,10 @@ fun RootHost(
     val navBarVisibleDestinations = remember {
         RootDestinations.getVisibleNavBarDestinations()
     }
-    LaunchedEffect(backStackEntry) {
+    LaunchedEffect(backStackEntry, isScrollInProgress.value, state.edgeToEdgeEnable) {
         val currentRoute = backStackEntry?.destination?.route
-        navBarVisible = currentRoute in navBarVisibleDestinations && isScrollInProgress.value.not()
-    }
-    LaunchedEffect(isScrollInProgress.value) {
-        if (state.edgeToEdgeEnable) {
-            navBarVisible = isScrollInProgress.value.not()
-        }
+        val scrolling = state.edgeToEdgeEnable && isScrollInProgress.value
+        navBarVisible = currentRoute in navBarVisibleDestinations && scrolling.not()
     }
 
     Column(

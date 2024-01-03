@@ -34,13 +34,10 @@ import coil.size.Size
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
-import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.kvf.core.domain.entities.Folder
-import ru.kvf.core.utils.Constants
-import ru.kvf.core.utils.log
 import ru.kvf.core.widgets.ImageWithLoader
 import ru.kvf.core.widgets.PhotosListWithDate
 import ru.kvf.core.widgets.ReverseIcon
@@ -58,7 +55,6 @@ fun PhotosListScreen(
     val photosListGridState = rememberLazyGridState()
 
     LaunchedEffect(photosListGridState.isScrollInProgress) {
-        if (photosListGridState.isScrollInProgress.not()) delay(Constants.EDGE_TO_EDGE_DELAY)
         isScrollInProgress.value = photosListGridState.isScrollInProgress
     }
 
