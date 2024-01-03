@@ -14,9 +14,9 @@ val photosModule = module {
     viewModelOf(::PhotosListViewModel)
     viewModelOf(::PhotoDetailsViewModel)
     viewModel { params ->
-        PhotoDetailsViewModel(getAllPhotosUseCase = get(), photoId = params.get())
+        PhotoDetailsViewModel(get(), params.get())
     }
     viewModel { params ->
-        FolderDetailsViewModel(getFolderPhotosUseCase = get(), folderName = params.get())
+        FolderDetailsViewModel(params.get(), get(), get(), get())
     }
 }

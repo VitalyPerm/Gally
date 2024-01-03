@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import coil.size.Size
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableMap
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -83,8 +84,8 @@ fun PhotosListScreen(
                 )
             } else {
                 PhotosListWithDate(
-                    photos = state.photos,
-                    likedPhotos = state.likedPhotos,
+                    photos = state.photos.toImmutableMap(),
+                    likedPhotos = state.likedPhotos.toImmutableList(),
                     gridState = photosListGridState,
                     onPhotoClick = navigateToPhotoDetails,
                     onLikedClick = vm::onLikeClick
