@@ -7,7 +7,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import ru.kvf.core.utils.log
 import ru.kvf.photos.details.PhotosDetailsScreen
 import ru.kvf.photos.folderdetails.FolderDetailsScreen
 import ru.kvf.photos.list.PhotosListScreen
@@ -17,7 +16,6 @@ fun NavGraphBuilder.photosNavigation(
     route: String,
     isScrollInProgress: MutableState<Boolean>
 ) {
-    log("photosNavigation isScrollInProgress = ${isScrollInProgress.value}")
     navigation(startDestination = PhotosDestinations.List.route, route = route) {
         composable(PhotosDestinations.List.route) {
 

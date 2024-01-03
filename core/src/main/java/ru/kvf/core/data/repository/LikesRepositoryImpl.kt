@@ -10,25 +10,25 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.kvf.core.domain.repository.LikesRepository
 
-private const val LIKE_LIST_PREFERENCE = "likes"
+private const val LIKE_LIST_KEY = "likes_key"
 
 class LikesRepositoryImpl(
     private val dataStore: DataStore<Preferences>
 ) : LikesRepository {
 
     override fun getLikedListFlow(): Flow<List<Long>> = dataStore.data.map {
-        it[stringPreferencesKey(LIKE_LIST_PREFERENCE)].toLikeList()
+        it[stringPreferencesKey(LIKE_LIST_KEY)].toLikeList()
     }
 
     override suspend fun addToLikedList(id: Long) {
         dataStore.edit { prefs ->
-            val list = prefs[stringPreferencesKey(LIKE_LIST_PREFERENCE)].toLikeList().toMutableList()
+            val list = prefs[stringPreferencesKey(LIKE_LIST_KEY)].toLikeList().toMutableList()
             if (id in list) {
                 list.remove(id)
             } else {
                 list.add(id)
             }
-            prefs[stringPreferencesKey(LIKE_LIST_PREFERENCE)] = list.toLikeString()
+            prefs[stringPreferencesKey(LIKE_LIST_KEY)] = list.toLikeString()
         }
     }
 

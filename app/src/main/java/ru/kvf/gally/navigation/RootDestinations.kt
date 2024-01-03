@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import ru.kvf.favorite.ui.navigation.FavoriteDestinations
 import ru.kvf.gally.R
 import ru.kvf.photos.navigation.PhotosDestinations
+import ru.kvf.settings.navigation.SettingsDestinations
 
 sealed class RootDestinations(
     val route: String,
@@ -42,7 +43,7 @@ sealed class RootDestinations(
         fun getVisibleNavBarDestinations() = listOf(
             PhotosDestinations.List.route,
             FavoriteDestinations.List.route,
-            "set",
+            SettingsDestinations.List.route,
             "deisgn"
         )
     }

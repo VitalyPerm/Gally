@@ -24,17 +24,21 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import org.koin.androidx.compose.koinViewModel
+import org.orbitmvi.orbit.compose.collectAsState
 import ru.kvf.design.DesignScreen
 import ru.kvf.favorite.ui.navigation.favoriteNavigation
 import ru.kvf.gally.BuildConfig
 import ru.kvf.photos.navigation.photosNavigation
-import ru.kvf.settings.SettingsHost
+import ru.kvf.settings.navigation.settingsNavigation
 
 @Composable
 fun RootHost(
     navController: NavHostController,
     isScrollInProgress: MutableState<Boolean>,
+    vm: RootHostViewModel = koinViewModel()
 ) {
+    val state by vm.collectAsState()
     val backStackEntry by navController.currentBackStackEntryAsState()
     var navBarVisible by remember {
         mutableStateOf(true)
@@ -42,9 +46,14 @@ fun RootHost(
     val navBarVisibleDestinations = remember {
         RootDestinations.getVisibleNavBarDestinations()
     }
-    LaunchedEffect(backStackEntry, isScrollInProgress.value) {
+    LaunchedEffect(backStackEntry) {
         val currentRoute = backStackEntry?.destination?.route
         navBarVisible = currentRoute in navBarVisibleDestinations && isScrollInProgress.value.not()
+    }
+    LaunchedEffect(isScrollInProgress.value) {
+        if (state.edgeToEdgeEnable) {
+            navBarVisible = isScrollInProgress.value.not()
+        }
     }
 
     Column(
@@ -62,7 +71,7 @@ fun RootHost(
                 isScrollInProgress = isScrollInProgress
             )
             favoriteNavigation(navController, RootDestinations.Favorite.route)
-            SettingsHost(navController, RootDestinations.Settings.route)
+            settingsNavigation(navController, RootDestinations.Settings.route)
             composable(RootDestinations.Design.route) {
                 DesignScreen()
             }

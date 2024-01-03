@@ -12,6 +12,7 @@ import ru.kvf.core.coreModule
 import ru.kvf.favorite.favoriteModule
 import ru.kvf.gally.di.appModule
 import ru.kvf.photos.photosModule
+import ru.kvf.settings.settingsModule
 
 class App : Application(), ImageLoaderFactory {
 
@@ -24,7 +25,8 @@ class App : Application(), ImageLoaderFactory {
                     appModule,
                     photosModule,
                     favoriteModule,
-                    coreModule
+                    coreModule,
+                    settingsModule
                 )
             )
         }

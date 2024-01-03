@@ -6,7 +6,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
+import ru.kvf.gally.navigation.RootHostViewModel
 
 private const val DATA_STORE_NAME = "data_store"
 
@@ -17,4 +19,5 @@ val appModule = module {
             get<Context>().preferencesDataStoreFile(DATA_STORE_NAME)
         }
     }
+    viewModelOf(::RootHostViewModel)
 }

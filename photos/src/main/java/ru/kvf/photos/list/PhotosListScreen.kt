@@ -57,8 +57,6 @@ fun PhotosListScreen(
     val state by vm.collectAsState()
     val photosListGridState = rememberLazyGridState()
 
-    log("PhotosListScreen isScrollInProgress = $isScrollInProgress")
-
     LaunchedEffect(photosListGridState.isScrollInProgress) {
         if (photosListGridState.isScrollInProgress.not()) delay(Constants.EDGE_TO_EDGE_DELAY)
         isScrollInProgress.value = photosListGridState.isScrollInProgress
