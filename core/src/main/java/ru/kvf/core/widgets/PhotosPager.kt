@@ -12,14 +12,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.util.lerp
-import ru.kvf.core.domain.Photo
+import kotlinx.collections.immutable.ImmutableList
+import ru.kvf.core.domain.entities.Photo
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PhotosPager(
     modifier: Modifier = Modifier,
-    photos: List<Photo>,
+    photos: ImmutableList<Photo>,
     pagerState: PagerState,
     loading: Boolean
 ) {

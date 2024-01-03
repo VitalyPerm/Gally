@@ -1,7 +1,7 @@
 package ru.kvf.favorite.ui.list
 
 import androidx.compose.runtime.Stable
-import ru.kvf.core.domain.Photo
+import ru.kvf.core.domain.entities.Photo
 
 @Stable
 data class FavoriteListState(

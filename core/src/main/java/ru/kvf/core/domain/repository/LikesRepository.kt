@@ -1,4 +1,4 @@
-package ru.kvf.core.domain
+package ru.kvf.core.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 

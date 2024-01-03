@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
-import ru.kvf.core.domain.Photo
+import ru.kvf.core.domain.entities.Photo
 import ru.kvf.core.widgets.PhotoItem
 import ru.kvf.core.widgets.ReverseIcon
 import ru.kvf.core.widgets.TopBar

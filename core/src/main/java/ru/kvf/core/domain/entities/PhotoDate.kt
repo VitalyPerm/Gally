@@ -1,20 +1,20 @@
-package ru.kvf.core.data
+package ru.kvf.core.domain.entities
 
 import android.annotation.SuppressLint
 import android.content.res.Resources
-import org.koin.java.KoinJavaComponent.inject
+import org.koin.java.KoinJavaComponent
 import ru.kvf.core.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class CustomDate(
+class PhotoDate(
     val date: Calendar
-) : Comparable<CustomDate> {
+) : Comparable<PhotoDate> {
 
-    private val resources: Resources by inject(Resources::class.java)
+    private val resources: Resources by KoinJavaComponent.inject(Resources::class.java)
 
-    override fun compareTo(other: CustomDate): Int {
+    override fun compareTo(other: PhotoDate): Int {
         return this.date.time.compareTo(other.date.time)
     }
 
@@ -22,7 +22,7 @@ class CustomDate(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as CustomDate
+        other as PhotoDate
 
         val otherYear = other.date.get(Calendar.YEAR)
         val otherDayOfYear = other.date.get(Calendar.DAY_OF_YEAR)
@@ -53,8 +53,8 @@ class CustomDate(
 
 @SuppressLint("ConstantLocale")
 private val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-private val today = CustomDate(Calendar.getInstance())
-private val yesterday = CustomDate(
+private val today = PhotoDate(Calendar.getInstance())
+private val yesterday = PhotoDate(
     Calendar.getInstance().apply {
         add(Calendar.DAY_OF_YEAR, -1)
     }

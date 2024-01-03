@@ -1,4 +1,4 @@
-package ru.kvf.core.data
+package ru.kvf.core.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import ru.kvf.core.domain.LikesRepository
+import ru.kvf.core.domain.repository.LikesRepository
 
 private const val LIKE_LIST_PREFERENCE = "likes"
 

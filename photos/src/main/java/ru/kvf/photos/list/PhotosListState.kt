@@ -1,13 +1,13 @@
 package ru.kvf.photos.list
 
 import androidx.compose.runtime.Stable
-import ru.kvf.core.data.CustomDate
-import ru.kvf.core.domain.Folder
-import ru.kvf.core.domain.Photo
+import ru.kvf.core.domain.entities.PhotoDate
+import ru.kvf.core.domain.entities.Folder
+import ru.kvf.core.domain.entities.Photo
 
 @Stable
 data class PhotosListState(
-    val photos: Map<CustomDate, List<Photo>> = emptyMap(),
+    val photos: Map<PhotoDate, List<Photo>> = emptyMap(),
     val likedPhotos: List<Long> = emptyList(),
     val folders: List<Folder> = emptyList(),
     val loading: Boolean = false,

@@ -1,12 +1,13 @@
-package ru.kvf.core.data
+package ru.kvf.core.data.repository
 
 import android.content.ContentUris
 import android.content.Context
 import android.provider.MediaStore
 import kotlinx.coroutines.flow.MutableStateFlow
-import ru.kvf.core.domain.Folder
-import ru.kvf.core.domain.Photo
-import ru.kvf.core.domain.PhotosRepository
+import ru.kvf.core.domain.entities.Folder
+import ru.kvf.core.domain.entities.Photo
+import ru.kvf.core.domain.entities.PhotoDate
+import ru.kvf.core.domain.repository.PhotosRepository
 import java.util.Calendar
 import java.util.Date
 
@@ -23,10 +24,11 @@ class PhotosRepositoryImpl(
     )
 
     override val foldersFlow: MutableStateFlow<List<Folder>> = MutableStateFlow(emptyList())
-    override val photosSortedByDateFlow: MutableStateFlow<Map<CustomDate, List<Photo>>> = MutableStateFlow(emptyMap())
+    override val photosSortedByDateFlow: MutableStateFlow<Map<PhotoDate, List<Photo>>> =
+        MutableStateFlow(emptyMap())
     override val photosFlow: MutableStateFlow<List<Photo>> = MutableStateFlow(emptyList())
 
-    override suspend fun fetch() {
+    override suspend fun loadPhotos() {
         val photosAccumulator = mutableListOf<Photo>()
         val query = context.contentResolver.query(
             collection,
@@ -58,7 +60,7 @@ class PhotosRepositoryImpl(
                     Photo(
                         id = id,
                         name = name,
-                        date = CustomDate(calendar),
+                        date = PhotoDate(calendar),
                         uri = uri,
                         folder = folder
                     )
@@ -78,7 +80,6 @@ class PhotosRepositoryImpl(
                 )
             }
             foldersFlow.value = folders
-
         }
     }
 }

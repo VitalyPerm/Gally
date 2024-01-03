@@ -35,9 +35,9 @@ import coil.size.Size
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
-import ru.kvf.core.data.CustomDate
-import ru.kvf.core.domain.Folder
-import ru.kvf.core.domain.Photo
+import ru.kvf.core.domain.entities.PhotoDate
+import ru.kvf.core.domain.entities.Folder
+import ru.kvf.core.domain.entities.Photo
 import ru.kvf.core.widgets.ImageWithLoader
 import ru.kvf.core.widgets.PhotoItem
 import ru.kvf.core.widgets.ReverseIcon
@@ -111,7 +111,7 @@ private fun ViewModelIcon(
 
 @Composable
 private fun PhotosList(
-    photos: Map<CustomDate, List<Photo>>,
+    photos: Map<PhotoDate, List<Photo>>,
     likedPhotos: List<Long>,
     gridState: LazyGridState,
     onPhotoClick: (Long) -> Unit,

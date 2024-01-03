@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
-import ru.kvf.core.domain.PhotosRepository
+import ru.kvf.core.domain.repository.PhotosRepository
 import ru.kvf.core.ui.VM
 import ru.kvf.core.utils.log
 

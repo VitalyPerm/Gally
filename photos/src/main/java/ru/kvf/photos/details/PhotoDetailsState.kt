@@ -1,7 +1,7 @@
 package ru.kvf.photos.details
 
 import androidx.compose.runtime.Stable
-import ru.kvf.core.domain.Photo
+import ru.kvf.core.domain.entities.Photo
 
 @Stable
 data class PhotoDetailsState(

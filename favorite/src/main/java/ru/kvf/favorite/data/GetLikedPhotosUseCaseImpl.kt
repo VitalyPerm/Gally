@@ -2,9 +2,9 @@ package ru.kvf.favorite.data
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import ru.kvf.core.domain.LikesRepository
-import ru.kvf.core.domain.Photo
-import ru.kvf.core.domain.PhotosRepository
+import ru.kvf.core.domain.repository.LikesRepository
+import ru.kvf.core.domain.entities.Photo
+import ru.kvf.core.domain.repository.PhotosRepository
 import ru.kvf.favorite.domain.GetLikedPhotosUseCase
 
 class GetLikedPhotosUseCaseImpl(

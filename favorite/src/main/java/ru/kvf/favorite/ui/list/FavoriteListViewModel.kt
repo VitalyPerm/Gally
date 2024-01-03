@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
-import ru.kvf.core.domain.LikesRepository
-import ru.kvf.core.domain.Photo
+import ru.kvf.core.domain.repository.LikesRepository
+import ru.kvf.core.domain.entities.Photo
 import ru.kvf.core.ui.VM
 import ru.kvf.core.widgets.PHOTO_ITEM_LIKE_DURATION
 import ru.kvf.favorite.domain.GetLikedPhotosUseCase

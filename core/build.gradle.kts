@@ -50,6 +50,7 @@ dependencies {
     api(libs.bundles.orbit)
     api(libs.bundles.koin)
     api(libs.proto)
+    api(libs.immutable.collections)
     implementation(libs.kotlin.serialization)
     debugImplementation(libs.compose.debug.ui.tooling)
 }
