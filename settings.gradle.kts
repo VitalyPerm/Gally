@@ -66,6 +66,7 @@ dependencyResolutionManagement {
             )
 
             library("compose-ui", "androidx.compose.ui:ui:$composeVersion")
+            library("compose-ui-util", "androidx.compose.ui:ui-util:$composeVersion")
             library("compose-ui-graphics", "androidx.compose.ui:ui-graphics:$composeVersion")
             library("compose-ui-tooling-preview", "androidx.compose.ui:ui-tooling-preview:$composeVersion")
             library("compose-material3", "androidx.compose.material3:material3:$composeMaterial3Version")
@@ -75,6 +76,7 @@ dependencyResolutionManagement {
                 "compose",
                 listOf(
                     "compose-ui",
+                    "compose-ui-util",
                     "compose-ui-graphics",
                     "compose-ui-tooling-preview",
                     "compose-material3",
