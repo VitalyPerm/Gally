@@ -1,24 +1,21 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
 
 package ru.kvf.photos.list
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Image
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,14 +29,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.size.Size
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
-import ru.kvf.core.domain.entities.PhotoDate
 import ru.kvf.core.domain.entities.Folder
-import ru.kvf.core.domain.entities.Photo
 import ru.kvf.core.widgets.ImageWithLoader
-import ru.kvf.core.widgets.PhotoItem
+import ru.kvf.core.widgets.PhotosListWithDate
 import ru.kvf.core.widgets.ReverseIcon
 import ru.kvf.core.widgets.TopBar
 import ru.kvf.photos.R
@@ -47,7 +44,8 @@ import ru.kvf.photos.R
 @Composable
 fun PhotosListScreen(
     vm: PhotosListViewModel = koinViewModel(),
-    navigateToDetails: (Long) -> Unit
+    navigateToPhotoDetails: (Long) -> Unit,
+    navigateToFolderDetails: (String) -> Unit
 ) {
     val state by vm.collectAsState()
     val photosListGridState = rememberLazyGridState()
@@ -79,13 +77,16 @@ fun PhotosListScreen(
         )
         AnimatedContent(targetState = state.showFolders, label = "") { showFolders ->
             if (showFolders) {
-                FoldersList(state.folders)
+                FoldersList(
+                    folders = state.folders.toImmutableList(),
+                    onFolderClick = navigateToFolderDetails
+                )
             } else {
-                PhotosList(
+                PhotosListWithDate(
                     photos = state.photos,
                     likedPhotos = state.likedPhotos,
                     gridState = photosListGridState,
-                    onPhotoClick = navigateToDetails,
+                    onPhotoClick = navigateToPhotoDetails,
                     onLikedClick = vm::onLikeClick
                 )
             }
@@ -110,43 +111,9 @@ private fun ViewModelIcon(
 }
 
 @Composable
-private fun PhotosList(
-    photos: Map<PhotoDate, List<Photo>>,
-    likedPhotos: List<Long>,
-    gridState: LazyGridState,
-    onPhotoClick: (Long) -> Unit,
-    onLikedClick: (Long) -> Unit
-) {
-    LazyVerticalGrid(
-        state = gridState,
-        columns = GridCells.Fixed(3),
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        photos.forEach { (date, photos) ->
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                Text(
-                    text = date.toString(),
-                    style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier
-                        .padding(10.dp)
-                )
-            }
-            items(photos, key = { item: Photo -> item.id }) { photo ->
-                PhotoItem(
-                    model = photo.uri,
-                    liked = photo.id in likedPhotos,
-                    onClick = { onPhotoClick(photo.id) },
-                    onLiked = { onLikedClick(photo.id) }
-                )
-            }
-        }
-    }
-}
-
-@Composable
 fun FoldersList(
-    folders: List<Folder>
+    folders: ImmutableList<Folder>,
+    onFolderClick: (String) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -156,7 +123,8 @@ fun FoldersList(
         items(folders) { folder ->
             FolderItem(
                 uri = folder.photos.firstOrNull()?.uri,
-                name = folder.name
+                name = folder.name,
+                onClick = { onFolderClick(folder.name) }
             )
         }
     }
@@ -165,11 +133,13 @@ fun FoldersList(
 @Composable
 fun FolderItem(
     uri: Any?,
-    name: String
+    name: String,
+    onClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
     ) {
         ImageWithLoader(
             model = uri,

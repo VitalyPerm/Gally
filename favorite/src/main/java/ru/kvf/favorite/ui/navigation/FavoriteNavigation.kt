@@ -9,7 +9,7 @@ import androidx.navigation.navigation
 import ru.kvf.favorite.ui.details.FavoriteDetailsScreen
 import ru.kvf.favorite.ui.list.FavoriteListScreen
 
-fun NavGraphBuilder.FavoriteNavigation(navController: NavHostController, route: String) {
+fun NavGraphBuilder.favoriteNavigation(navController: NavHostController, route: String) {
     navigation(startDestination = FavoriteDestinations.List.route, route = route) {
         composable(FavoriteDestinations.List.route) {
             FavoriteListScreen(

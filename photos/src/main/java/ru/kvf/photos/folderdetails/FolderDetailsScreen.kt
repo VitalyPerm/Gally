@@ -1,9 +1,8 @@
-package ru.kvf.photos.details
+package ru.kvf.photos.folderdetails
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.koinViewModel
@@ -13,10 +12,10 @@ import ru.kvf.core.widgets.PhotosPager
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PhotosDetailsScreen(
-    photoId: Long,
-    viewModel: PhotoDetailsViewModel = koinViewModel {
-        parametersOf(photoId)
+fun FolderDetailsScreen(
+    folderName: String,
+    viewModel: FolderDetailsViewModel = koinViewModel {
+        parametersOf(folderName)
     }
 ) {
     val state by viewModel.collectAsState()
@@ -24,10 +23,6 @@ fun PhotosDetailsScreen(
     val pagerState = rememberPagerState {
         state.photos.size
     }
-    // todo unnessesary?
-    LaunchedEffect(key1 = state.startIndex, block = {
-        pagerState.scrollToPage(state.startIndex)
-    })
 
     PhotosPager(photos = state.photos.toImmutableList(), pagerState = pagerState, loading = state.loading)
 }

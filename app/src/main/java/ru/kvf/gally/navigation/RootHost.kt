@@ -25,9 +25,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.kvf.core.utils.log
 import ru.kvf.design.DesignScreen
-import ru.kvf.favorite.ui.navigation.FavoriteNavigation
+import ru.kvf.favorite.ui.navigation.favoriteNavigation
 import ru.kvf.gally.Config
-import ru.kvf.photos.navigation.PhotosNavigation
+import ru.kvf.photos.navigation.photosNavigation
 import ru.kvf.settings.SettingsHost
 
 @Composable
@@ -53,8 +53,8 @@ fun RootHost(navController: NavHostController) {
             navController = navController,
             startDestination = RootDestinations.Photos.route
         ) {
-            PhotosNavigation(navController, RootDestinations.Photos.route)
-            FavoriteNavigation(navController, RootDestinations.Favorite.route)
+            photosNavigation(navController, RootDestinations.Photos.route)
+            favoriteNavigation(navController, RootDestinations.Favorite.route)
             SettingsHost(navController, RootDestinations.Settings.route)
             composable(RootDestinations.Design.route) {
                 DesignScreen()
