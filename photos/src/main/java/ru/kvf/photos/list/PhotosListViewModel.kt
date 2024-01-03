@@ -1,10 +1,6 @@
 package ru.kvf.photos.list
 
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
@@ -28,21 +24,17 @@ class PhotosListViewModel(
     private val reversedPhotosMap = sortedMapOf<PhotoDate, List<Photo>>()
 
     init {
-        getLikedIdsListUseCase()
-            .onEach { list ->
-                intent {
-                    reduce {
-                        state.copy(likedPhotos = list)
-                    }
-                }
-            }.launchIn(viewModelScope)
-        viewModelScope.launch {
+        collectFlow(getLikedIdsListUseCase()) { list ->
+            intent { reduce { state.copy(likedPhotos = list) } }
+        }
+
+        safeLaunch {
             loadPhotosUseCase()
         }
-        getSortedPhotosAndFoldersUseCase.flow
-            .onEach { (folders, photos) ->
-                photosDataUpdated(photos, folders)
-            }.launchIn(viewModelScope)
+
+        collectFlow(getSortedPhotosAndFoldersUseCase()) { (folders, photos) ->
+            photosDataUpdated(photos, folders)
+        }
     }
 
     private fun photosDataUpdated(photos: Map<PhotoDate, List<Photo>>, folders: List<Folder>) = intent {

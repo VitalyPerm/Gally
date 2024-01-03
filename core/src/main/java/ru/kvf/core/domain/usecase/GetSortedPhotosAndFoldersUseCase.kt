@@ -6,5 +6,5 @@ import ru.kvf.core.domain.entities.Photo
 import ru.kvf.core.domain.entities.PhotoDate
 
 interface GetSortedPhotosAndFoldersUseCase {
-    val flow: Flow<Pair<List<Folder>, Map<PhotoDate, List<Photo>>>>
+    operator fun invoke(): Flow<Pair<List<Folder>, Map<PhotoDate, List<Photo>>>>
 }

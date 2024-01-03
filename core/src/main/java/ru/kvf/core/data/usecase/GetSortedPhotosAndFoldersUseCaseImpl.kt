@@ -11,7 +11,7 @@ import ru.kvf.core.domain.usecase.GetSortedPhotosAndFoldersUseCase
 class GetSortedPhotosAndFoldersUseCaseImpl(
     private val photosRepository: PhotosRepository
 ) : GetSortedPhotosAndFoldersUseCase {
-    override val flow: Flow<Pair<List<Folder>, Map<PhotoDate, List<Photo>>>> =
+    override operator fun invoke(): Flow<Pair<List<Folder>, Map<PhotoDate, List<Photo>>>> =
         combine(photosRepository.foldersFlow, photosRepository.photosSortedByDateFlow) { folders, photos ->
             folders to photos
         }
