@@ -3,12 +3,12 @@ package ru.kvf.photos.details
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.orbitmvi.orbit.compose.collectAsState
+import ru.kvf.core.widgets.LoadableContent
 import ru.kvf.core.widgets.PhotosPager
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -21,13 +21,14 @@ fun PhotosDetailsScreen(
 ) {
     val state by viewModel.collectAsState()
 
-    val pagerState = rememberPagerState {
-        state.photos.size
+    LoadableContent(loading = state.loading) {
+        val pagerState = rememberPagerState(initialPage = state.startIndex) {
+            state.photos.size
+        }
+        PhotosPager(
+            photos = state.photos.toImmutableList(),
+            pagerState = pagerState,
+            loading = state.loading,
+        )
     }
-    // todo unnessesary?
-    LaunchedEffect(key1 = state.startIndex, block = {
-        pagerState.scrollToPage(state.startIndex)
-    })
-
-    PhotosPager(photos = state.photos.toImmutableList(), pagerState = pagerState, loading = state.loading)
 }

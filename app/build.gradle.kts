@@ -41,6 +41,11 @@ android {
             )
             signingConfig = signingConfigs.getByName("release")
         }
+
+        debug {
+            applicationIdSuffix = ".debug"
+            resValue("string", "app_name", "GalDebug")
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_19
