@@ -12,7 +12,7 @@ import ru.kvf.core.domain.usecase.GetSortedPhotosAndFoldersUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
 import ru.kvf.core.domain.usecase.LoadPhotosUseCase
 import ru.kvf.core.ui.VM
-import ru.kvf.core.widgets.PHOTO_ITEM_LIKE_DURATION
+import ru.kvf.core.utils.Constants
 
 class PhotosListViewModel(
     private val loadPhotosUseCase: LoadPhotosUseCase,
@@ -60,7 +60,7 @@ class PhotosListViewModel(
     }
 
     fun onLikeClick(id: Long) = intent {
-        delay(PHOTO_ITEM_LIKE_DURATION)
+        delay(Constants.PHOTO_ITEM_LIKE_DURATION)
         handleLikeClickUseCase(id)
     }
 

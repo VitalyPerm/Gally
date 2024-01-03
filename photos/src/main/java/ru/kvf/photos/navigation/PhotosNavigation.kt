@@ -1,19 +1,28 @@
 package ru.kvf.photos.navigation
 
+import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import ru.kvf.core.utils.log
 import ru.kvf.photos.details.PhotosDetailsScreen
 import ru.kvf.photos.folderdetails.FolderDetailsScreen
 import ru.kvf.photos.list.PhotosListScreen
 
-fun NavGraphBuilder.photosNavigation(navController: NavHostController, route: String) {
+fun NavGraphBuilder.photosNavigation(
+    navController: NavHostController,
+    route: String,
+    isScrollInProgress: MutableState<Boolean>
+) {
+    log("photosNavigation isScrollInProgress = ${isScrollInProgress.value}")
     navigation(startDestination = PhotosDestinations.List.route, route = route) {
         composable(PhotosDestinations.List.route) {
+
             PhotosListScreen(
+                isScrollInProgress = isScrollInProgress,
                 navigateToPhotoDetails = {
                     navController.navigate(PhotosDestinations.PhotoDetails.createRoute(it))
                 },

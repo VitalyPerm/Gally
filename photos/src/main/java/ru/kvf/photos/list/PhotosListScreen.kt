@@ -21,6 +21,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -32,10 +34,13 @@ import coil.size.Size
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.kvf.core.domain.entities.Folder
+import ru.kvf.core.utils.Constants
+import ru.kvf.core.utils.log
 import ru.kvf.core.widgets.ImageWithLoader
 import ru.kvf.core.widgets.PhotosListWithDate
 import ru.kvf.core.widgets.ReverseIcon
@@ -45,11 +50,19 @@ import ru.kvf.photos.R
 @Composable
 fun PhotosListScreen(
     vm: PhotosListViewModel = koinViewModel(),
+    isScrollInProgress: MutableState<Boolean>,
     navigateToPhotoDetails: (Long) -> Unit,
     navigateToFolderDetails: (String) -> Unit
 ) {
     val state by vm.collectAsState()
     val photosListGridState = rememberLazyGridState()
+
+    log("PhotosListScreen isScrollInProgress = $isScrollInProgress")
+
+    LaunchedEffect(photosListGridState.isScrollInProgress) {
+        if (photosListGridState.isScrollInProgress.not()) delay(Constants.EDGE_TO_EDGE_DELAY)
+        isScrollInProgress.value = photosListGridState.isScrollInProgress
+    }
 
     vm.collectSideEffect {
         when (it) {
@@ -64,18 +77,20 @@ fun PhotosListScreen(
         val title = remember(state.showFolders) {
             if (state.showFolders) R.string.folders else R.string.photos
         }
-        TopBar(
-            title = stringResource(title),
-            actions = {
-                AnimatedVisibility(state.showFolders.not()) {
-                    ReverseIcon(vm::onReverseIconClick)
+        AnimatedVisibility(isScrollInProgress.value.not()) {
+            TopBar(
+                title = stringResource(title),
+                actions = {
+                    AnimatedVisibility(state.showFolders.not()) {
+                        ReverseIcon(vm::onReverseIconClick)
+                    }
+                    ViewModelIcon(
+                        showFolders = state.showFolders,
+                        onClick = vm::onChangeViewModeClick
+                    )
                 }
-                ViewModelIcon(
-                    showFolders = state.showFolders,
-                    onClick = vm::onChangeViewModeClick
-                )
-            }
-        )
+            )
+        }
         AnimatedContent(targetState = state.showFolders, label = "") { showFolders ->
             if (showFolders) {
                 FoldersList(

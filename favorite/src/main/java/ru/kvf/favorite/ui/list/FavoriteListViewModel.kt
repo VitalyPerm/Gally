@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
-import ru.kvf.core.domain.repository.LikesRepository
 import ru.kvf.core.domain.entities.Photo
+import ru.kvf.core.domain.repository.LikesRepository
 import ru.kvf.core.ui.VM
-import ru.kvf.core.widgets.PHOTO_ITEM_LIKE_DURATION
+import ru.kvf.core.utils.Constants
 import ru.kvf.favorite.domain.GetLikedPhotosUseCase
 
 class FavoriteListViewModel(
@@ -35,7 +35,7 @@ class FavoriteListViewModel(
     }
 
     fun onLikeClick(id: Long) = intent {
-        delay(PHOTO_ITEM_LIKE_DURATION)
+        delay(Constants.PHOTO_ITEM_LIKE_DURATION)
         likesRepository.addToLikedList(id)
     }
 

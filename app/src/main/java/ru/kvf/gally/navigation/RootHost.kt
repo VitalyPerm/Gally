@@ -11,6 +11,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,7 +32,10 @@ import ru.kvf.photos.navigation.photosNavigation
 import ru.kvf.settings.SettingsHost
 
 @Composable
-fun RootHost(navController: NavHostController) {
+fun RootHost(
+    navController: NavHostController,
+    isScrollInProgress: MutableState<Boolean>,
+) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     var navBarVisible by remember {
         mutableStateOf(true)
@@ -39,11 +43,11 @@ fun RootHost(navController: NavHostController) {
     val navBarVisibleDestinations = remember {
         RootDestinations.getVisibleNavBarDestinations()
     }
-    LaunchedEffect(key1 = backStackEntry, block = {
+    LaunchedEffect(backStackEntry, isScrollInProgress.value) {
         val currentRoute = backStackEntry?.destination?.route
-        log("current = $currentRoute")
-        navBarVisible = currentRoute in navBarVisibleDestinations
-    })
+        navBarVisible = currentRoute in navBarVisibleDestinations && isScrollInProgress.value.not()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -53,14 +57,18 @@ fun RootHost(navController: NavHostController) {
             navController = navController,
             startDestination = RootDestinations.Photos.route
         ) {
-            photosNavigation(navController, RootDestinations.Photos.route)
+            photosNavigation(
+                navController = navController,
+                route = RootDestinations.Photos.route,
+                isScrollInProgress = isScrollInProgress
+            )
             favoriteNavigation(navController, RootDestinations.Favorite.route)
             SettingsHost(navController, RootDestinations.Settings.route)
             composable(RootDestinations.Design.route) {
                 DesignScreen()
             }
         }
-        AnimatedVisibility(visible = navBarVisible) {
+        AnimatedVisibility(navBarVisible) {
             BottomBar(navController = navController)
         }
     }

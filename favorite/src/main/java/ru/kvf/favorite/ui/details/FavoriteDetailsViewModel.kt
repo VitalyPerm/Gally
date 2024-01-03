@@ -26,7 +26,6 @@ class FavoriteDetailsViewModel(
 
     fun start(photoId: Long) = intent {
         val index = state.photos.indexOfFirst { it.id == photoId }.takeIf { it != -1 } ?: 0
-        log("index = $index")
         reduce {
             state.copy(
                 startIndex = index,

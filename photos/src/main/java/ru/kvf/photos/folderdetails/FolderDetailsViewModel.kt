@@ -7,7 +7,7 @@ import ru.kvf.core.domain.usecase.GetFolderPhotosUseCase
 import ru.kvf.core.domain.usecase.GetLikedIdsListUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
 import ru.kvf.core.ui.VM
-import ru.kvf.core.widgets.PHOTO_ITEM_LIKE_DURATION
+import ru.kvf.core.utils.Constants
 
 class FolderDetailsViewModel(
     folderName: String,
@@ -32,7 +32,7 @@ class FolderDetailsViewModel(
     }
 
     fun onLikeClick(id: Long) = intent {
-        delay(PHOTO_ITEM_LIKE_DURATION)
+        delay(Constants.PHOTO_ITEM_LIKE_DURATION)
         handleLikeClickUseCase(id)
     }
 }

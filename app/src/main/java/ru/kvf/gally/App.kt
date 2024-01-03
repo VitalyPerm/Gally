@@ -34,14 +34,14 @@ class App : Application(), ImageLoaderFactory {
         .memoryCachePolicy(CachePolicy.ENABLED)
         .memoryCache {
             MemoryCache.Builder(this)
-                .maxSizePercent(0.2)
+                .strongReferencesEnabled(true)
                 .build()
         }
         .diskCachePolicy(CachePolicy.ENABLED)
         .diskCache {
             DiskCache.Builder()
-                .maxSizePercent(0.1)
-                .directory(cacheDir)
+                .maxSizePercent(0.05)
+                .directory(cacheDir.resolve("coil_cache"))
                 .build()
         }
         .build()

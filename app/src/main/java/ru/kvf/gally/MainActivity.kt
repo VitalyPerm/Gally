@@ -9,9 +9,12 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import ru.kvf.core.theme.GallyTheme
+import ru.kvf.core.utils.log
 import ru.kvf.gally.navigation.RootHost
 
 class MainActivity : ComponentActivity() {
@@ -34,8 +37,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
+            val isScrollInProgress = remember { mutableStateOf(false) }
             GallyTheme {
-                RootHost(navController)
+                RootHost(
+                    navController = navController,
+                    isScrollInProgress = isScrollInProgress
+                )
             }
         }
 

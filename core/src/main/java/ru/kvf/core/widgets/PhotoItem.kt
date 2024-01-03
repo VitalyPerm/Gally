@@ -26,9 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.size.Size
 import kotlinx.coroutines.delay
-import ru.kvf.core.utils.log
-
-const val PHOTO_ITEM_LIKE_DURATION = 1000L
+import ru.kvf.core.utils.Constants
 
 @Composable
 fun PhotoItem(
@@ -41,7 +39,7 @@ fun PhotoItem(
     var showLike by remember { mutableStateOf(false) }
     val hearSize by animateFloatAsState(targetValue = if (showLike) 100f else 0f, label = "")
     LaunchedEffect(key1 = showLike, block = {
-        delay(PHOTO_ITEM_LIKE_DURATION)
+        delay(Constants.PHOTO_ITEM_LIKE_DURATION)
         showLike = false
     })
 
@@ -63,7 +61,6 @@ fun PhotoItem(
                         onDoubleTap = {
                             showLike = true
                             onLiked()
-                            log("double tap detected")
                         },
                         onTap = {
                             onClick()
