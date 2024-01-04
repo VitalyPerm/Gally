@@ -3,6 +3,7 @@ package ru.kvf.photos.list
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -68,13 +69,12 @@ fun PhotosListScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primaryContainer)
     ) {
         val title = remember(state.showFolders) {
             if (state.showFolders) R.string.folders else R.string.photos
         }
-        AnimatedVisibility(
-            visible = navBarVisible,
-        ) {
+        AnimatedVisibility(navBarVisible) {
             TopBar(
                 title = stringResource(title),
                 actions = {

@@ -51,6 +51,7 @@ dependencies {
     api(libs.bundles.koin)
     api(libs.proto)
     api(libs.immutable.collections)
+    api(libs.zoomable)
     implementation(libs.kotlin.serialization)
     debugImplementation(libs.compose.debug.ui.tooling)
 }

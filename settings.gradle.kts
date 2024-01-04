@@ -39,6 +39,7 @@ dependencyResolutionManagement {
             val splashVersion = "1.0.0"
             val protoVersion = "1.0.0"
             val kotlinSerializationVersion = "1.6.0"
+            val zoomableVersion = "1.5.3"
 
             library("orbit-viewmodel", "org.orbit-mvi:orbit-viewmodel:$orbitVersion")
             library("orbit-compose", "org.orbit-mvi:orbit-compose:$orbitVersion")
@@ -94,6 +95,8 @@ dependencyResolutionManagement {
                 "kotlin-serialization",
                 "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion"
             )
+
+            library("zoomable", "net.engawapg.lib:zoomable:$zoomableVersion")
         }
     }
 }
