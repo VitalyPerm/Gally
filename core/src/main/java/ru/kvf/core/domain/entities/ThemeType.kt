@@ -11,4 +11,18 @@ enum class ThemeType {
         Light -> R.string.theme_light
         Black -> R.string.theme_dark
     }
+
+    fun toInt() = when (this) {
+        System -> 0
+        Light -> 1
+        Black -> 2
+    }
+
+    companion object {
+        fun fromInt(value: Int?) = when (value) {
+            2 -> Black
+            1 -> Light
+            else -> System
+        }
+    }
 }

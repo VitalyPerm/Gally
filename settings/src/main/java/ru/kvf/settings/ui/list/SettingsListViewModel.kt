@@ -2,42 +2,31 @@ package ru.kvf.settings.ui.list
 
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
-import ru.kvf.core.domain.entities.Setting
 import ru.kvf.core.domain.entities.ThemeType
-import ru.kvf.core.domain.usecase.GetSettingUseCase
 import ru.kvf.core.ui.VM
-import ru.kvf.settings.domain.ChangeSettingUseCase
+import ru.kvf.settings.domain.EdgeToEdgeUseCase
+import ru.kvf.settings.domain.ThemeUseCase
 
 class SettingsListViewModel(
-    private val getSettingUseCase: GetSettingUseCase,
-    private val changeSettingUseCase: ChangeSettingUseCase
+    private val themeUseCase: ThemeUseCase,
+    private val edgeUseCase: EdgeToEdgeUseCase
 ) : VM<SettingsListState, SettingsListSideEffect>(SettingsListState()) {
 
     init {
-        Setting.getAll().forEach { setting ->
-            collectFlow(getSettingUseCase(setting)) { enable ->
-                updateSetting(setting, enable)
-            }
+        collectFlow(themeUseCase.getTheme()) { theme ->
+            intent { reduce { state.copy(theme = theme) } }
+        }
+
+        collectFlow(edgeUseCase.getEnabled()) { edgeToEdgeEnable ->
+            intent { reduce { state.copy(edgeToEdge = edgeToEdgeEnable) } }
         }
     }
 
-    private fun updateSetting(setting: Setting, enable: Boolean) = intent {
-        reduce {
-            val settings = state.settings.toMutableList().apply {
-                indexOfFirst { it.first == setting }.let { index ->
-                    removeAt(index)
-                    add(index, setting to enable)
-                }
-            }
-            state.copy(settings = settings)
-        }
+    fun onThemeChanged(themeType: ThemeType) = intent {
+        themeUseCase.setThemeType(themeType)
     }
 
-    fun onSettingChanged(setting: Setting, enable: Boolean) = intent {
-        changeSettingUseCase(setting, enable)
-    }
-
-    fun onThemeTypeSelected(themeType: ThemeType) = intent {
-        reduce { state.copy(theme = themeType) }
+    fun onEdgeToEdgeChanged(enable: Boolean) = intent {
+        edgeUseCase.setEnabled(enable)
     }
 }

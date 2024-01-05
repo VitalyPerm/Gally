@@ -10,8 +10,7 @@ import ru.kvf.core.domain.entities.Setting
 import ru.kvf.core.domain.repository.SettingsRepository
 
 private const val EDGE_TO_EDGE_KEY = "edge_to_edge_key"
-private const val TEST_1_KEY = "test1"
-private const val TEST_2_KEY = "test2"
+private const val THEME_KEY = "test1"
 
 class SettingsRepositoryImpl(
     private val dataStore: DataStore<Preferences>
@@ -25,21 +24,14 @@ class SettingsRepositoryImpl(
 
     override suspend fun updateTest1(enable: Boolean) {
         dataStore.edit { prefs ->
-            prefs[booleanPreferencesKey(TEST_1_KEY)] = enable
-        }
-    }
-
-    override suspend fun updateTest2(enable: Boolean) {
-        dataStore.edit { prefs ->
-            prefs[booleanPreferencesKey(TEST_2_KEY)] = enable
+            prefs[booleanPreferencesKey(THEME_KEY)] = enable
         }
     }
 
     override fun getSetting(setting: Setting): Flow<Boolean> {
         val key = when (setting) {
             Setting.EdgeToEdge -> EDGE_TO_EDGE_KEY
-            Setting.Test1 -> TEST_1_KEY
-            Setting.Test2 -> TEST_2_KEY
+            Setting.Theme -> THEME_KEY
         }
         return dataStore.data.map {
             it[booleanPreferencesKey(key)] ?: false

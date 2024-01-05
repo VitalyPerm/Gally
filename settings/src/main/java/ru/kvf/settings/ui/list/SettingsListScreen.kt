@@ -24,11 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
-import ru.kvf.core.domain.entities.Setting
 import ru.kvf.core.domain.entities.ThemeType
 import ru.kvf.settings.R
 import ru.kvf.settings.ui.list.theme.ChooseThemeBSH
@@ -41,17 +38,15 @@ fun SettingsListScreen(
 
     Content(
         state = state,
-        settings = state.settings.toImmutableList(),
-        onSettingChanged = vm::onSettingChanged,
-        onThemeTypeSelected = vm::onThemeTypeSelected
+        onEdgeToEdgeChanged = vm::onEdgeToEdgeChanged,
+        onThemeTypeSelected = vm::onThemeChanged
     )
 }
 
 @Composable
 private fun Content(
     state: SettingsListState,
-    settings: ImmutableList<Pair<Setting, Boolean>>,
-    onSettingChanged: (Setting, Boolean) -> Unit,
+    onEdgeToEdgeChanged: (Boolean) -> Unit,
     onThemeTypeSelected: (ThemeType) -> Unit
 ) {
     val chooseThemeBSHVisible = remember { mutableStateOf(false) }
@@ -61,38 +56,14 @@ private fun Content(
             .verticalScroll(rememberScrollState())
             .safeDrawingPadding()
     ) {
-        settings.forEach { (setting, enable) ->
-            SettingItem(
-                title = stringResource(setting.name),
-                enable = enable,
-                onCheckedChange = { checked -> onSettingChanged(setting, checked) }
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .border(BorderStroke(1.dp, Color.Blue), MaterialTheme.shapes.medium),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = stringResource(R.string.theme),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier
-                    .padding(16.dp)
-            )
-
-            TextButton(onClick = { chooseThemeBSHVisible.value = true }) {
-                Text(
-                    text = stringResource(state.theme.getRes()),
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier
-                        .padding(16.dp)
-                )
-            }
-        }
+        EdgeToEdge(
+            enable = state.edgeToEdge,
+            onCheckedChange = onEdgeToEdgeChanged
+        )
+        Theme(
+            currentTheme = state.theme,
+            onCurrentThemeClick = { chooseThemeBSHVisible.value = true }
+        )
     }
 
     ChooseThemeBSH(
@@ -103,7 +74,10 @@ private fun Content(
 }
 
 @Composable
-fun SettingItem(title: String, enable: Boolean, onCheckedChange: (Boolean) -> Unit) {
+private fun Theme(
+    onCurrentThemeClick: () -> Unit,
+    currentTheme: ThemeType
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -113,7 +87,35 @@ fun SettingItem(title: String, enable: Boolean, onCheckedChange: (Boolean) -> Un
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = title,
+            text = stringResource(R.string.theme),
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier
+                .padding(16.dp)
+        )
+
+        TextButton(onClick = onCurrentThemeClick) {
+            Text(
+                text = stringResource(currentTheme.getRes()),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier
+                    .padding(16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun EdgeToEdge(enable: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .border(BorderStroke(1.dp, Color.Blue), MaterialTheme.shapes.medium),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = stringResource(R.string.edge_to_edge),
             modifier = Modifier
                 .padding(16.dp)
         )

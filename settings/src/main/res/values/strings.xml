@@ -1,3 +1,4 @@
 <resources>
 <string name="theme">Тема</string>
+<string name="edge_to_edge">Полноэкранный скролл</string>
 </resources>
