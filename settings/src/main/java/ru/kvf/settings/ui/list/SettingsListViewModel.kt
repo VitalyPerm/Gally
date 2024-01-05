@@ -3,9 +3,10 @@ package ru.kvf.settings.ui.list
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import ru.kvf.core.domain.entities.Setting
-import ru.kvf.settings.domain.ChangeSettingUseCase
+import ru.kvf.core.domain.entities.ThemeType
 import ru.kvf.core.domain.usecase.GetSettingUseCase
 import ru.kvf.core.ui.VM
+import ru.kvf.settings.domain.ChangeSettingUseCase
 
 class SettingsListViewModel(
     private val getSettingUseCase: GetSettingUseCase,
@@ -34,5 +35,9 @@ class SettingsListViewModel(
 
     fun onSettingChanged(setting: Setting, enable: Boolean) = intent {
         changeSettingUseCase(setting, enable)
+    }
+
+    fun onThemeTypeSelected(themeType: ThemeType) = intent {
+        reduce { state.copy(theme = themeType) }
     }
 }

@@ -14,8 +14,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +29,9 @@ import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.kvf.core.domain.entities.Setting
+import ru.kvf.core.domain.entities.ThemeType
+import ru.kvf.settings.R
+import ru.kvf.settings.ui.list.theme.ChooseThemeBSH
 
 @Composable
 fun SettingsListScreen(
@@ -34,16 +40,21 @@ fun SettingsListScreen(
     val state by vm.collectAsState()
 
     Content(
+        state = state,
         settings = state.settings.toImmutableList(),
-        onSettingChanged = vm::onSettingChanged
+        onSettingChanged = vm::onSettingChanged,
+        onThemeTypeSelected = vm::onThemeTypeSelected
     )
 }
 
 @Composable
 private fun Content(
+    state: SettingsListState,
     settings: ImmutableList<Pair<Setting, Boolean>>,
-    onSettingChanged: (Setting, Boolean) -> Unit
+    onSettingChanged: (Setting, Boolean) -> Unit,
+    onThemeTypeSelected: (ThemeType) -> Unit
 ) {
+    val chooseThemeBSHVisible = remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -57,7 +68,38 @@ private fun Content(
                 onCheckedChange = { checked -> onSettingChanged(setting, checked) }
             )
         }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .border(BorderStroke(1.dp, Color.Blue), MaterialTheme.shapes.medium),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = stringResource(R.string.theme),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier
+                    .padding(16.dp)
+            )
+
+            TextButton(onClick = { chooseThemeBSHVisible.value = true }) {
+                Text(
+                    text = stringResource(state.theme.getRes()),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier
+                        .padding(16.dp)
+                )
+            }
+        }
     }
+
+    ChooseThemeBSH(
+        visible = chooseThemeBSHVisible,
+        onTypeSelected = onThemeTypeSelected,
+        currentTheme = state.theme
+    )
 }
 
 @Composable

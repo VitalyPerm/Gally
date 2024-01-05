@@ -6,4 +6,7 @@
     <string name="setting_edge_to_edge">Полноэкранный скролл</string>
     <string name="setting_test1">Тест 1</string>
     <string name="setting_test2">Тест 2</string>
+    <string name="theme_system">Системная</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Темная</string>
 </resources>
