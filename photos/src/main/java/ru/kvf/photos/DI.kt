@@ -1,14 +1,13 @@
 package ru.kvf.photos
 
-import org.koin.androidx.compose.get
-import org.koin.androidx.compose.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
-import org.koin.core.scope.get
 import org.koin.dsl.module
-import ru.kvf.photos.details.PhotoDetailsViewModel
-import ru.kvf.photos.folderdetails.FolderDetailsViewModel
-import ru.kvf.photos.list.PhotosListViewModel
+import ru.kvf.photos.data.LoadPhotosUseCaseImpl
+import ru.kvf.photos.domain.LoadPhotosUseCase
+import ru.kvf.photos.ui.details.PhotoDetailsViewModel
+import ru.kvf.photos.ui.folderdetails.FolderDetailsViewModel
+import ru.kvf.photos.ui.list.PhotosListViewModel
 
 val photosModule = module {
     viewModelOf(::PhotosListViewModel)
@@ -19,4 +18,5 @@ val photosModule = module {
     viewModel { params ->
         FolderDetailsViewModel(params.get(), get(), get(), get())
     }
+    single<LoadPhotosUseCase> { LoadPhotosUseCaseImpl(get()) }
 }

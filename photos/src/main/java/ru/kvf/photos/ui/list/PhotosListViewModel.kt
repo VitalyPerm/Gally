@@ -1,4 +1,4 @@
-package ru.kvf.photos.list
+package ru.kvf.photos.ui.list
 
 import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -10,7 +10,7 @@ import ru.kvf.core.domain.entities.PhotoDate
 import ru.kvf.core.domain.usecase.GetLikedIdsListUseCase
 import ru.kvf.core.domain.usecase.GetSortedPhotosAndFoldersUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
-import ru.kvf.core.domain.usecase.LoadPhotosUseCase
+import ru.kvf.photos.domain.LoadPhotosUseCase
 import ru.kvf.core.ui.VM
 import ru.kvf.core.utils.Constants
 

@@ -11,7 +11,6 @@ import ru.kvf.core.data.usecase.GetLikedIdsListUseCaseImpl
 import ru.kvf.core.data.usecase.GetSettingUseCaseImpl
 import ru.kvf.core.data.usecase.GetSortedPhotosAndFoldersUseCaseImpl
 import ru.kvf.core.data.usecase.HandleLikeClickUseCaseImpl
-import ru.kvf.core.data.usecase.LoadPhotosUseCaseImpl
 import ru.kvf.core.domain.repository.LikesRepository
 import ru.kvf.core.domain.repository.PhotosRepository
 import ru.kvf.core.domain.repository.SettingsRepository
@@ -22,12 +21,10 @@ import ru.kvf.core.domain.usecase.GetLikedIdsListUseCase
 import ru.kvf.core.domain.usecase.GetSettingUseCase
 import ru.kvf.core.domain.usecase.GetSortedPhotosAndFoldersUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
-import ru.kvf.core.domain.usecase.LoadPhotosUseCase
 
 val coreModule = module {
     single<PhotosRepository> { PhotosRepositoryImpl(get()) }
     single<LikesRepository> { LikesRepositoryImpl(get()) }
-    single<LoadPhotosUseCase> { LoadPhotosUseCaseImpl(get()) }
     single<SettingsRepository> { SettingsRepositoryImpl(get()) }
     single<GetSortedPhotosAndFoldersUseCase> { GetSortedPhotosAndFoldersUseCaseImpl(get()) }
     single<GetLikedIdsListUseCase> { GetLikedIdsListUseCaseImpl(get()) }

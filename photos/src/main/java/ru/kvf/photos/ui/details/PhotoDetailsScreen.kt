@@ -1,4 +1,4 @@
-package ru.kvf.photos.details
+package ru.kvf.photos.ui.details
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.rememberPagerState

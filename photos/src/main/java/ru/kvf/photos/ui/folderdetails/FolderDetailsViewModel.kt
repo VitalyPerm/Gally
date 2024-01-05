@@ -1,4 +1,4 @@
-package ru.kvf.photos.folderdetails
+package ru.kvf.photos.ui.folderdetails
 
 import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.syntax.simple.intent

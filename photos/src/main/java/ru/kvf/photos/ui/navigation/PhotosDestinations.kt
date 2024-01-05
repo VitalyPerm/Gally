@@ -1,4 +1,4 @@
-package ru.kvf.photos.navigation
+package ru.kvf.photos.ui.navigation
 
 sealed class PhotosDestinations(val route: String) {
     data object List : PhotosDestinations("photos_list")

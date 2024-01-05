@@ -31,7 +31,7 @@ import ru.kvf.core.utils.Constants
 import ru.kvf.design.DesignScreen
 import ru.kvf.favorite.ui.navigation.favoriteNavigation
 import ru.kvf.gally.BuildConfig
-import ru.kvf.photos.navigation.photosNavigation
+import ru.kvf.photos.ui.navigation.photosNavigation
 import ru.kvf.settings.navigation.settingsNavigation
 
 @Composable

@@ -1,4 +1,4 @@
-package ru.kvf.photos.navigation
+package ru.kvf.photos.ui.navigation
 
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
@@ -7,9 +7,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import ru.kvf.photos.details.PhotosDetailsScreen
-import ru.kvf.photos.folderdetails.FolderDetailsScreen
-import ru.kvf.photos.list.PhotosListScreen
+import ru.kvf.photos.ui.details.PhotosDetailsScreen
+import ru.kvf.photos.ui.folderdetails.FolderDetailsScreen
+import ru.kvf.photos.ui.list.PhotosListScreen
 
 fun NavGraphBuilder.photosNavigation(
     navController: NavHostController,

@@ -1,4 +1,4 @@
-package ru.kvf.photos.list
+package ru.kvf.photos.ui.list
 
 import androidx.compose.runtime.Stable
 import ru.kvf.core.domain.entities.PhotoDate

@@ -1,4 +1,4 @@
-package ru.kvf.core.domain.usecase
+package ru.kvf.photos.domain
 
 interface LoadPhotosUseCase {
     suspend operator fun invoke()
