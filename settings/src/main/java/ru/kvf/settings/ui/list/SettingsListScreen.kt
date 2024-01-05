@@ -26,7 +26,6 @@ import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.kvf.core.domain.entities.Setting
-import ru.kvf.core.utils.log
 
 @Composable
 fun SettingsListScreen(
@@ -45,7 +44,6 @@ private fun Content(
     settings: ImmutableList<Pair<Setting, Boolean>>,
     onSettingChanged: (Setting, Boolean) -> Unit
 ) {
-    log("settings = $settings")
     Column(
         modifier = Modifier
             .fillMaxSize()

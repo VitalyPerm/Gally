@@ -10,6 +10,7 @@ import ru.kvf.core.domain.entities.Folder
 import ru.kvf.core.domain.entities.Photo
 import ru.kvf.core.domain.entities.PhotoDate
 import ru.kvf.core.domain.repository.PhotosRepository
+import ru.kvf.core.utils.Log
 import java.util.Calendar
 import java.util.Date
 
@@ -30,7 +31,14 @@ class PhotosRepositoryImpl(
         MutableStateFlow(emptyMap())
     override val photosFlow: MutableStateFlow<List<Photo>> = MutableStateFlow(emptyList())
 
+    private fun clear() {
+        foldersFlow.value = emptyList()
+        photosSortedByDateFlow.value = emptyMap()
+        photosFlow.value = emptyList()
+    }
+
     override suspend fun loadPhotos(): Unit = withContext(Dispatchers.IO) {
+        clear()
         val photosAccumulator = mutableListOf<Photo>()
         val query = context.contentResolver.query(
             collection,
@@ -83,5 +91,6 @@ class PhotosRepositoryImpl(
             }
             foldersFlow.value = folders
         }
+        Log.d("photosAccumulator size = ${photosAccumulator.size}")
     }
 }

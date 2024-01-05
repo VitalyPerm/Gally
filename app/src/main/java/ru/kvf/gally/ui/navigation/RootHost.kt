@@ -32,6 +32,7 @@ import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.kvf.core.utils.Constants
+import ru.kvf.core.widgets.LoadableContent
 import ru.kvf.design.DesignScreen
 import ru.kvf.favorite.ui.navigation.favoriteNavigation
 import ru.kvf.gally.BuildConfig
@@ -53,7 +54,7 @@ fun RootHost(
         RootDestinations.getVisibleNavBarDestinations()
     }
 
-    ObserveLifeCycleEvents(onResume = vm::loadPhotos)
+    ObserveLifeCycleEvents(onResume = vm::onResume, onPause = vm::onPause)
 
     LaunchedEffect(backStackEntry, isScrollInProgress.value, state.edgeToEdgeEnable) {
         val currentRoute = backStackEntry?.destination?.route
@@ -63,36 +64,39 @@ fun RootHost(
         navBarVisible = value
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        NavHost(
-            modifier = Modifier.weight(1f),
-            navController = navController,
-            startDestination = RootDestinations.Photos.route
+    LoadableContent(loading = state.loading) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
         ) {
-            photosNavigation(
+            NavHost(
+                modifier = Modifier.weight(1f),
                 navController = navController,
-                route = RootDestinations.Photos.route,
-                isScrollInProgress = isScrollInProgress,
-                navBarVisible = navBarVisible
-            )
-            favoriteNavigation(navController, RootDestinations.Favorite.route)
-            settingsNavigation(navController, RootDestinations.Settings.route)
-            composable(RootDestinations.Design.route) {
-                DesignScreen()
+                startDestination = RootDestinations.Photos.route
+            ) {
+                photosNavigation(
+                    navController = navController,
+                    route = RootDestinations.Photos.route,
+                    isScrollInProgress = isScrollInProgress,
+                    navBarVisible = navBarVisible
+                )
+                favoriteNavigation(navController, RootDestinations.Favorite.route)
+                settingsNavigation(navController, RootDestinations.Settings.route)
+                composable(RootDestinations.Design.route) {
+                    DesignScreen()
+                }
             }
-        }
-        AnimatedVisibility(navBarVisible) {
-            BottomBar(navController = navController)
+            AnimatedVisibility(navBarVisible) {
+                BottomBar(navController = navController)
+            }
         }
     }
 }
 
 @Composable
 private fun ObserveLifeCycleEvents(
-    onResume: () -> Unit
+    onResume: () -> Unit,
+    onPause: () -> Unit
 ) {
     val lifeCycleOwner = LocalLifecycleOwner.current
     DisposableEffect(key1 = lifeCycleOwner, effect = {
@@ -100,6 +104,11 @@ private fun ObserveLifeCycleEvents(
             override fun onResume(owner: LifecycleOwner) {
                 super.onResume(owner)
                 onResume()
+            }
+
+            override fun onPause(owner: LifecycleOwner) {
+                super.onPause(owner)
+                onPause()
             }
         }
         lifeCycleOwner.lifecycle.addObserver(observer)

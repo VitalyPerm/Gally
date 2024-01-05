@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
-import ru.kvf.core.utils.log
+import ru.kvf.core.utils.Log
 
 abstract class VM<STATE : Any, SIDE_EFFECT : Any>(state: STATE) :
     ViewModel(),
@@ -19,7 +19,7 @@ abstract class VM<STATE : Any, SIDE_EFFECT : Any>(state: STATE) :
     override val container: Container<STATE, SIDE_EFFECT> = container(state)
 
     fun <T>collectFlow(flow: Flow<T>, value: (T) -> Unit) {
-        flow.catch { e -> log("Collect flow error! - ${e.message}") }
+        flow.catch { e -> Log.e("Collect flow error! - ${e.message}") }
             .onEach {
                 value(it)
             }.launchIn(viewModelScope)
@@ -30,7 +30,7 @@ abstract class VM<STATE : Any, SIDE_EFFECT : Any>(state: STATE) :
             try {
                 action()
             } catch (e: Exception) {
-                log("SafeLaunch error! - ${e.message}")
+                Log.e("SafeLaunch error! - ${e.message}")
             }
         }
     }

@@ -19,5 +19,10 @@ class RootHostViewModel(
         }
     }
 
-    fun loadPhotos() = safeLaunch { loadPhotosUseCase() }
+    fun onPause() = intent { reduce { state.copy(loading = true) } }
+
+    fun onResume() = intent {
+        safeLaunch { loadPhotosUseCase() }
+        reduce { state.copy(loading = false) }
+    }
 }

@@ -12,7 +12,7 @@ import ru.kvf.core.domain.usecase.GetSortedPhotosAndFoldersUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
 import ru.kvf.core.ui.VM
 import ru.kvf.core.utils.Constants
-import ru.kvf.core.utils.log
+import ru.kvf.core.utils.Log
 
 class PhotosListViewModel(
     getSortedPhotosAndFoldersUseCase: GetSortedPhotosAndFoldersUseCase,
@@ -29,6 +29,7 @@ class PhotosListViewModel(
         }
 
         collectFlow(getSortedPhotosAndFoldersUseCase()) { (folders, photos) ->
+            Log.d("getSortedPhotosAndFoldersUseCase called")
             photosDataUpdated(photos, folders)
         }
     }
@@ -38,7 +39,6 @@ class PhotosListViewModel(
             normalPhotosMap.putAll(photos)
             reversedPhotosMap.putAll(photos)
             state.copy(
-                loading = photos.isEmpty(),
                 photos = if (state.reversed) reversedPhotosMap else normalPhotosMap,
                 folders = folders,
                 noPhotosFound = photos.isEmpty()
