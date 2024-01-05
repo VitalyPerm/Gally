@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import ru.kvf.favorite.ui.navigation.FavoriteDestinations
 import ru.kvf.gally.R
 import ru.kvf.photos.ui.navigation.PhotosDestinations
-import ru.kvf.settings.navigation.SettingsDestinations
+import ru.kvf.settings.ui.navigation.SettingsDestinations
 
 sealed class RootDestinations(
     val route: String,

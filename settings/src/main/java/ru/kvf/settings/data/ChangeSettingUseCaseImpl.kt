@@ -1,8 +1,8 @@
-package ru.kvf.core.data.usecase
+package ru.kvf.settings.data
 
 import ru.kvf.core.domain.entities.Setting
 import ru.kvf.core.domain.repository.SettingsRepository
-import ru.kvf.core.domain.usecase.ChangeSettingUseCase
+import ru.kvf.settings.domain.ChangeSettingUseCase
 
 class ChangeSettingUseCaseImpl(
     private val settingsRepository: SettingsRepository

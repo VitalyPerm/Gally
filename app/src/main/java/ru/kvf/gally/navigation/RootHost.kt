@@ -32,7 +32,7 @@ import ru.kvf.design.DesignScreen
 import ru.kvf.favorite.ui.navigation.favoriteNavigation
 import ru.kvf.gally.BuildConfig
 import ru.kvf.photos.ui.navigation.photosNavigation
-import ru.kvf.settings.navigation.settingsNavigation
+import ru.kvf.settings.ui.navigation.settingsNavigation
 
 @Composable
 fun RootHost(

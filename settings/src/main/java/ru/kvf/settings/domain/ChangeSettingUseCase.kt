@@ -1,4 +1,4 @@
-package ru.kvf.core.domain.usecase
+package ru.kvf.settings.domain
 
 import ru.kvf.core.domain.entities.Setting
 

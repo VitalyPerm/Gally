@@ -1,4 +1,4 @@
-package ru.kvf.settings.list
+package ru.kvf.settings.ui.list
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border

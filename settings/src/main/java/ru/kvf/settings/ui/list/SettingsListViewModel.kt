@@ -1,9 +1,9 @@
-package ru.kvf.settings.list
+package ru.kvf.settings.ui.list
 
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import ru.kvf.core.domain.entities.Setting
-import ru.kvf.core.domain.usecase.ChangeSettingUseCase
+import ru.kvf.settings.domain.ChangeSettingUseCase
 import ru.kvf.core.domain.usecase.GetSettingUseCase
 import ru.kvf.core.ui.VM
 
