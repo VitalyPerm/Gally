@@ -1,8 +1,5 @@
 package ru.kvf.favorite.ui.list
 
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
@@ -17,10 +14,7 @@ class FavoriteListViewModel(
 ) : VM<FavoriteListState, FavoriteListSideEffect>(FavoriteListState()) {
 
     init {
-        getLikedPhotosUseCase.get()
-            .onEach { photos ->
-                photosDataUpdated(photos)
-            }.launchIn(viewModelScope)
+        collectFlow(getLikedPhotosUseCase()) { photosDataUpdated(it) }
     }
 
     private fun photosDataUpdated(photos: List<Photo>) = intent {

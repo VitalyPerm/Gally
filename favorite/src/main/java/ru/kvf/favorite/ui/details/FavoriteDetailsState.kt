@@ -5,7 +5,7 @@ import ru.kvf.core.domain.entities.Photo
 
 @Stable
 data class PhotoDetailsState(
-    val startIndex: Int = 0,
+    val startIndex: Int = -1,
     val photos: List<Photo> = emptyList(),
     val loading: Boolean = true
 )

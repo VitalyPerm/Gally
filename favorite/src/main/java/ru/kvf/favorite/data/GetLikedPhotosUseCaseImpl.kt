@@ -12,7 +12,7 @@ class GetLikedPhotosUseCaseImpl(
     private val likesRepository: LikesRepository
 ) : GetLikedPhotosUseCase {
 
-    override fun get(): Flow<List<Photo>> = combine(
+    override fun invoke(): Flow<List<Photo>> = combine(
         photosRepository.photosFlow,
         likesRepository.getLikedListFlow()
     ) { photos, liked ->

@@ -1,26 +1,24 @@
 package ru.kvf.favorite.ui.details
 
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
-import ru.kvf.core.domain.repository.PhotosRepository
 import ru.kvf.core.ui.VM
+import ru.kvf.favorite.domain.GetLikedPhotosUseCase
 
 class FavoriteDetailsViewModel(
-    photosRepository: PhotosRepository,
+    selectedPhotoId: Long,
+    getLikedPhotosUseCase: GetLikedPhotosUseCase
 ) : VM<PhotoDetailsState, DetailsSideEffect>(PhotoDetailsState()) {
 
     init {
-        photosRepository.photosFlow
-            .onEach { photos ->
-                intent {
-                    reduce {
-                        state.copy(photos = photos)
-                    }
+        collectFlow(getLikedPhotosUseCase()) { photos ->
+            val index = photos.indexOfFirst { it.id == selectedPhotoId }.takeIf { it != -1 } ?: 0
+            intent {
+                reduce {
+                    state.copy(photos = photos, startIndex = index)
                 }
-            }.launchIn(viewModelScope)
+            }
+        }
     }
 
     fun start(photoId: Long) = intent {
