@@ -39,7 +39,9 @@ import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.kvf.core.domain.entities.Folder
+import ru.kvf.core.utils.log
 import ru.kvf.core.widgets.ImageWithLoader
+import ru.kvf.core.widgets.LoadableContent
 import ru.kvf.core.widgets.PhotosListWithDate
 import ru.kvf.core.widgets.ReverseIcon
 import ru.kvf.core.widgets.TopBar
@@ -65,43 +67,46 @@ fun PhotosListScreen(
             PhotosListSideEffect.ScrollUp -> photosListGridState.animateScrollToItem(0)
         }
     }
+    log("loading = ${state.loading}")
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primaryContainer)
-    ) {
-        val title = remember(state.showFolders) {
-            if (state.showFolders) R.string.folders else R.string.photos
-        }
-        AnimatedVisibility(navBarVisible) {
-            TopBar(
-                title = stringResource(title),
-                actions = {
-                    AnimatedVisibility(state.showFolders.not()) {
-                        ReverseIcon(vm::onReverseIconClick)
+    LoadableContent(loading = state.loading) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.primaryContainer)
+        ) {
+            val title = remember(state.showFolders) {
+                if (state.showFolders) R.string.folders else R.string.photos
+            }
+            AnimatedVisibility(navBarVisible) {
+                TopBar(
+                    title = stringResource(title),
+                    actions = {
+                        AnimatedVisibility(state.showFolders.not()) {
+                            ReverseIcon(vm::onReverseIconClick)
+                        }
+                        ViewModelIcon(
+                            showFolders = state.showFolders,
+                            onClick = vm::onChangeViewModeClick
+                        )
                     }
-                    ViewModelIcon(
-                        showFolders = state.showFolders,
-                        onClick = vm::onChangeViewModeClick
+                )
+            }
+            AnimatedContent(targetState = state.showFolders, label = "") { showFolders ->
+                if (showFolders) {
+                    FoldersList(
+                        folders = state.folders.toImmutableList(),
+                        onFolderClick = navigateToFolderDetails
+                    )
+                } else {
+                    PhotosListWithDate(
+                        photos = state.photos.toImmutableMap(),
+                        likedPhotos = state.likedPhotos.toImmutableList(),
+                        gridState = photosListGridState,
+                        onPhotoClick = navigateToPhotoDetails,
+                        onLikedClick = vm::onLikeClick
                     )
                 }
-            )
-        }
-        AnimatedContent(targetState = state.showFolders, label = "") { showFolders ->
-            if (showFolders) {
-                FoldersList(
-                    folders = state.folders.toImmutableList(),
-                    onFolderClick = navigateToFolderDetails
-                )
-            } else {
-                PhotosListWithDate(
-                    photos = state.photos.toImmutableMap(),
-                    likedPhotos = state.likedPhotos.toImmutableList(),
-                    gridState = photosListGridState,
-                    onPhotoClick = navigateToPhotoDetails,
-                    onLikedClick = vm::onLikeClick
-                )
             }
         }
     }

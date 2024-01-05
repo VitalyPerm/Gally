@@ -3,7 +3,9 @@ package ru.kvf.core.data.repository
 import android.content.ContentUris
 import android.content.Context
 import android.provider.MediaStore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
 import ru.kvf.core.domain.entities.Folder
 import ru.kvf.core.domain.entities.Photo
 import ru.kvf.core.domain.entities.PhotoDate
@@ -28,7 +30,7 @@ class PhotosRepositoryImpl(
         MutableStateFlow(emptyMap())
     override val photosFlow: MutableStateFlow<List<Photo>> = MutableStateFlow(emptyList())
 
-    override suspend fun loadPhotos() {
+    override suspend fun loadPhotos(): Unit = withContext(Dispatchers.IO) {
         val photosAccumulator = mutableListOf<Photo>()
         val query = context.contentResolver.query(
             collection,

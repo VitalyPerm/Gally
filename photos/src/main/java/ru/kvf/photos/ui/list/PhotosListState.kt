@@ -10,7 +10,7 @@ data class PhotosListState(
     val photos: Map<PhotoDate, List<Photo>> = emptyMap(),
     val likedPhotos: List<Long> = emptyList(),
     val folders: List<Folder> = emptyList(),
-    val loading: Boolean = false,
+    val loading: Boolean = true,
     val noPhotosFound: Boolean = false,
     val showFolders: Boolean = false,
     val reversed: Boolean = false

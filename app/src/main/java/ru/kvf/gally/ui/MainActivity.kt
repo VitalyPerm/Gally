@@ -1,4 +1,4 @@
-package ru.kvf.gally
+package ru.kvf.gally.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -14,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import ru.kvf.core.theme.GallyTheme
-import ru.kvf.gally.navigation.RootHost
+import ru.kvf.gally.ui.navigation.RootHost
 
 class MainActivity : ComponentActivity() {
 

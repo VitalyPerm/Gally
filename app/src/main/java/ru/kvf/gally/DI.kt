@@ -1,4 +1,4 @@
-package ru.kvf.gally.di
+package ru.kvf.gally
 
 import android.content.Context
 import android.content.res.Resources
@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
-import ru.kvf.gally.navigation.RootHostViewModel
+import ru.kvf.gally.ui.navigation.RootHostViewModel
 
 private const val DATA_STORE_NAME = "data_store"
 

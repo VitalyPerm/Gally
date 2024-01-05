@@ -1,4 +1,4 @@
-package ru.kvf.gally
+package ru.kvf.gally.ui
 
 import android.app.Application
 import coil.ImageLoader
@@ -10,7 +10,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import ru.kvf.core.coreModule
 import ru.kvf.favorite.favoriteModule
-import ru.kvf.gally.di.appModule
+import ru.kvf.gally.appModule
 import ru.kvf.photos.photosModule
 import ru.kvf.settings.settingsModule
 

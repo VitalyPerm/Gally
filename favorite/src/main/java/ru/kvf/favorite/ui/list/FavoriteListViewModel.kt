@@ -8,14 +8,14 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import ru.kvf.core.domain.entities.Photo
-import ru.kvf.core.domain.repository.LikesRepository
+import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
 import ru.kvf.core.ui.VM
 import ru.kvf.core.utils.Constants
 import ru.kvf.favorite.domain.GetLikedPhotosUseCase
 
 class FavoriteListViewModel(
     getLikedPhotosUseCase: GetLikedPhotosUseCase,
-    private val likesRepository: LikesRepository
+    private val handleLikeClickUseCase: HandleLikeClickUseCase,
 ) : VM<FavoriteListState, FavoriteListSideEffect>(FavoriteListState()) {
 
     init {
@@ -36,7 +36,7 @@ class FavoriteListViewModel(
 
     fun onLikeClick(id: Long) = intent {
         delay(Constants.PHOTO_ITEM_LIKE_DURATION)
-        likesRepository.addToLikedList(id)
+        handleLikeClickUseCase(id)
     }
 
     fun onReverseIconClick() = intent {

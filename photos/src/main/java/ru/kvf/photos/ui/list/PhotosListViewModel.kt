@@ -10,12 +10,11 @@ import ru.kvf.core.domain.entities.PhotoDate
 import ru.kvf.core.domain.usecase.GetLikedIdsListUseCase
 import ru.kvf.core.domain.usecase.GetSortedPhotosAndFoldersUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
-import ru.kvf.photos.domain.LoadPhotosUseCase
 import ru.kvf.core.ui.VM
 import ru.kvf.core.utils.Constants
+import ru.kvf.core.utils.log
 
 class PhotosListViewModel(
-    private val loadPhotosUseCase: LoadPhotosUseCase,
     getSortedPhotosAndFoldersUseCase: GetSortedPhotosAndFoldersUseCase,
     getLikedIdsListUseCase: GetLikedIdsListUseCase,
     private val handleLikeClickUseCase: HandleLikeClickUseCase
@@ -29,10 +28,6 @@ class PhotosListViewModel(
             intent { reduce { state.copy(likedPhotos = list) } }
         }
 
-        safeLaunch {
-            loadPhotosUseCase()
-        }
-
         collectFlow(getSortedPhotosAndFoldersUseCase()) { (folders, photos) ->
             photosDataUpdated(photos, folders)
         }
@@ -43,7 +38,7 @@ class PhotosListViewModel(
             normalPhotosMap.putAll(photos)
             reversedPhotosMap.putAll(photos)
             state.copy(
-                loading = false,
+                loading = photos.isEmpty(),
                 photos = if (state.reversed) reversedPhotosMap else normalPhotosMap,
                 folders = folders,
                 noPhotosFound = photos.isEmpty()
