@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -39,7 +40,8 @@ fun SettingsListScreen(
     Content(
         state = state,
         onEdgeToEdgeChanged = vm::onEdgeToEdgeChanged,
-        onThemeTypeSelected = vm::onThemeChanged
+        onThemeTypeSelected = vm::onThemeChanged,
+        onSortByChanged = vm::onSortByChanged
     )
 }
 
@@ -47,7 +49,8 @@ fun SettingsListScreen(
 private fun Content(
     state: SettingsListState,
     onEdgeToEdgeChanged: (Boolean) -> Unit,
-    onThemeTypeSelected: (ThemeType) -> Unit
+    onThemeTypeSelected: (ThemeType) -> Unit,
+    onSortByChanged: () -> Unit
 ) {
     val chooseThemeBSHVisible = remember { mutableStateOf(false) }
     Column(
@@ -64,6 +67,10 @@ private fun Content(
             currentTheme = state.theme,
             onCurrentThemeClick = { chooseThemeBSHVisible.value = true }
         )
+
+        Button(onClick = onSortByChanged) {
+            Text(text = "Test")
+        }
     }
 
     ChooseThemeBSH(

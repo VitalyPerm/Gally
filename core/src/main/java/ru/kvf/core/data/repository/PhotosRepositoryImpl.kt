@@ -10,20 +10,29 @@ import ru.kvf.core.domain.entities.Folder
 import ru.kvf.core.domain.entities.Photo
 import ru.kvf.core.domain.entities.PhotoDate
 import ru.kvf.core.domain.repository.PhotosRepository
-import ru.kvf.core.utils.Log
+import ru.kvf.core.domain.usecase.PhotosSortByUseCase
 import java.util.Calendar
 import java.util.Date
 
 class PhotosRepositoryImpl(
-    private val context: Context
+    context: Context,
+    private val photosSortByUseCase: PhotosSortByUseCase
 ) : PhotosRepository {
 
-    private val collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
     private val projection = arrayOf(
         MediaStore.Images.Media.DISPLAY_NAME,
         MediaStore.Images.Media._ID,
         MediaStore.Images.Media.DATE_TAKEN,
         MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+    )
+    private val photosAccumulator = mutableListOf<Photo>()
+
+    private val query = context.contentResolver.query(
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+        projection,
+        null,
+        null,
+        null
     )
 
     override val foldersFlow: MutableStateFlow<List<Folder>> = MutableStateFlow(emptyList())
@@ -32,6 +41,7 @@ class PhotosRepositoryImpl(
     override val photosFlow: MutableStateFlow<List<Photo>> = MutableStateFlow(emptyList())
 
     private fun clear() {
+        photosAccumulator.clear()
         foldersFlow.value = emptyList()
         photosSortedByDateFlow.value = emptyMap()
         photosFlow.value = emptyList()
@@ -39,15 +49,6 @@ class PhotosRepositoryImpl(
 
     override suspend fun loadPhotos(): Unit = withContext(Dispatchers.IO) {
         clear()
-        val photosAccumulator = mutableListOf<Photo>()
-        val query = context.contentResolver.query(
-            collection,
-            projection,
-            null,
-            null,
-            null
-        )
-
         query?.use { cursor ->
             val idColumn = cursor.getColumnIndex(MediaStore.Images.Media._ID)
             val nameColumn = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
@@ -70,7 +71,7 @@ class PhotosRepositoryImpl(
                     Photo(
                         id = id,
                         name = name,
-                        date = PhotoDate(calendar),
+                        date = PhotoDate(calendar, photosSortByUseCase.get()),
                         uri = uri,
                         folder = folder
                     )
@@ -91,6 +92,5 @@ class PhotosRepositoryImpl(
             }
             foldersFlow.value = folders
         }
-        Log.d("photosAccumulator size = ${photosAccumulator.size}")
     }
 }

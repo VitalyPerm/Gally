@@ -9,7 +9,8 @@ import java.util.Calendar
 import java.util.Locale
 
 class PhotoDate(
-    val date: Calendar
+    val date: Calendar,
+    private val sortBy: Int = Calendar.DAY_OF_YEAR
 ) : Comparable<PhotoDate> {
 
     private val resources: Resources by KoinJavaComponent.inject(Resources::class.java)
@@ -25,25 +26,29 @@ class PhotoDate(
         other as PhotoDate
 
         val otherYear = other.date.get(Calendar.YEAR)
-        val otherDayOfYear = other.date.get(Calendar.DAY_OF_YEAR)
+        val otherDayOfYear = other.date.get(sortBy)
 
         val year = date.get(Calendar.YEAR)
-        val dayOfYear = date.get(Calendar.DAY_OF_YEAR)
+        val dayOfYear = date.get(sortBy)
 
         return (otherYear == year && otherDayOfYear == dayOfYear)
     }
 
     override fun hashCode(): Int {
         val year = date.get(Calendar.YEAR)
-        val dayOfYear = date.get(Calendar.DAY_OF_YEAR)
+        val dayOfYear = date.get(sortBy)
         return year.hashCode() + dayOfYear.hashCode()
     }
 
-    override fun toString(): String = when {
-        isUnknown() -> resources.getString(R.string.date_unknown)
-        isToday() -> resources.getString(R.string.today)
-        isYesterday() -> resources.getString(R.string.yesterday)
-        else -> sdf.format(date.time)
+    override fun toString(): String = if (sortBy == Calendar.DAY_OF_YEAR) {
+        when {
+            isUnknown() -> resources.getString(R.string.date_unknown)
+            isToday() -> resources.getString(R.string.today)
+            isYesterday() -> resources.getString(R.string.yesterday)
+            else -> sdfDaily.format(date.time)
+        }
+    } else {
+        sdfMonthly.format(date.time)
     }
 
     private fun isToday() = this == today
@@ -52,7 +57,9 @@ class PhotoDate(
 }
 
 @SuppressLint("ConstantLocale")
-private val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+private val sdfDaily = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+@SuppressLint("ConstantLocale")
+private val sdfMonthly = SimpleDateFormat("MMM yy", Locale.getDefault())
 private val today = PhotoDate(Calendar.getInstance())
 private val yesterday = PhotoDate(
     Calendar.getInstance().apply {
