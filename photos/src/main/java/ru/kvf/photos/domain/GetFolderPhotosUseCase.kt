@@ -1,4 +1,4 @@
-package ru.kvf.core.domain.usecase
+package ru.kvf.photos.domain
 
 import kotlinx.coroutines.flow.Flow
 import ru.kvf.core.domain.entities.Photo

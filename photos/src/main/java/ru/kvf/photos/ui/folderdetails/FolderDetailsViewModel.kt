@@ -3,7 +3,7 @@ package ru.kvf.photos.ui.folderdetails
 import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
-import ru.kvf.core.domain.usecase.GetFolderPhotosUseCase
+import ru.kvf.photos.domain.GetFolderPhotosUseCase
 import ru.kvf.core.domain.usecase.GetLikedIdsListUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
 import ru.kvf.core.ui.VM

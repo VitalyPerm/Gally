@@ -5,7 +5,6 @@ import ru.kvf.core.data.repository.LikesRepositoryImpl
 import ru.kvf.core.data.repository.PhotosRepositoryImpl
 import ru.kvf.core.data.repository.SettingsRepositoryImpl
 import ru.kvf.core.data.usecase.GetAllPhotosUseCaseImpl
-import ru.kvf.core.data.usecase.GetFolderPhotosUseCaseImpl
 import ru.kvf.core.data.usecase.GetLikedIdsListUseCaseImpl
 import ru.kvf.core.data.usecase.GetSettingUseCaseImpl
 import ru.kvf.core.data.usecase.GetSortedPhotosAndFoldersUseCaseImpl
@@ -14,7 +13,6 @@ import ru.kvf.core.domain.repository.LikesRepository
 import ru.kvf.core.domain.repository.PhotosRepository
 import ru.kvf.core.domain.repository.SettingsRepository
 import ru.kvf.core.domain.usecase.GetAllPhotosUseCase
-import ru.kvf.core.domain.usecase.GetFolderPhotosUseCase
 import ru.kvf.core.domain.usecase.GetLikedIdsListUseCase
 import ru.kvf.core.domain.usecase.GetSettingUseCase
 import ru.kvf.core.domain.usecase.GetSortedPhotosAndFoldersUseCase
@@ -28,6 +26,5 @@ val coreModule = module {
     single<GetLikedIdsListUseCase> { GetLikedIdsListUseCaseImpl(get()) }
     single<HandleLikeClickUseCase> { HandleLikeClickUseCaseImpl(get()) }
     single<GetAllPhotosUseCase> { GetAllPhotosUseCaseImpl(get()) }
-    single<GetFolderPhotosUseCase> { GetFolderPhotosUseCaseImpl(get()) }
     single<GetSettingUseCase> { GetSettingUseCaseImpl(get()) }
 }
