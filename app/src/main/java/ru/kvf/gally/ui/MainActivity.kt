@@ -13,7 +13,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
-import ru.kvf.core.theme.GallyTheme
 import ru.kvf.gally.ui.navigation.RootHost
 
 class MainActivity : ComponentActivity() {
@@ -37,12 +36,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val isScrollInProgress = remember { mutableStateOf(false) }
-            GallyTheme {
-                RootHost(
-                    navController = navController,
-                    isScrollInProgress = isScrollInProgress
-                )
-            }
+            RootHost(
+                navController = navController,
+                isScrollInProgress = isScrollInProgress
+            )
         }
 
         val hasPhotoPermission = checkSelfPermission(READ_PHOTO_PERMISSION) == PackageManager.PERMISSION_GRANTED

@@ -1,6 +1,7 @@
 package ru.kvf.gally.ui.navigation
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -34,6 +35,8 @@ import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
+import ru.kvf.core.domain.entities.ThemeType
+import ru.kvf.core.theme.GallyTheme
 import ru.kvf.core.utils.Constants
 import ru.kvf.core.widgets.LoadableContent
 import ru.kvf.design.DesignScreen
@@ -74,30 +77,38 @@ fun RootHost(
         navBarVisible = value
     }
 
-    LoadableContent(loading = state.loading) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            NavHost(
-                modifier = Modifier.weight(1f),
-                navController = navController,
-                startDestination = RootDestinations.Photos.route
+    GallyTheme(
+        darkTheme = when (state.theme) {
+            ThemeType.System -> isSystemInDarkTheme()
+            ThemeType.Light -> false
+            ThemeType.Black -> true
+        }
+    ) {
+        LoadableContent(loading = state.loading) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
             ) {
-                photosNavigation(
+                NavHost(
+                    modifier = Modifier.weight(1f),
                     navController = navController,
-                    route = RootDestinations.Photos.route,
-                    isScrollInProgress = isScrollInProgress,
-                    navBarVisible = navBarVisible
-                )
-                favoriteNavigation(navController, RootDestinations.Favorite.route)
-                settingsNavigation(navController, RootDestinations.Settings.route)
-                composable(RootDestinations.Design.route) {
-                    DesignScreen()
+                    startDestination = RootDestinations.Photos.route
+                ) {
+                    photosNavigation(
+                        navController = navController,
+                        route = RootDestinations.Photos.route,
+                        isScrollInProgress = isScrollInProgress,
+                        navBarVisible = navBarVisible
+                    )
+                    favoriteNavigation(navController, RootDestinations.Favorite.route)
+                    settingsNavigation(navController, RootDestinations.Settings.route)
+                    composable(RootDestinations.Design.route) {
+                        DesignScreen()
+                    }
                 }
-            }
-            AnimatedVisibility(navBarVisible) {
-                BottomBar(navController = navController)
+                AnimatedVisibility(navBarVisible) {
+                    BottomBar(navController = navController)
+                }
             }
         }
     }
