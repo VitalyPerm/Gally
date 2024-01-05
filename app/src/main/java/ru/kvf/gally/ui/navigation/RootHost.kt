@@ -18,6 +18,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -31,6 +33,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.kvf.core.utils.Constants
 import ru.kvf.core.widgets.LoadableContent
 import ru.kvf.design.DesignScreen
@@ -52,6 +55,13 @@ fun RootHost(
     }
     val navBarVisibleDestinations = remember {
         RootDestinations.getVisibleNavBarDestinations()
+    }
+    val haptic = LocalHapticFeedback.current
+
+    vm.collectSideEffect {
+        when (it) {
+            RootHostSideEffect.Vibrate -> haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+        }
     }
 
     ObserveLifeCycleEvents(onResume = vm::onResume, onPause = vm::onPause)

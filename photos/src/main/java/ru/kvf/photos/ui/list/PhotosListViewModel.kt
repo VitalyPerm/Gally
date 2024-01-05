@@ -1,6 +1,5 @@
 package ru.kvf.photos.ui.list
 
-import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
@@ -11,7 +10,6 @@ import ru.kvf.core.domain.usecase.GetLikedIdsListUseCase
 import ru.kvf.core.domain.usecase.GetSortedPhotosAndFoldersUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
 import ru.kvf.core.ui.VM
-import ru.kvf.core.utils.Constants
 import ru.kvf.core.utils.Log
 
 class PhotosListViewModel(
@@ -50,17 +48,10 @@ class PhotosListViewModel(
         }
     }
 
-    fun onLikeClick(id: Long) = intent {
-        delay(Constants.PHOTO_ITEM_LIKE_DURATION)
-        handleLikeClickUseCase(id)
-    }
+    fun onLikeClick(id: Long) = intent { handleLikeClickUseCase(id) }
 
     fun onReverseIconClick() = intent {
-        reduce {
-            state.copy(
-                reversed = state.reversed.not()
-            )
-        }
+        reduce { state.copy(reversed = state.reversed.not()) }
         postSideEffect(PhotosListSideEffect.ScrollUp)
     }
 }

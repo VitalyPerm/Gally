@@ -5,4 +5,6 @@ data class RootHostState(
     val loading: Boolean = true
 )
 
-sealed interface RootHostSideEffect
+sealed interface RootHostSideEffect {
+    data object Vibrate : RootHostSideEffect
+}

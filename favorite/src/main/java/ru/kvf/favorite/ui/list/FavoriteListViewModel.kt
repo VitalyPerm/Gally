@@ -1,7 +1,6 @@
 package ru.kvf.favorite.ui.list
 
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -10,7 +9,6 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import ru.kvf.core.domain.entities.Photo
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
 import ru.kvf.core.ui.VM
-import ru.kvf.core.utils.Constants
 import ru.kvf.favorite.domain.GetLikedPhotosUseCase
 
 class FavoriteListViewModel(
@@ -35,7 +33,6 @@ class FavoriteListViewModel(
     }
 
     fun onLikeClick(id: Long) = intent {
-        delay(Constants.PHOTO_ITEM_LIKE_DURATION)
         handleLikeClickUseCase(id)
     }
 

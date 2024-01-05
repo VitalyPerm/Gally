@@ -14,24 +14,19 @@ import org.orbitmvi.orbit.viewmodel.container
 import ru.kvf.core.utils.Log
 
 abstract class VM<STATE : Any, SIDE_EFFECT : Any>(state: STATE) :
-    ViewModel(),
-    ContainerHost<STATE, SIDE_EFFECT> {
+    ViewModel(), ContainerHost<STATE, SIDE_EFFECT> {
     override val container: Container<STATE, SIDE_EFFECT> = container(state)
 
     fun <T>collectFlow(flow: Flow<T>, value: (T) -> Unit) {
         flow.catch { e -> Log.e("Collect flow error! - ${e.message}") }
-            .onEach {
-                value(it)
-            }.launchIn(viewModelScope)
+            .onEach { value(it) }.launchIn(viewModelScope)
     }
 
-    fun safeLaunch(action: suspend () -> Unit): Job {
-        return viewModelScope.launch {
-            try {
-                action()
-            } catch (e: Exception) {
-                Log.e("SafeLaunch error! - ${e.message}")
-            }
+    fun safeLaunch(action: suspend () -> Unit): Job = viewModelScope.launch {
+        try {
+            action()
+        } catch (e: Exception) {
+            Log.e("SafeLaunch error! - ${e.message}")
         }
     }
 }
