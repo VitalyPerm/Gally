@@ -88,6 +88,9 @@ fun PhotosListScreen(
                 }
             )
         }
+        val photos = remember(state) {
+            with(state) { if (reversed) reversedPhotos else normalPhotos }.toImmutableMap()
+        }
         AnimatedContent(targetState = state.showFolders, label = "") { showFolders ->
             if (showFolders) {
                 FoldersList(
@@ -96,7 +99,7 @@ fun PhotosListScreen(
                 )
             } else {
                 PhotosListWithDate(
-                    photos = state.photos.toImmutableMap(),
+                    photos = photos,
                     likedPhotos = state.likedPhotos.toImmutableList(),
                     gridState = photosListGridState,
                     onPhotoClick = navigateToPhotoDetails,

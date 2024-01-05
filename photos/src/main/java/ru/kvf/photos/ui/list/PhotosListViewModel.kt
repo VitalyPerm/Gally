@@ -20,9 +20,6 @@ class PhotosListViewModel(
     private val handleLikeClickUseCase: HandleLikeClickUseCase
 ) : VM<PhotosListState, PhotosListSideEffect>(PhotosListState()) {
 
-    private val normalPhotosMap = sortedMapOf<PhotoDate, List<Photo>>(Comparator.reverseOrder())
-    private val reversedPhotosMap = sortedMapOf<PhotoDate, List<Photo>>()
-
     init {
         collectFlow(getLikedIdsListUseCase()) { list ->
             intent { reduce { state.copy(likedPhotos = list) } }
@@ -36,10 +33,9 @@ class PhotosListViewModel(
 
     private fun photosDataUpdated(photos: Map<PhotoDate, List<Photo>>, folders: List<Folder>) = intent {
         reduce {
-            normalPhotosMap.putAll(photos)
-            reversedPhotosMap.putAll(photos)
             state.copy(
-                photos = if (state.reversed) reversedPhotosMap else normalPhotosMap,
+                normalPhotos = photos,
+                reversedPhotos = photos.toSortedMap(Comparator.reverseOrder()),
                 folders = folders,
                 noPhotosFound = photos.isEmpty()
             )
@@ -62,8 +58,7 @@ class PhotosListViewModel(
     fun onReverseIconClick() = intent {
         reduce {
             state.copy(
-                reversed = state.reversed.not(),
-                photos = if (state.reversed.not()) reversedPhotosMap else normalPhotosMap,
+                reversed = state.reversed.not()
             )
         }
         postSideEffect(PhotosListSideEffect.ScrollUp)
