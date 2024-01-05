@@ -15,7 +15,7 @@ import java.util.Calendar
 import java.util.Date
 
 class PhotosRepositoryImpl(
-    context: Context,
+    private val context: Context,
     private val photosSortByUseCase: PhotosSortByUseCase
 ) : PhotosRepository {
 
@@ -26,14 +26,6 @@ class PhotosRepositoryImpl(
         MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
     )
     private val photosAccumulator = mutableListOf<Photo>()
-
-    private val query = context.contentResolver.query(
-        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-        projection,
-        null,
-        null,
-        null
-    )
 
     override val foldersFlow: MutableStateFlow<List<Folder>> = MutableStateFlow(emptyList())
     override val photosSortedByDateFlow: MutableStateFlow<Map<PhotoDate, List<Photo>>> =
@@ -49,6 +41,13 @@ class PhotosRepositoryImpl(
 
     override suspend fun loadPhotos(): Unit = withContext(Dispatchers.IO) {
         clear()
+        val query = context.contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            projection,
+            null,
+            null,
+            null
+        )
         query?.use { cursor ->
             val idColumn = cursor.getColumnIndex(MediaStore.Images.Media._ID)
             val nameColumn = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
