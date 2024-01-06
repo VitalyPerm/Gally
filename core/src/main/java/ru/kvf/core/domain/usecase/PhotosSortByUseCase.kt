@@ -4,5 +4,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface PhotosSortByUseCase {
     suspend fun set(type: Int)
-    fun get(): Flow<Int?>
+    fun get(): Flow<Int>
 }

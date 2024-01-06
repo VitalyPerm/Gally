@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.kvf.core.domain.usecase.PhotosSortByUseCase
+import java.util.Calendar
 
 private const val PHOTOS_SORT_KEY = "sort_key"
 
@@ -20,7 +21,7 @@ class PhotosSortByUseCaseImpl(
         }
     }
 
-    override fun get(): Flow<Int?> = dataStore.data.map {
-        it[intPreferencesKey(PHOTOS_SORT_KEY)]
+    override fun get(): Flow<Int> = dataStore.data.map {
+        it[intPreferencesKey(PHOTOS_SORT_KEY)] ?: Calendar.DAY_OF_YEAR
     }
 }

@@ -8,7 +8,6 @@ import ru.kvf.core.domain.usecase.PhotosSortByUseCase
 import ru.kvf.core.ui.VM
 import ru.kvf.settings.domain.EdgeToEdgeUseCase
 import ru.kvf.settings.domain.ThemeUseCase
-import java.util.Calendar
 
 class SettingsListViewModel(
     private val themeUseCase: ThemeUseCase,
@@ -17,8 +16,6 @@ class SettingsListViewModel(
     private val loadPhotosUseCase: LoadPhotosUseCase
 ) : VM<SettingsListState, SettingsListSideEffect>(SettingsListState()) {
 
-    private var t = false
-
     init {
         collectFlow(themeUseCase.getTheme()) { theme ->
             intent { reduce { state.copy(theme = theme) } }
@@ -26,6 +23,10 @@ class SettingsListViewModel(
 
         collectFlow(edgeUseCase.getEnabled()) { edgeToEdgeEnable ->
             intent { reduce { state.copy(edgeToEdge = edgeToEdgeEnable) } }
+        }
+
+        collectFlow(sortByUseCase.get()) { sortBy ->
+            intent { reduce { state.copy(sortBy = sortBy) } }
         }
     }
 
@@ -37,14 +38,8 @@ class SettingsListViewModel(
         edgeUseCase.setEnabled(enable)
     }
 
-    fun onSortByChanged() = intent {
-        t = if (!t) {
-            sortByUseCase.set(Calendar.MONTH)
-            true
-        } else {
-            sortByUseCase.set(Calendar.DAY_OF_YEAR)
-            false
-        }
+    fun onSortByChanged(value: Int) = intent {
+        sortByUseCase.set(value)
         loadPhotosUseCase()
     }
 }
