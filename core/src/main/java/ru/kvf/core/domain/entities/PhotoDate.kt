@@ -13,6 +13,10 @@ class PhotoDate(
     private val sortBy: Int = Calendar.DAY_OF_YEAR
 ) : Comparable<PhotoDate> {
 
+    companion object {
+        val empty = PhotoDate(Calendar.getInstance())
+    }
+
     private val resources: Resources by KoinJavaComponent.inject(Resources::class.java)
 
     override fun compareTo(other: PhotoDate): Int {

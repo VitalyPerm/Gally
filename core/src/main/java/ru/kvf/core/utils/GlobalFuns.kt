@@ -1,8 +1,5 @@
 package ru.kvf.core.utils
 
-import java.util.SortedMap
+import java.util.Calendar
 
-suspend fun <K, V>SortedMap<K, V>.update(from: Map<out K, V>) {
-    clear()
-    putAll(from)
-}
+fun Int?.toCalendarSort(): Int = if (this == 2) Calendar.MONTH else Calendar.DAY_OF_YEAR

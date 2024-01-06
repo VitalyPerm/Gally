@@ -4,7 +4,11 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 import ru.kvf.photos.data.GetFolderPhotosUseCaseImpl
+import ru.kvf.photos.data.GetFoldersUseCaseImpl
+import ru.kvf.photos.data.GetSortedPhotosUseCaseImpl
 import ru.kvf.photos.domain.GetFolderPhotosUseCase
+import ru.kvf.photos.domain.GetFoldersUseCase
+import ru.kvf.photos.domain.GetSortedPhotosUseCase
 import ru.kvf.photos.ui.details.PhotoDetailsViewModel
 import ru.kvf.photos.ui.folderdetails.FolderDetailsViewModel
 import ru.kvf.photos.ui.list.PhotosListViewModel
@@ -14,5 +18,7 @@ val photosModule = module {
     viewModelOf(::PhotoDetailsViewModel)
     viewModel { params -> PhotoDetailsViewModel(get(), params.get()) }
     viewModel { params -> FolderDetailsViewModel(params.get(), get(), get(), get()) }
+    single<GetFoldersUseCase> { GetFoldersUseCaseImpl(get()) }
     single<GetFolderPhotosUseCase> { GetFolderPhotosUseCaseImpl(get()) }
+    single<GetSortedPhotosUseCase> { GetSortedPhotosUseCaseImpl(get(), get()) }
 }

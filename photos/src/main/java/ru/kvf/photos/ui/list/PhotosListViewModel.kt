@@ -7,13 +7,14 @@ import ru.kvf.core.domain.entities.Folder
 import ru.kvf.core.domain.entities.Photo
 import ru.kvf.core.domain.entities.PhotoDate
 import ru.kvf.core.domain.usecase.GetLikedIdsListUseCase
-import ru.kvf.core.domain.usecase.GetSortedPhotosAndFoldersUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
 import ru.kvf.core.ui.VM
-import ru.kvf.core.utils.Log
+import ru.kvf.photos.domain.GetFoldersUseCase
+import ru.kvf.photos.domain.GetSortedPhotosUseCase
 
 class PhotosListViewModel(
-    getSortedPhotosAndFoldersUseCase: GetSortedPhotosAndFoldersUseCase,
+    getSortedPhotosUseCase: GetSortedPhotosUseCase,
+    getFoldersUseCase: GetFoldersUseCase,
     getLikedIdsListUseCase: GetLikedIdsListUseCase,
     private val handleLikeClickUseCase: HandleLikeClickUseCase
 ) : VM<PhotosListState, PhotosListSideEffect>(PhotosListState()) {
@@ -23,9 +24,21 @@ class PhotosListViewModel(
             intent { reduce { state.copy(likedPhotos = list) } }
         }
 
-        collectFlow(getSortedPhotosAndFoldersUseCase()) { (folders, photos) ->
-            Log.d("getSortedPhotosAndFoldersUseCase called")
-            photosDataUpdated(photos, folders)
+        collectFlow(getFoldersUseCase()) { updateFolders(it) }
+
+        collectFlow(getSortedPhotosUseCase()) { updatePhotos(it) }
+    }
+
+    private fun updateFolders(folders: List<Folder>) = intent {
+        reduce { state.copy(folders = folders) }
+    }
+
+    private fun updatePhotos(photos: Map<PhotoDate, List<Photo>>) = intent {
+        reduce {
+            state.copy(
+                normalPhotos = photos,
+                reversedPhotos = photos.toSortedMap(Comparator.reverseOrder())
+            )
         }
     }
 

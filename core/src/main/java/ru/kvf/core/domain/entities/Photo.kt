@@ -7,7 +7,8 @@ import androidx.compose.runtime.Stable
 data class Photo(
     val id: Long,
     val name: String,
-    val date: PhotoDate,
     val uri: Uri,
-    val folder: String
+    val folder: String,
+    val timeStamp: Long,
+    val date: PhotoDate = PhotoDate.empty
 )

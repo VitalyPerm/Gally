@@ -6,17 +6,11 @@ import android.provider.MediaStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
-import ru.kvf.core.domain.entities.Folder
 import ru.kvf.core.domain.entities.Photo
-import ru.kvf.core.domain.entities.PhotoDate
 import ru.kvf.core.domain.repository.PhotosRepository
-import ru.kvf.core.domain.usecase.PhotosSortByUseCase
-import java.util.Calendar
-import java.util.Date
 
 class PhotosRepositoryImpl(
     private val context: Context,
-    private val photosSortByUseCase: PhotosSortByUseCase
 ) : PhotosRepository {
 
     private val projection = arrayOf(
@@ -25,22 +19,12 @@ class PhotosRepositoryImpl(
         MediaStore.Images.Media.DATE_TAKEN,
         MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
     )
-    private val photosAccumulator = mutableListOf<Photo>()
 
-    override val foldersFlow: MutableStateFlow<List<Folder>> = MutableStateFlow(emptyList())
-    override val photosSortedByDateFlow: MutableStateFlow<Map<PhotoDate, List<Photo>>> =
-        MutableStateFlow(emptyMap())
     override val photosFlow: MutableStateFlow<List<Photo>> = MutableStateFlow(emptyList())
 
-    private fun clear() {
-        photosAccumulator.clear()
-        foldersFlow.value = emptyList()
-        photosSortedByDateFlow.value = emptyMap()
-        photosFlow.value = emptyList()
-    }
-
     override suspend fun loadPhotos(): Unit = withContext(Dispatchers.IO) {
-        clear()
+        photosFlow.value = emptyList()
+        val photosAccumulator = mutableListOf<Photo>()
         val query = context.contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             projection,
@@ -63,33 +47,17 @@ class PhotosRepositoryImpl(
                     id
                 )
                 val folder = cursor.getString(bucketColumn)
-                val calendar = Calendar.getInstance().apply {
-                    time = Date(date)
-                }
                 photosAccumulator.add(
                     Photo(
                         id = id,
                         name = name,
-                        date = PhotoDate(calendar, photosSortByUseCase.get()),
+                        timeStamp = date,
                         uri = uri,
                         folder = folder
                     )
                 )
             }
             photosFlow.value = photosAccumulator.reversed()
-            val sortedPhotos = photosAccumulator.reversed()
-                .groupBy(Photo::date).toSortedMap()
-            photosSortedByDateFlow.value = sortedPhotos
-            val folders = photosAccumulator.groupBy {
-                it.folder
-            }.map { (folder, photos) ->
-                Folder(
-                    id = photos.firstOrNull()?.id ?: 0,
-                    name = folder,
-                    photos = photos
-                )
-            }
-            foldersFlow.value = folders
         }
     }
 }

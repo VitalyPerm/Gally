@@ -1,6 +1,8 @@
 package ru.kvf.core.domain.usecase
 
+import kotlinx.coroutines.flow.Flow
+
 interface PhotosSortByUseCase {
     suspend fun set(type: Int)
-    suspend fun get(): Int
+    fun get(): Flow<Int?>
 }
