@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,10 +18,13 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -28,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -45,6 +50,7 @@ import ru.kvf.core.widgets.ReverseIcon
 import ru.kvf.core.widgets.TopBar
 import ru.kvf.photos.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PhotosListScreen(
     vm: PhotosListViewModel = koinViewModel(),
@@ -64,46 +70,54 @@ fun PhotosListScreen(
             PhotosListSideEffect.ScrollUp -> photosListGridState.animateScrollToItem(0)
         }
     }
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    Column(
+    Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primaryContainer)
-    ) {
-        val title = remember(state.showFolders) {
-            if (state.showFolders) R.string.folders else R.string.photos
-        }
-
-        TopBar(
-            title = stringResource(title),
-            actions = {
-                AnimatedVisibility(state.showFolders.not()) {
-                    ReverseIcon(vm::onReverseIconClick)
-                }
-                ViewModelIcon(
-                    showFolders = state.showFolders,
-                    onClick = vm::onChangeViewModeClick
-                )
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            val title = remember(state.showFolders) {
+                if (state.showFolders) R.string.folders else R.string.photos
             }
-        )
-
+            TopBar(
+                title = stringResource(title),
+                actions = {
+                    AnimatedVisibility(state.showFolders.not()) {
+                        ReverseIcon(vm::onReverseIconClick)
+                    }
+                    ViewModelIcon(
+                        showFolders = state.showFolders,
+                        onClick = vm::onChangeViewModeClick
+                    )
+                },
+                scrollBehavior = scrollBehavior
+            )
+        }
+    ) { padding ->
         val photos = remember(state) {
             with(state) { if (reversed) reversedPhotos else normalPhotos }.toImmutableMap()
         }
-        AnimatedContent(targetState = state.showFolders, label = "") { showFolders ->
-            if (showFolders) {
-                FoldersList(
-                    folders = state.folders.toImmutableList(),
-                    onFolderClick = navigateToFolderDetails
-                )
-            } else {
-                PhotosListWithDate(
-                    photos = photos,
-                    likedPhotos = state.likedPhotos.toImmutableList(),
-                    gridState = photosListGridState,
-                    onPhotoClick = navigateToPhotoDetails,
-                    onLikedClick = vm::onLikeClick
-                )
+        Box(
+            modifier = Modifier
+                .padding(padding)
+        ) {
+            AnimatedContent(targetState = state.showFolders, label = "") { showFolders ->
+                if (showFolders) {
+                    FoldersList(
+                        folders = state.folders.toImmutableList(),
+                        onFolderClick = navigateToFolderDetails
+                    )
+                } else {
+                    PhotosListWithDate(
+                        photos = photos,
+                        likedPhotos = state.likedPhotos.toImmutableList(),
+                        gridState = photosListGridState,
+                        onPhotoClick = navigateToPhotoDetails,
+                        onLikedClick = vm::onLikeClick
+                    )
+                }
             }
         }
     }

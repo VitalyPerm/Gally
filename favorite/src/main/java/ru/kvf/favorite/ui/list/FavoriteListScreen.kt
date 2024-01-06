@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import ru.kvf.core.widgets.ReverseIcon
 import ru.kvf.core.widgets.TopBar
 import ru.kvf.favorite.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteListScreen(
     vm: FavoriteListViewModel = koinViewModel(),
