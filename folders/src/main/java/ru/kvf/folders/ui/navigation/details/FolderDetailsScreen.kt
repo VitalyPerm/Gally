@@ -1,4 +1,4 @@
-package ru.kvf.photos.ui.folderdetails
+package ru.kvf.folders.ui.navigation.details
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets

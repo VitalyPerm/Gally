@@ -6,8 +6,4 @@ sealed class PhotosDestinations(val route: String) {
         fun createRoute(photoId: Long) = "photo_details/$photoId"
         const val argument = "photoId"
     }
-    data object FolderDetails : PhotosDestinations("folder_details/{folderName}") {
-        fun createRoute(folderName: String) = "folder_details/$folderName"
-        const val argument = "folderName"
-    }
 }

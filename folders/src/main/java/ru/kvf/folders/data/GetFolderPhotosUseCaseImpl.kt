@@ -1,4 +1,4 @@
-package ru.kvf.photos.data
+package ru.kvf.folders.data
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -8,7 +8,7 @@ import ru.kvf.core.domain.repository.PhotosRepository
 
 class GetFolderPhotosUseCaseImpl(
     private val photosRepository: PhotosRepository
-) : ru.kvf.photos.domain.GetFolderPhotosUseCase {
+) : ru.kvf.folders.domain.GetFolderPhotosUseCase {
     override fun invoke(folderName: String): Flow<Map<PhotoDate, List<Photo>>> =
         photosRepository.photosFlow.map { allPhotos ->
             allPhotos.filter { it.folder == folderName }.reversed()

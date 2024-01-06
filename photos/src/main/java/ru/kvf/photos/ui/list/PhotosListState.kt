@@ -1,7 +1,6 @@
 package ru.kvf.photos.ui.list
 
 import androidx.compose.runtime.Stable
-import ru.kvf.core.domain.entities.Folder
 import ru.kvf.core.domain.entities.Photo
 import ru.kvf.core.domain.entities.PhotoDate
 
@@ -10,9 +9,6 @@ data class PhotosListState(
     val normalPhotos: Map<PhotoDate, List<Photo>> = emptyMap(),
     val reversedPhotos: Map<PhotoDate, List<Photo>> = emptyMap(),
     val likedPhotos: List<Long> = emptyList(),
-    val folders: List<Folder> = emptyList(),
-    val noPhotosFound: Boolean = false,
-    val showFolders: Boolean = false,
     val reversed: Boolean = true,
 )
 

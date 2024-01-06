@@ -71,6 +71,7 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":photos"))
+    implementation(project(":folders"))
     implementation(project(":favorite"))
     implementation(project(":settings"))
     implementation(project(":design"))

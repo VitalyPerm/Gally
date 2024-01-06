@@ -44,6 +44,7 @@ import ru.kvf.core.utils.Constants
 import ru.kvf.core.widgets.LoadableContent
 import ru.kvf.design.DesignScreen
 import ru.kvf.favorite.ui.navigation.favoriteNavigation
+import ru.kvf.folders.ui.navigation.foldersNavigation
 import ru.kvf.gally.BuildConfig
 import ru.kvf.photos.ui.navigation.photosNavigation
 import ru.kvf.settings.ui.navigation.settingsNavigation
@@ -100,6 +101,11 @@ fun RootHost(
                     photosNavigation(
                         navController = navController,
                         route = RootDestinations.Photos.route,
+                        isScrollInProgress = isScrollInProgress
+                    )
+                    foldersNavigation(
+                        navController = navController,
+                        route = RootDestinations.Folders.route,
                         isScrollInProgress = isScrollInProgress
                     )
                     favoriteNavigation(navController, RootDestinations.Favorite.route)
