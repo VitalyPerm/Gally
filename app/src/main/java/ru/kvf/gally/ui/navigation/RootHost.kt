@@ -1,8 +1,9 @@
 package ru.kvf.gally.ui.navigation
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -18,7 +19,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -85,20 +88,19 @@ fun RootHost(
         }
     ) {
         LoadableContent(loading = state.loading) {
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
                 NavHost(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.fillMaxSize(),
                     navController = navController,
                     startDestination = RootDestinations.Photos.route
                 ) {
                     photosNavigation(
                         navController = navController,
                         route = RootDestinations.Photos.route,
-                        isScrollInProgress = isScrollInProgress,
-                        navBarVisible = navBarVisible
+                        isScrollInProgress = isScrollInProgress
                     )
                     favoriteNavigation(navController, RootDestinations.Favorite.route)
                     settingsNavigation(navController, RootDestinations.Settings.route)
@@ -106,9 +108,10 @@ fun RootHost(
                         DesignScreen()
                     }
                 }
-                AnimatedVisibility(navBarVisible) {
-                    BottomBar(navController = navController)
-                }
+                BottomBar(
+                    navController = navController,
+                    visible = navBarVisible
+                )
             }
         }
     }
@@ -140,9 +143,16 @@ private fun ObserveLifeCycleEvents(
 }
 
 @Composable
-private fun BottomBar(navController: NavHostController) {
+private fun BoxScope.BottomBar(
+    navController: NavHostController,
+    visible: Boolean
+) {
+    val alpha by animateFloatAsState(targetValue = if (visible)1f else 0f, label = "")
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.inversePrimary
+        containerColor = MaterialTheme.colorScheme.inversePrimary,
+        modifier = Modifier
+            .alpha(alpha)
+            .align(Alignment.BottomCenter)
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
@@ -168,6 +178,7 @@ private fun BottomBar(navController: NavHostController) {
                             restoreState = true
                         }
                     },
+                    enabled = visible,
                     colors = NavigationBarItemDefaults.colors(
                         indicatorColor = MaterialTheme.colorScheme.onPrimary
                     )

@@ -1,6 +1,6 @@
 <resources>
 <string name="theme">Тема</string>
-<string name="edge_to_edge">Полноэкранный скролл</string>
+<string name="edge_to_edge">Анимированный навбар</string>
 <string name="sort_by">Сортировать фото по:</string>
 <string name="sort_by_days">дням</string>
 <string name="sort_by_moth">месяцам</string>

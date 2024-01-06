@@ -49,7 +49,6 @@ import ru.kvf.photos.R
 fun PhotosListScreen(
     vm: PhotosListViewModel = koinViewModel(),
     isScrollInProgress: MutableState<Boolean>,
-    navBarVisible: Boolean,
     navigateToPhotoDetails: (Long) -> Unit,
     navigateToFolderDetails: (String) -> Unit
 ) {
@@ -74,20 +73,20 @@ fun PhotosListScreen(
         val title = remember(state.showFolders) {
             if (state.showFolders) R.string.folders else R.string.photos
         }
-        AnimatedVisibility(navBarVisible) {
-            TopBar(
-                title = stringResource(title),
-                actions = {
-                    AnimatedVisibility(state.showFolders.not()) {
-                        ReverseIcon(vm::onReverseIconClick)
-                    }
-                    ViewModelIcon(
-                        showFolders = state.showFolders,
-                        onClick = vm::onChangeViewModeClick
-                    )
+
+        TopBar(
+            title = stringResource(title),
+            actions = {
+                AnimatedVisibility(state.showFolders.not()) {
+                    ReverseIcon(vm::onReverseIconClick)
                 }
-            )
-        }
+                ViewModelIcon(
+                    showFolders = state.showFolders,
+                    onClick = vm::onChangeViewModeClick
+                )
+            }
+        )
+
         val photos = remember(state) {
             with(state) { if (reversed) reversedPhotos else normalPhotos }.toImmutableMap()
         }
