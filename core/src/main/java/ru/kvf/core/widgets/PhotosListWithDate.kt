@@ -35,7 +35,7 @@ fun PhotosListWithDate(
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Text(
                     text = date.toString(),
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier
                         .padding(10.dp)
                 )

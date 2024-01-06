@@ -108,7 +108,11 @@ fun RootHost(
                         route = RootDestinations.Folders.route,
                         isScrollInProgress = isScrollInProgress
                     )
-                    favoriteNavigation(navController, RootDestinations.Favorite.route)
+                    favoriteNavigation(
+                        navController = navController,
+                        route = RootDestinations.Favorite.route,
+                        isScrollInProgress = isScrollInProgress
+                    )
                     settingsNavigation(navController, RootDestinations.Settings.route)
                     composable(RootDestinations.Design.route) {
                         DesignScreen()

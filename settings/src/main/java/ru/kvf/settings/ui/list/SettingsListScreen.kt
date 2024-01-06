@@ -9,14 +9,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -37,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.kvf.core.domain.entities.ThemeType
+import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.settings.R
 import ru.kvf.settings.ui.list.theme.ChooseThemeBSH
 import java.util.Calendar
@@ -63,12 +60,8 @@ private fun Content(
     onSortByChanged: (Int) -> Unit
 ) {
     val chooseThemeBSHVisible = remember { mutableStateOf(false) }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .safeDrawingPadding()
-    ) {
+
+    DefaultContainer(title = R.string.settings) {
         EdgeToEdge(
             enable = state.edgeToEdge,
             onCheckedChange = onEdgeToEdgeChanged
@@ -82,13 +75,12 @@ private fun Content(
             currentSortBy = state.sortBy,
             onSortByChanged = onSortByChanged
         )
+        ChooseThemeBSH(
+            visible = chooseThemeBSHVisible,
+            onTypeSelected = onThemeTypeSelected,
+            currentTheme = state.theme
+        )
     }
-
-    ChooseThemeBSH(
-        visible = chooseThemeBSHVisible,
-        onTypeSelected = onThemeTypeSelected,
-        currentTheme = state.theme
-    )
 }
 
 @Composable
