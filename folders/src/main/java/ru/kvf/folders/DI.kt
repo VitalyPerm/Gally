@@ -13,7 +13,7 @@ import ru.kvf.folders.ui.navigation.photodetail.FolderPhotoDetailsViewModel
 
 val foldersModule = module {
     single<GetFoldersUseCase> { GetFoldersUseCaseImpl(get()) }
-    single<GetFolderPhotosUseCase> { GetFolderPhotosUseCaseImpl(get()) }
+    single<GetFolderPhotosUseCase> { GetFolderPhotosUseCaseImpl(get(), get()) }
     viewModel { params ->
         FolderPhotosListViewModel(params.get(), get(), get(), get())
     }

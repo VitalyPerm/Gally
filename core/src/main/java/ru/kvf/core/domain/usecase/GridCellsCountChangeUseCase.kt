@@ -8,6 +8,7 @@ interface GridCellsCountChangeUseCase {
 
     sealed class Screen(val key: String) {
         data object PhotosList : Screen("grid_cells_photos_list")
+        data object FoldersList : Screen("grid_cells_folders_list")
         data object Favorite : Screen("grid_cells_favorite_list")
     }
 }

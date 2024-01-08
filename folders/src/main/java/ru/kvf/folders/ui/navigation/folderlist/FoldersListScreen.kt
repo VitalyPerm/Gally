@@ -43,11 +43,17 @@ fun FoldersListScreen(
         isScrollInProgress.value = foldersListGridState.isScrollInProgress
     }
 
-    DefaultContainer(title = R.string.folders) {
+    DefaultContainer(
+        title = R.string.folders,
+        gridCountActionEnable = true,
+        gridCount = state.gridCellsCount,
+        onGridCountClick = vm::onGridCountClick,
+    ) {
         FoldersList(
             folders = state.folders.toImmutableList(),
             onFolderClick = navigateToFolderDetails,
-            gridState = foldersListGridState
+            gridState = foldersListGridState,
+            cellsCount = state.gridCellsCount,
         )
     }
 }
@@ -57,9 +63,10 @@ private fun FoldersList(
     folders: ImmutableList<Folder>,
     onFolderClick: (String) -> Unit,
     gridState: LazyGridState,
+    cellsCount: Int
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
+        columns = GridCells.Fixed(cellsCount),
         state = gridState,
         modifier = Modifier
             .fillMaxWidth()
