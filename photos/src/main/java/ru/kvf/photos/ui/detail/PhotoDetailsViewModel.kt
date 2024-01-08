@@ -1,4 +1,4 @@
-package ru.kvf.photos.ui.details
+package ru.kvf.photos.ui.detail
 
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce

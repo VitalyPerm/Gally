@@ -1,4 +1,4 @@
-package ru.kvf.folders.ui.navigation.details
+package ru.kvf.folders.ui.navigation.folderphotolist
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -19,9 +19,10 @@ import ru.kvf.core.widgets.PhotosListWithDate
 @Composable
 fun FolderDetailsScreen(
     folderName: String,
-    vm: FolderDetailsViewModel = koinViewModel {
+    vm: FolderPhotosListViewModel = koinViewModel {
         parametersOf(folderName)
-    }
+    },
+    navigateToPhotoDetails: (photoId: Long) -> Unit,
 ) {
     val state by vm.collectAsState()
     Box(
@@ -33,7 +34,7 @@ fun FolderDetailsScreen(
             photos = state.photos.toImmutableMap(),
             likedPhotos = state.likedPhotos.toImmutableList(),
             gridState = rememberLazyGridState(),
-            onPhotoClick = {},
+            onPhotoClick = navigateToPhotoDetails,
             onLikedClick = vm::onLikeClick
         )
     }

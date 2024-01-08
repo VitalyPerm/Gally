@@ -1,4 +1,4 @@
-package ru.kvf.photos.ui.details
+package ru.kvf.photos.ui.detail
 
 import androidx.compose.runtime.Stable
 import ru.kvf.core.domain.entities.Photo

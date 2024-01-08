@@ -12,7 +12,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.util.lerp
 import kotlinx.collections.immutable.ImmutableList
@@ -27,7 +26,6 @@ fun PhotosPager(
     modifier: Modifier = Modifier,
     photos: ImmutableList<Photo>,
     pagerState: PagerState,
-    loading: Boolean
 ) {
     HorizontalPager(
         state = pagerState,
@@ -66,15 +64,14 @@ fun PhotosPager(
                     }
                 }
         ) {
-            if (loading.not()) {
-                ImageWithLoader(
-                    model = photos[page].uri,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.inversePrimary)
-                        .zoomable(zoomState)
-                )
-            }
+            ImageWithLoader(
+                model = photos[page].uri,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.inversePrimary)
+                    .zoomable(zoomState)
+            )
+
             val visible = page == pagerState.settledPage
             LaunchedEffect(visible) {
                 if (visible.not()) zoomState.reset()

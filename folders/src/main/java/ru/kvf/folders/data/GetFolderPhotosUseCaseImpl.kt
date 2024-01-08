@@ -5,13 +5,20 @@ import kotlinx.coroutines.flow.map
 import ru.kvf.core.domain.entities.Photo
 import ru.kvf.core.domain.entities.PhotoDate
 import ru.kvf.core.domain.repository.PhotosRepository
+import ru.kvf.folders.domain.GetFolderPhotosUseCase
 
 class GetFolderPhotosUseCaseImpl(
     private val photosRepository: PhotosRepository
-) : ru.kvf.folders.domain.GetFolderPhotosUseCase {
-    override fun invoke(folderName: String): Flow<Map<PhotoDate, List<Photo>>> =
+) : GetFolderPhotosUseCase {
+    override fun invoke(
+        folderName: String
+    ): Flow<List<Photo>> = photosRepository.photosFlow.map { allPhotos ->
+        allPhotos.filter { it.folder == folderName }.reversed()
+    }
+
+    override fun sorted(folderName: String): Flow<Map<PhotoDate, List<Photo>>> =
         photosRepository.photosFlow.map { allPhotos ->
-            allPhotos.filter { it.folder == folderName }.reversed()
+            allPhotos.filter { it.folder == folderName }
                 .groupBy(Photo::date).toSortedMap()
         }
 }

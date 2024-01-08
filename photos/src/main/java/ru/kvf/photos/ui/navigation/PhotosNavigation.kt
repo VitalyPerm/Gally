@@ -7,7 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import ru.kvf.photos.ui.details.PhotosDetailsScreen
+import ru.kvf.photos.ui.detail.PhotosDetailsScreen
 import ru.kvf.photos.ui.list.PhotosListScreen
 
 fun NavGraphBuilder.photosNavigation(

@@ -1,4 +1,4 @@
-package ru.kvf.folders.ui.navigation.details
+package ru.kvf.folders.ui.navigation.folderphotolist
 
 import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -9,14 +9,14 @@ import ru.kvf.core.ui.VM
 import ru.kvf.core.utils.Constants
 import ru.kvf.folders.domain.GetFolderPhotosUseCase
 
-class FolderDetailsViewModel(
+class FolderPhotosListViewModel(
     folderName: String,
     getFolderPhotosUseCase: GetFolderPhotosUseCase,
     getLikedIdsListUseCase: GetLikedIdsListUseCase,
     private val handleLikeClickUseCase: HandleLikeClickUseCase
-) : VM<FolderDetailsState, FolderDetailsSideEffect>(FolderDetailsState()) {
+) : VM<FolderPhotosListState, Nothing>(FolderPhotosListState()) {
     init {
-        collectFlow(getFolderPhotosUseCase(folderName)) { photos ->
+        collectFlow(getFolderPhotosUseCase.sorted(folderName)) { photos ->
             intent {
                 reduce {
                     state.copy(photos = photos, loading = false)

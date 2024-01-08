@@ -1,4 +1,4 @@
-package ru.kvf.folders.ui.navigation.list
+package ru.kvf.folders.ui.navigation.folderlist
 
 import ru.kvf.core.domain.entities.Folder
 

@@ -7,14 +7,16 @@ import ru.kvf.folders.data.GetFolderPhotosUseCaseImpl
 import ru.kvf.folders.data.GetFoldersUseCaseImpl
 import ru.kvf.folders.domain.GetFolderPhotosUseCase
 import ru.kvf.folders.domain.GetFoldersUseCase
-import ru.kvf.folders.ui.navigation.details.FolderDetailsViewModel
-import ru.kvf.folders.ui.navigation.list.FoldersListViewModel
+import ru.kvf.folders.ui.navigation.folderlist.FoldersListViewModel
+import ru.kvf.folders.ui.navigation.folderphotolist.FolderPhotosListViewModel
+import ru.kvf.folders.ui.navigation.photodetail.FolderPhotoDetailsViewModel
 
 val foldersModule = module {
     single<GetFoldersUseCase> { GetFoldersUseCaseImpl(get()) }
     single<GetFolderPhotosUseCase> { GetFolderPhotosUseCaseImpl(get()) }
     viewModel { params ->
-        FolderDetailsViewModel(params.get(), get(), get(), get())
+        FolderPhotosListViewModel(params.get(), get(), get(), get())
     }
+    viewModel { params -> FolderPhotoDetailsViewModel(params.get(), params.get(), get()) }
     viewModelOf(::FoldersListViewModel)
 }

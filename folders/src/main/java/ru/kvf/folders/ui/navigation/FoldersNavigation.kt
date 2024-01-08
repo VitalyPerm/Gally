@@ -7,8 +7,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import ru.kvf.folders.ui.navigation.details.FolderDetailsScreen
-import ru.kvf.folders.ui.navigation.list.FoldersListScreen
+import ru.kvf.folders.ui.navigation.folderlist.FoldersListScreen
+import ru.kvf.folders.ui.navigation.folderphotolist.FolderDetailsScreen
+import ru.kvf.folders.ui.navigation.photodetail.FolderPhotoDetailsScreen
 
 fun NavGraphBuilder.foldersNavigation(
     navController: NavHostController,
@@ -33,9 +34,29 @@ fun NavGraphBuilder.foldersNavigation(
                 }
             )
         ) { backStackEntry ->
-            val folderName = backStackEntry.arguments
-                ?.getString(FoldersDestinations.FolderDetails.argument) ?: ""
-            FolderDetailsScreen(folderName = folderName)
+            val folderName = FoldersDestinations.FolderDetails.getFolderName(backStackEntry)
+            FolderDetailsScreen(
+                folderName = folderName,
+                navigateToPhotoDetails = {
+                    navController.navigate(FoldersDestinations.FolderPhotoDetails.createRoute(folderName, it))
+                }
+            )
+        }
+
+        composable(
+            route = FoldersDestinations.FolderPhotoDetails.route,
+            arguments = listOf(
+                navArgument(FoldersDestinations.FolderPhotoDetails.folderNameArgument) {
+                    type = NavType.StringType
+                },
+                navArgument(FoldersDestinations.FolderPhotoDetails.photoIdArgument) {
+                    type = NavType.LongType
+                }
+            )
+        ) { backStackEntry ->
+            val folderName = FoldersDestinations.FolderPhotoDetails.getFolderName(backStackEntry)
+            val photoId = FoldersDestinations.FolderPhotoDetails.getPhotoIdArgument(backStackEntry)
+            FolderPhotoDetailsScreen(folderName = folderName, photoId = photoId)
         }
     }
 }

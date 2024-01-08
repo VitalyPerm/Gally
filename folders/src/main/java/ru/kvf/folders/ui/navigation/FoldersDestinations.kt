@@ -1,9 +1,25 @@
 package ru.kvf.folders.ui.navigation
 
+import androidx.navigation.NavBackStackEntry
+
 sealed class FoldersDestinations(val route: String) {
     data object List : FoldersDestinations("folders_list")
     data object FolderDetails : FoldersDestinations("folder_details/{folderName}") {
         fun createRoute(folderName: String) = "folder_details/$folderName"
+        fun getFolderName(
+            backStackEntry: NavBackStackEntry
+        ) = backStackEntry.arguments ?.getString(argument) ?: ""
         const val argument = "folderName"
+    }
+    data object FolderPhotoDetails : FoldersDestinations("folder_photo_details/{folderName}/{photoId}") {
+        fun createRoute(folderName: String, photoId: Long) = "folder_photo_details/$folderName/$photoId"
+        fun getFolderName(
+            backStackEntry: NavBackStackEntry
+        ) = backStackEntry.arguments ?.getString(folderNameArgument) ?: ""
+        fun getPhotoIdArgument(
+            backStackEntry: NavBackStackEntry
+        ) = backStackEntry.arguments?.getLong(photoIdArgument) ?: 0
+        const val folderNameArgument = "folderName"
+        const val photoIdArgument = "photoId"
     }
 }

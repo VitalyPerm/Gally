@@ -1,4 +1,4 @@
-package ru.kvf.folders.ui.navigation.list
+package ru.kvf.folders.ui.navigation.folderlist
 
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
