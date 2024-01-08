@@ -14,7 +14,6 @@ import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.PhotosListWithDate
-import ru.kvf.core.widgets.ReverseIcon
 import ru.kvf.photos.R
 
 @Composable
@@ -38,9 +37,11 @@ fun PhotosListScreen(
 
     DefaultContainer(
         title = R.string.photos,
-        titleActions = {
-            ReverseIcon(vm::onReverseIconClick)
-        }
+        gridCountActionEnable = true,
+        gridCount = state.gridCellsCount,
+        onGridCountClick = vm::onGridCountClick,
+        reverseActionEnable = true,
+        onReverseClick = vm::onReverseClick
     ) {
         val photos = remember(state) {
             with(state) { if (reversed) reversedPhotos else normalPhotos }.toImmutableMap()
@@ -49,6 +50,7 @@ fun PhotosListScreen(
             photos = photos,
             likedPhotos = state.likedPhotos.toImmutableList(),
             gridState = photosListGridState,
+            cellsCount = state.gridCellsCount,
             onPhotoClick = navigateToPhotoDetails,
             onLikedClick = vm::onLikeClick
         )

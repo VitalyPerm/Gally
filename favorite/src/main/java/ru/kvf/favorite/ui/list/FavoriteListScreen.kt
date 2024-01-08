@@ -17,7 +17,6 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.kvf.core.domain.entities.Photo
 import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.PhotoItem
-import ru.kvf.core.widgets.ReverseIcon
 import ru.kvf.favorite.R
 
 @Composable
@@ -41,7 +40,8 @@ fun FavoriteListScreen(
 
     DefaultContainer(
         title = R.string.likes,
-        titleActions = { ReverseIcon(vm::onReverseIconClick) }
+        reverseActionEnable = true,
+        onReverseClick = vm::onReverseIconClick
     ) {
         PhotosList(
             photos = state.photos,

@@ -10,6 +10,7 @@ data class PhotosListState(
     val reversedPhotos: Map<PhotoDate, List<Photo>> = emptyMap(),
     val likedPhotos: List<Long> = emptyList(),
     val reversed: Boolean = true,
+    val gridCellsCount: Int = 1
 )
 
 sealed interface PhotosListSideEffect {
