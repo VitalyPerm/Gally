@@ -57,7 +57,7 @@ class PhotosRepositoryImpl(
                     )
                 )
             }
-            photosFlow.value = photosAccumulator
+            photosFlow.value = photosAccumulator.reversed()
         }
     }
 }

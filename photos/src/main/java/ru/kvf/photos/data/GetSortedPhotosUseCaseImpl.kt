@@ -9,6 +9,7 @@ import ru.kvf.core.domain.usecase.PhotosSortByUseCase
 import ru.kvf.core.utils.toCalendarSort
 import ru.kvf.photos.domain.GetSortedPhotosUseCase
 import java.util.Calendar
+import java.util.Comparator
 import java.util.Date
 
 class GetSortedPhotosUseCaseImpl(
@@ -27,6 +28,6 @@ class GetSortedPhotosUseCaseImpl(
                         sortBy.toCalendarSort()
                     )
                 )
-            }.groupBy(Photo::date).toSortedMap()
+            }.groupBy(Photo::date).toSortedMap(Comparator.reverseOrder())
         }
 }

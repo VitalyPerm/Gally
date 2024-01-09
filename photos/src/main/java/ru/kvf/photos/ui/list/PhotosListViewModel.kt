@@ -9,6 +9,7 @@ import ru.kvf.core.domain.usecase.GetLikedIdsListUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
 import ru.kvf.core.ui.VM
+import ru.kvf.core.utils.Log
 import ru.kvf.photos.domain.GetSortedPhotosUseCase
 
 class PhotosListViewModel(
@@ -33,7 +34,7 @@ class PhotosListViewModel(
     private fun updatePhotos(photos: Map<PhotoDate, List<Photo>>) = intent {
         reduce {
             state.copy(
-                normalPhotos = photos,
+                photos = photos,
                 reversedPhotos = photos.toSortedMap(Comparator.reverseOrder())
             )
         }

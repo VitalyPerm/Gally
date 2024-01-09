@@ -6,10 +6,10 @@ import ru.kvf.core.domain.entities.PhotoDate
 
 @Stable
 data class PhotosListState(
-    val normalPhotos: Map<PhotoDate, List<Photo>> = emptyMap(),
+    val photos: Map<PhotoDate, List<Photo>> = emptyMap(),
     val reversedPhotos: Map<PhotoDate, List<Photo>> = emptyMap(),
     val likedPhotos: List<Long> = emptyList(),
-    val reversed: Boolean = true,
+    val reversed: Boolean = false,
     val gridCellsCount: Int = 1
 )
 

@@ -18,6 +18,7 @@ import kotlinx.collections.immutable.ImmutableList
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 import ru.kvf.core.domain.entities.Photo
+import ru.kvf.core.utils.Log
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -32,6 +33,7 @@ fun PhotosPager(
         modifier = modifier
             .background(MaterialTheme.colorScheme.inverseSurface)
     ) { page ->
+        Log.d("page = $page")
         val zoomState = rememberZoomState()
         Card(
             modifier = Modifier

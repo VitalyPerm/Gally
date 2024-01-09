@@ -12,6 +12,7 @@ import kotlinx.collections.immutable.toImmutableMap
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
+import ru.kvf.core.utils.Log
 import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.PhotosListWithDate
 import ru.kvf.photos.R
@@ -43,8 +44,9 @@ fun PhotosListScreen(
         reverseActionEnable = true,
         onReverseClick = vm::onReverseClick
     ) {
+        Log.d("reversed = ${state.reversed}")
         val photos = remember(state) {
-            with(state) { if (reversed) reversedPhotos else normalPhotos }.toImmutableMap()
+            with(state) { if (reversed) reversedPhotos else photos }.toImmutableMap()
         }
         PhotosListWithDate(
             photos = photos,
