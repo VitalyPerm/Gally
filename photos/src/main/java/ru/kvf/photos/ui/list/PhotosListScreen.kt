@@ -36,7 +36,7 @@ fun PhotosListScreen(
     }
 
     DefaultContainer(
-        title = R.string.photos,
+        titleRes = R.string.photos,
         gridCountActionEnable = true,
         gridCount = state.gridCellsCount,
         onGridCountClick = vm::onGridCountClick,

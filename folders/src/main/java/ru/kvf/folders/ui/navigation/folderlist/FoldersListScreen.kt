@@ -44,7 +44,7 @@ fun FoldersListScreen(
     }
 
     DefaultContainer(
-        title = R.string.folders,
+        titleRes = R.string.folders,
         gridCountActionEnable = true,
         gridCount = state.gridCellsCount,
         onGridCountClick = vm::onGridCountClick,

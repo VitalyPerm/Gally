@@ -39,7 +39,7 @@ fun FavoriteListScreen(
     }
 
     DefaultContainer(
-        title = R.string.likes,
+        titleRes = R.string.likes,
         reverseActionEnable = true,
         onReverseClick = vm::onReverseIconClick
     ) {

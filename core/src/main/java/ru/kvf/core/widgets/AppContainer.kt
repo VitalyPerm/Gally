@@ -27,7 +27,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun DefaultContainer(
-    @StringRes title: Int,
+    @StringRes titleRes: Int? = null,
+    titleString: String? = null,
     reverseActionEnable: Boolean = false,
     onReverseClick: () -> Unit = {},
     gridCountActionEnable: Boolean = false,
@@ -36,6 +37,7 @@ fun DefaultContainer(
     content: @Composable ColumnScope.() -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val title = titleRes?.let { stringResource(it) } ?: titleString ?: ""
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -43,7 +45,7 @@ fun DefaultContainer(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
         TopAppBar(
-            title = { Text(text = stringResource(title), style = MaterialTheme.typography.titleLarge) },
+            title = { Text(text = title, style = MaterialTheme.typography.titleLarge) },
             actions = {
                 if (gridCountActionEnable) GridCountIcon(count = gridCount, onClick = onGridCountClick)
                 if (reverseActionEnable) ReverseIcon(onReverseClick)

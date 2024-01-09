@@ -33,7 +33,7 @@ class FavoriteListViewModel(
     fun onReverseIconClick() = intent {
         reduce {
             state.copy(
-                photos = state.photos.reversed(),
+                photos = state.photos,
             )
         }
         postSideEffect(FavoriteListSideEffect.ScrollUp)

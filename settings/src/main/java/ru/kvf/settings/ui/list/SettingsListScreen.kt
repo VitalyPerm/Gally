@@ -61,7 +61,7 @@ private fun Content(
 ) {
     val chooseThemeBSHVisible = remember { mutableStateOf(false) }
 
-    DefaultContainer(title = R.string.settings) {
+    DefaultContainer(titleRes = R.string.settings) {
         EdgeToEdge(
             enable = state.edgeToEdge,
             onCheckedChange = onEdgeToEdgeChanged

@@ -19,7 +19,7 @@ class GetFolderPhotosUseCaseImpl(
     override fun invoke(
         folderName: String
     ): Flow<List<Photo>> = photosRepository.photosFlow.map { allPhotos ->
-        allPhotos.filter { it.folder == folderName }.reversed()
+        allPhotos.filter { it.folder == folderName }
     }
 
     override fun sorted(folderName: String): Flow<Map<PhotoDate, List<Photo>>> =
