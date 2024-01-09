@@ -20,7 +20,7 @@ import ru.kvf.photos.R
 @Composable
 fun PhotosListScreen(
     vm: PhotosListViewModel = koinViewModel(),
-    navigateToPhotoDetails: (Long) -> Unit,
+    navigateToPhotoDetails: (Long, Boolean) -> Unit,
     isScrollInProgress: MutableState<Boolean>,
 ) {
     val state by vm.collectAsState()
@@ -53,7 +53,7 @@ fun PhotosListScreen(
             likedPhotos = state.likedPhotos.toImmutableList(),
             gridState = photosListGridState,
             cellsCount = state.gridCellsCount,
-            onPhotoClick = navigateToPhotoDetails,
+            onPhotoClick = { navigateToPhotoDetails(it, state.reversed) },
             onLikedClick = vm::onLikeClick
         )
     }

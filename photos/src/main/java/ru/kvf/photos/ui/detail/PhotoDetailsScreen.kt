@@ -14,6 +14,7 @@ import ru.kvf.core.widgets.PhotosPager
 @Composable
 fun PhotosDetailsScreen(
     photoId: Long,
+    reversePager: Boolean = false,
     viewModel: PhotoDetailsViewModel = koinViewModel {
         parametersOf(photoId)
     }
@@ -27,6 +28,7 @@ fun PhotosDetailsScreen(
         PhotosPager(
             photos = state.photos.toImmutableList(),
             pagerState = pagerState,
+            reversePager = reversePager
         )
     }
 }

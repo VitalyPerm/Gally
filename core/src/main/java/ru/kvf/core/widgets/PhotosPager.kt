@@ -27,9 +27,11 @@ fun PhotosPager(
     modifier: Modifier = Modifier,
     photos: ImmutableList<Photo>,
     pagerState: PagerState,
+    reversePager: Boolean = false
 ) {
     HorizontalPager(
         state = pagerState,
+        reverseLayout = reversePager,
         modifier = modifier
             .background(MaterialTheme.colorScheme.inverseSurface)
     ) { page ->

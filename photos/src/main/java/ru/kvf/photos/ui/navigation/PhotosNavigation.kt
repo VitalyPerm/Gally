@@ -19,8 +19,8 @@ fun NavGraphBuilder.photosNavigation(
         composable(PhotosDestinations.List.route) {
             PhotosListScreen(
                 isScrollInProgress = isScrollInProgress,
-                navigateToPhotoDetails = {
-                    navController.navigate(PhotosDestinations.PhotoDetails.createRoute(it))
+                navigateToPhotoDetails = { photoId, reverse ->
+                    navController.navigate(PhotosDestinations.PhotoDetails.createRoute(photoId, reverse))
                 }
             )
         }
@@ -28,13 +28,17 @@ fun NavGraphBuilder.photosNavigation(
         composable(
             route = PhotosDestinations.PhotoDetails.route,
             arguments = listOf(
-                navArgument(PhotosDestinations.PhotoDetails.argument) {
+                navArgument(PhotosDestinations.PhotoDetails.photoId) {
                     type = NavType.LongType
+                },
+                navArgument(PhotosDestinations.PhotoDetails.reverse) {
+                    type = NavType.BoolType
                 }
             )
         ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getLong(PhotosDestinations.PhotoDetails.argument) ?: 0
-            PhotosDetailsScreen(photoId = id)
+            val photoId = PhotosDestinations.PhotoDetails.getPhotoId(backStackEntry)
+            val reverse = PhotosDestinations.PhotoDetails.getReverse(backStackEntry)
+            PhotosDetailsScreen(photoId = photoId, reversePager = reverse)
         }
     }
 }
