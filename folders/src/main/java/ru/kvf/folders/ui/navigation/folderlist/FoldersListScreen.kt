@@ -1,5 +1,7 @@
 package ru.kvf.folders.ui.navigation.folderlist
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -16,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -90,7 +93,11 @@ private fun FolderItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(3.dp)
             .clickable(onClick = onClick)
+            .border(BorderStroke(3.dp, MaterialTheme.colorScheme.onPrimary), MaterialTheme.shapes.large)
+            .padding(3.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ImageWithLoader(
             model = uri,
@@ -105,6 +112,7 @@ private fun FolderItem(
 
         Text(
             text = name,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier
                 .padding(vertical = 4.dp, horizontal = 6.dp)
         )

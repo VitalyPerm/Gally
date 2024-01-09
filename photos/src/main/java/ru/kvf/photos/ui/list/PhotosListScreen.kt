@@ -44,7 +44,6 @@ fun PhotosListScreen(
         reverseActionEnable = true,
         onReverseClick = vm::onReverseClick
     ) {
-        Log.d("reversed = ${state.reversed}")
         val photos = remember(state) {
             with(state) { if (reversed) reversedPhotos else photos }.toImmutableMap()
         }

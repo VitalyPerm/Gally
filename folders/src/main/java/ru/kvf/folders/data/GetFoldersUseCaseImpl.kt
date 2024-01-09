@@ -17,6 +17,6 @@ class GetFoldersUseCaseImpl(
                 name = folder,
                 photos = folderPhotos
             )
-        }
+        }.sortedBy { it.name }
     }
 }

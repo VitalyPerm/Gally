@@ -11,15 +11,20 @@ sealed class FoldersDestinations(val route: String) {
         ) = backStackEntry.arguments ?.getString(argument) ?: ""
         const val argument = "folderName"
     }
-    data object FolderPhotoDetails : FoldersDestinations("folder_photo_details/{folderName}/{photoId}") {
-        fun createRoute(folderName: String, photoId: Long) = "folder_photo_details/$folderName/$photoId"
+    data object FolderPhotoDetails : FoldersDestinations("folder_photo_details/{folderName}/{photoId}/{reversed}") {
+        fun createRoute(folderName: String, photoId: Long, reversed: Boolean) =
+            "folder_photo_details/$folderName/$photoId/$reversed"
         fun getFolderName(
             backStackEntry: NavBackStackEntry
         ) = backStackEntry.arguments ?.getString(folderNameArgument) ?: ""
         fun getPhotoIdArgument(
             backStackEntry: NavBackStackEntry
         ) = backStackEntry.arguments?.getLong(photoIdArgument) ?: 0
+        fun getReversedArgument(
+            backStackEntry: NavBackStackEntry
+        ) = backStackEntry.arguments?.getBoolean(reversedArgument) ?: false
         const val folderNameArgument = "folderName"
         const val photoIdArgument = "photoId"
+        const val reversedArgument = "reversed"
     }
 }

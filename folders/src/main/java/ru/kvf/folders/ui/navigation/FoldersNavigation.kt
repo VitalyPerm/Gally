@@ -37,8 +37,14 @@ fun NavGraphBuilder.foldersNavigation(
             val folderName = FoldersDestinations.FolderDetails.getFolderName(backStackEntry)
             FolderDetailsScreen(
                 folderName = folderName,
-                navigateToPhotoDetails = {
-                    navController.navigate(FoldersDestinations.FolderPhotoDetails.createRoute(folderName, it))
+                navigateToPhotoDetails = { photoId, reverse ->
+                    navController.navigate(
+                        FoldersDestinations.FolderPhotoDetails.createRoute(
+                            folderName,
+                            photoId = photoId,
+                            reversed = reverse
+                        )
+                    )
                 }
             )
         }
@@ -51,12 +57,20 @@ fun NavGraphBuilder.foldersNavigation(
                 },
                 navArgument(FoldersDestinations.FolderPhotoDetails.photoIdArgument) {
                     type = NavType.LongType
+                },
+                navArgument(FoldersDestinations.FolderPhotoDetails.reversedArgument) {
+                    type = NavType.BoolType
                 }
             )
         ) { backStackEntry ->
             val folderName = FoldersDestinations.FolderPhotoDetails.getFolderName(backStackEntry)
             val photoId = FoldersDestinations.FolderPhotoDetails.getPhotoIdArgument(backStackEntry)
-            FolderPhotoDetailsScreen(folderName = folderName, photoId = photoId)
+            val reverse = FoldersDestinations.FolderPhotoDetails.getReversedArgument(backStackEntry)
+            FolderPhotoDetailsScreen(
+                folderName = folderName,
+                photoId = photoId,
+                reverse = reverse
+            )
         }
     }
 }

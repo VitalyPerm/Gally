@@ -15,6 +15,7 @@ import ru.kvf.core.widgets.PhotosPager
 fun FolderPhotoDetailsScreen(
     folderName: String,
     photoId: Long,
+    reverse: Boolean,
     viewModel: FolderPhotoDetailsViewModel = koinViewModel {
         parametersOf(photoId, folderName)
     }
@@ -28,6 +29,7 @@ fun FolderPhotoDetailsScreen(
         PhotosPager(
             photos = state.photos.toImmutableList(),
             pagerState = pagerState,
+            reversePager = reverse
         )
     }
 }
