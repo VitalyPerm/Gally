@@ -1,22 +1,24 @@
 package ru.kvf.folders
 
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.androidx.viewmodel.dsl.viewModelOf
+import com.arkivanov.decompose.ComponentContext
+import org.koin.core.component.get
 import org.koin.dsl.module
-import ru.kvf.folders.data.GetFolderPhotosUseCaseImpl
+import ru.kvf.core.ComponentFactory
 import ru.kvf.folders.data.GetFoldersUseCaseImpl
-import ru.kvf.folders.domain.GetFolderPhotosUseCase
 import ru.kvf.folders.domain.GetFoldersUseCase
-import ru.kvf.folders.ui.navigation.folderlist.FoldersListViewModel
-import ru.kvf.folders.ui.navigation.folderphotolist.FolderPhotosListViewModel
-import ru.kvf.folders.ui.navigation.photodetail.FolderPhotoDetailsViewModel
+import ru.kvf.folders.ui.folderlist.FoldersListComponent
+import ru.kvf.folders.ui.folderlist.RealFoldersListComponent
 
 val foldersModule = module {
     single<GetFoldersUseCase> { GetFoldersUseCaseImpl(get()) }
-    single<GetFolderPhotosUseCase> { GetFolderPhotosUseCaseImpl(get(), get()) }
-    viewModel { params ->
-        FolderPhotosListViewModel(params.get(), get(), get(), get())
-    }
-    viewModel { params -> FolderPhotoDetailsViewModel(params.get(), params.get(), get()) }
-    viewModelOf(::FoldersListViewModel)
 }
+
+fun ComponentFactory.createFoldersListComponent(
+    componentContext: ComponentContext,
+    output: (FoldersListComponent.Output) -> Unit
+): FoldersListComponent = RealFoldersListComponent(
+    componentContext = componentContext,
+    onOutput = output,
+    getFoldersUseCase = get(),
+    gridCellsCountChangeUseCase = get()
+)

@@ -14,22 +14,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Abc
-import androidx.compose.material.icons.filled.WifiProtectedSetup
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.kvf.photos.R
 
@@ -37,7 +37,9 @@ private val pages = listOf(R.string.colors, R.string.typo, R.string.shape)
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun DesignScreen() {
+fun DesignUi(
+    navBarPadding: Dp
+) {
     val pagerState = rememberPagerState {
         pages.size
     }
@@ -46,6 +48,7 @@ fun DesignScreen() {
         modifier = Modifier
             .fillMaxSize()
             .padding(2.dp)
+            .padding(bottom = navBarPadding)
     ) {
         TopAppBar(
             title = {
@@ -55,7 +58,11 @@ fun DesignScreen() {
                 )
             },
         )
-        HorizontalPager(state = pagerState) { page ->
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .weight(1f)
+        ) { page ->
             when (page) {
                 0 -> Colors()
                 1 -> Typo()

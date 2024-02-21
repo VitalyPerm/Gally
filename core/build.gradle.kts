@@ -47,11 +47,11 @@ dependencies {
     api(libs.bundles.compose)
     api(libs.bundles.android)
     api(libs.coil)
-    api(libs.bundles.orbit)
     api(libs.bundles.koin)
     api(libs.proto)
     api(libs.immutable.collections)
     api(libs.zoomable)
+    api(libs.bundles.decompose)
     implementation(libs.kotlin.serialization)
     debugImplementation(libs.compose.debug.ui.tooling)
 }

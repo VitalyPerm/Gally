@@ -8,5 +8,3 @@ data class SettingsListState(
     val theme: ThemeType = ThemeType.System,
     val sortBy: Int = Calendar.DAY_OF_YEAR
 )
-
-sealed interface SettingsListSideEffect

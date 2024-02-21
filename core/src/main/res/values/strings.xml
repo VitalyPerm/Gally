@@ -9,4 +9,6 @@
     <string name="theme_system">Системная</string>
     <string name="theme_light">Светлая</string>
     <string name="theme_dark">Темная</string>
+    <string name="grant_permission_title">Для работы приложения необходимо дать доступ фото</string>
+    <string name="grant_permission_btn_ok">Хорошо</string>
 </resources>

@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun DefaultContainer(
+    modifier: Modifier = Modifier,
     @StringRes titleRes: Int? = null,
     titleString: String? = null,
     reverseActionEnable: Boolean = false,
@@ -37,9 +38,9 @@ fun DefaultContainer(
     content: @Composable ColumnScope.() -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val title = titleRes?.let { stringResource(it) } ?: titleString ?: ""
+    val title = titleString ?: titleRes?.let { stringResource(it) } ?: ""
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primaryContainer)
             .nestedScroll(scrollBehavior.nestedScrollConnection)

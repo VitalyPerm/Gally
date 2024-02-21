@@ -25,11 +25,9 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            val orbitVersion = "6.1.0"
             val koinVersion = "3.5.0"
             val coroutinesVersion = "1.7.3"
             val coilVersion = "2.5.0"
-            val navigationVersion = "2.7.6"
             val coreKtxVersion = "1.12.0"
             val lifecycleKtx = "2.6.2"
             val activityVersion = "1.8.2"
@@ -40,11 +38,7 @@ dependencyResolutionManagement {
             val protoVersion = "1.0.0"
             val kotlinSerializationVersion = "1.6.0"
             val zoomableVersion = "1.5.3"
-
-            library("orbit-viewmodel", "org.orbit-mvi:orbit-viewmodel:$orbitVersion")
-            library("orbit-compose", "org.orbit-mvi:orbit-compose:$orbitVersion")
-            library("orbit-core", "org.orbit-mvi:orbit-core:$orbitVersion")
-            bundle("orbit", listOf("orbit-viewmodel", "orbit-compose", "orbit-core"))
+            val decomposeVersion = "2.2.2"
 
             library("koin-core", "io.insert-koin:koin-core:$koinVersion")
             library("koin-android", "io.insert-koin:koin-androidx-compose:$koinVersion")
@@ -72,7 +66,6 @@ dependencyResolutionManagement {
             library("compose-ui-tooling-preview", "androidx.compose.ui:ui-tooling-preview:$composeVersion")
             library("compose-material3", "androidx.compose.material3:material3:$composeMaterial3Version")
             library("compose-icons", "androidx.compose.material:material-icons-extended:$composeVersion")
-            library("compose-navigation", "androidx.navigation:navigation-compose:$navigationVersion")
             bundle(
                 "compose",
                 listOf(
@@ -81,10 +74,14 @@ dependencyResolutionManagement {
                     "compose-ui-graphics",
                     "compose-ui-tooling-preview",
                     "compose-material3",
-                    "compose-icons",
-                    "compose-navigation"
+                    "compose-icons"
                 )
             )
+
+            library("decompose-core", "com.arkivanov.decompose:decompose:$decomposeVersion")
+            library("decompose-ext", "com.arkivanov.decompose:extensions-compose-jetpack:$decomposeVersion")
+            bundle("decompose", listOf("decompose-core", "decompose-ext"))
+
             library("compose-debug-ui-tooling", "androidx.compose.ui:ui-tooling:$composeVersion")
 
             library("splash", "androidx.core:core-splashscreen:$splashVersion")
