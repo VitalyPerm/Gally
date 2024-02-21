@@ -37,7 +37,7 @@ fun DefaultContainer(
     content: @Composable ColumnScope.() -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val title = titleRes?.let { stringResource(it) } ?: titleString ?: ""
+    val title = titleString ?: titleRes?.let { stringResource(it) } ?: ""
     Column(
         modifier = Modifier
             .fillMaxSize()

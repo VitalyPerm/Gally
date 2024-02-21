@@ -52,6 +52,7 @@ dependencies {
     api(libs.proto)
     api(libs.immutable.collections)
     api(libs.zoomable)
+    api(libs.bundles.decompose)
     implementation(libs.kotlin.serialization)
     debugImplementation(libs.compose.debug.ui.tooling)
 }

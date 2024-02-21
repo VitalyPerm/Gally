@@ -40,6 +40,7 @@ dependencyResolutionManagement {
             val protoVersion = "1.0.0"
             val kotlinSerializationVersion = "1.6.0"
             val zoomableVersion = "1.5.3"
+            val decomposeVersion = "2.2.2"
 
             library("orbit-viewmodel", "org.orbit-mvi:orbit-viewmodel:$orbitVersion")
             library("orbit-compose", "org.orbit-mvi:orbit-compose:$orbitVersion")
@@ -72,7 +73,6 @@ dependencyResolutionManagement {
             library("compose-ui-tooling-preview", "androidx.compose.ui:ui-tooling-preview:$composeVersion")
             library("compose-material3", "androidx.compose.material3:material3:$composeMaterial3Version")
             library("compose-icons", "androidx.compose.material:material-icons-extended:$composeVersion")
-            library("compose-navigation", "androidx.navigation:navigation-compose:$navigationVersion")
             bundle(
                 "compose",
                 listOf(
@@ -81,10 +81,14 @@ dependencyResolutionManagement {
                     "compose-ui-graphics",
                     "compose-ui-tooling-preview",
                     "compose-material3",
-                    "compose-icons",
-                    "compose-navigation"
+                    "compose-icons"
                 )
             )
+
+            library("decompose-core", "com.arkivanov.decompose:decompose:$decomposeVersion")
+            library("decompose-ext", "com.arkivanov.decompose:extensions-compose-jetpack:$decomposeVersion")
+            bundle("decompose", listOf("decompose-core", "decompose-ext"))
+
             library("compose-debug-ui-tooling", "androidx.compose.ui:ui-tooling:$composeVersion")
 
             library("splash", "androidx.core:core-splashscreen:$splashVersion")

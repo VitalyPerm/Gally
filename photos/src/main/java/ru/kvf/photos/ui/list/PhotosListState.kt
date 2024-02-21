@@ -10,10 +10,10 @@ data class PhotosListState(
     val reversedPhotos: Map<PhotoDate, List<Photo>> = emptyMap(),
     val likedPhotos: List<Long> = emptyList(),
     val reversed: Boolean = false,
-    val gridCellsCount: Int = 1
+    val gridCellsCount: Int = 1,
+    val folderName: String? = null
 )
 
 sealed interface PhotosListSideEffect {
     data object ScrollUp : PhotosListSideEffect
-    data class NavigateToDetails(val index: Int) : PhotosListSideEffect
 }
