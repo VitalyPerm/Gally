@@ -3,7 +3,6 @@ package ru.kvf.core.widgets
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -35,10 +34,12 @@ import ru.kvf.core.utils.Constants
 @Composable
 fun PhotoItem(
     model: Any,
-    liked: Boolean,
+    liked: Boolean= false,
     shouldShowLikeIcon: Boolean = true,
-    onClick: () -> Unit,
-    onLiked: () -> Unit
+    onClick: (() -> Unit)? = null,
+    onLongClick: (() -> Unit)? = null,
+    onLiked: (() -> Unit)? = null,
+    size: Size = Size(250, 250)
 ) {
     var showLike by remember { mutableStateOf(false) }
     val hearSize by animateFloatAsState(targetValue = if (showLike) 100f else 0f, label = "")
@@ -55,23 +56,21 @@ fun PhotoItem(
         ImageWithLoader(
             model = model,
             contentScale = ContentScale.Crop,
-            size = Size(250, 250),
+            size = size,
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
                 .padding(1.dp)
                 .clip(MaterialTheme.shapes.medium)
-                .border(BorderStroke(3.dp, MaterialTheme.colorScheme.onPrimary),MaterialTheme.shapes.medium)
-                .clickable(onClick = onClick)
+                .border(BorderStroke(3.dp, MaterialTheme.colorScheme.onPrimary), MaterialTheme.shapes.medium)
                 .pointerInput(Unit) {
                     detectTapGestures(
                         onDoubleTap = {
                             showLike = true
-                            onLiked()
+                            onLiked?.invoke()
                         },
-                        onTap = {
-                            onClick()
-                        }
+                        onTap = { onClick?.invoke() },
+                        onLongPress = { onLongClick?.invoke() }
                     )
                 }
         )

@@ -1,9 +1,10 @@
 package ru.kvf.core.domain.entities
 
 import android.net.Uri
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 
-@Stable
+@Immutable
 data class Photo(
     val id: Long,
     val name: String,

@@ -50,7 +50,6 @@ class RealPhotoComponent(
                 )
             }
         }
-        Log.d("photo reversed = $reversed startIndex = $startIndex")
     }
 
     override fun onPageChanged(page: Int) {

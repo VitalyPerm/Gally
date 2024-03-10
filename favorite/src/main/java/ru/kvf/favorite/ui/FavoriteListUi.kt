@@ -48,7 +48,8 @@ fun FavoriteListUi(
             photos = photos,
             gridState = favoriteListGridState,
             onPhotoClick = component::onPhotoClick,
-            onLikedClick = component::onLikeClick
+            onLikedClick = component::onLikeClick,
+            onPhotoLongClick = {}
         )
     }
 }
@@ -58,6 +59,7 @@ private fun PhotosList(
     photos: List<Photo>,
     gridState: LazyGridState,
     onPhotoClick: (Long) -> Unit,
+    onPhotoLongClick: (Long) -> Unit,
     onLikedClick: (Long) -> Unit
 ) {
     LazyVerticalGrid(
@@ -72,7 +74,8 @@ private fun PhotosList(
                 liked = true,
                 shouldShowLikeIcon = false,
                 onClick = { onPhotoClick(photo.id) },
-                onLiked = { onLikedClick(photo.id) }
+                onLongClick = { onPhotoLongClick(photo.id) },
+                onLiked = { onLikedClick(photo.id) },
             )
         }
     }

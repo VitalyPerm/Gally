@@ -1,5 +1,6 @@
 package ru.kvf.photos.ui.list
 
+import android.net.Uri
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +13,6 @@ import ru.kvf.core.domain.usecase.GetAllPhotosUseCase
 import ru.kvf.core.domain.usecase.GetLikedIdsListUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
-import ru.kvf.core.utils.Log
 import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.componentCoroutineScope
 import ru.kvf.core.utils.safeLaunch
@@ -98,6 +98,22 @@ class RealPhotosListComponent(
 
     override fun savePosition(position: Int) {
         state.update { state.value.copy(lastPosition = position) }
+    }
+
+    override fun onPhotoLongClick(photo: Photo) {
+        state.update { state.value.copy(deletePhotosCandidate = photo) }
+    }
+
+    override fun onDeletePhotoClick() {
+        scope.launch {
+            val uri = state.value.deletePhotosCandidate?.uri ?: return@launch
+            onDismissDeletePhoto()
+            sideEffect.emit(PhotosListSideEffect.DeletePhoto(uri))
+        }
+    }
+
+    override fun onDismissDeletePhoto() {
+        state.update { state.value.copy(deletePhotosCandidate = null) }
     }
 
     private fun updatePhotos(photos: Map<PhotoDate, List<Photo>>) {

@@ -24,6 +24,7 @@ fun PhotosListWithDate(
     gridState: LazyGridState,
     cellsCount: Int = 3,
     onPhotoClick: (Long) -> Unit,
+    onPhotoLongClick: (Photo) -> Unit,
     onLikedClick: (Long) -> Unit
 ) {
     LazyVerticalGrid(
@@ -46,7 +47,8 @@ fun PhotosListWithDate(
                     model = photo.uri,
                     liked = photo.id in likedPhotos,
                     onClick = { onPhotoClick(photo.id) },
-                    onLiked = { onLikedClick(photo.id) }
+                    onLiked = { onLikedClick(photo.id) },
+                    onLongClick = { onPhotoLongClick(photo) }
                 )
             }
         }
