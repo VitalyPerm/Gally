@@ -3,19 +3,19 @@ package ru.kvf.folders.data
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.kvf.core.domain.entities.Folder
-import ru.kvf.core.domain.entities.Photo
-import ru.kvf.core.domain.repository.PhotosRepository
+import ru.kvf.core.domain.entities.Media
+import ru.kvf.core.domain.repository.MediaRepository
 
 class GetFoldersUseCaseImpl(
-    private val photosRepository: PhotosRepository
+    private val mediaRepository: MediaRepository
 ) : ru.kvf.folders.domain.GetFoldersUseCase {
 
-    override fun invoke(): Flow<List<Folder>> = photosRepository.photosFlow.map { allPhotos ->
-        allPhotos.groupBy(Photo::folder).map { (folder, folderPhotos) ->
+    override fun invoke(): Flow<List<Folder>> = mediaRepository.mediaFlow.map { media ->
+        media.groupBy(Media::folder).map { (folder, foldermedia) ->
             Folder(
-                id = folderPhotos.firstOrNull()?.id ?: 0,
+                id = foldermedia.firstOrNull()?.id ?: 0,
                 name = folder,
-                photos = folderPhotos
+                media = foldermedia
             )
         }.sortedBy { it.name }
     }

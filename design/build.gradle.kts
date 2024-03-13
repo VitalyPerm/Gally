@@ -5,7 +5,7 @@ plugins {
 
 android {
     val minSdkVersion: Int by rootProject.extra
-    namespace = "ru.kvf.photos"
+    namespace = "ru.kvf.design"
     compileSdk = 34
 
     defaultConfig {

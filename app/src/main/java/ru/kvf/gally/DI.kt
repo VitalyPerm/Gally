@@ -41,7 +41,7 @@ fun ComponentFactory.createHomeComponent(
     componentContext = componentContext,
     onOutput = output,
     componentFactory = get(),
-    loadPhotosUseCase = get(),
+    loadMediaUseCase = get(),
     edgeToEdgeUseCase = get(),
     performHapticFeedBackUseCase = get()
 )

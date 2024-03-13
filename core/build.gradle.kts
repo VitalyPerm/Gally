@@ -46,12 +46,13 @@ android {
 dependencies {
     api(libs.bundles.compose)
     api(libs.bundles.android)
-    api(libs.coil)
+    api(libs.bundles.coil)
     api(libs.bundles.koin)
     api(libs.proto)
     api(libs.immutable.collections)
     api(libs.zoomable)
     api(libs.bundles.decompose)
+    api(libs.bundles.media3)
     implementation(libs.kotlin.serialization)
     debugImplementation(libs.compose.debug.ui.tooling)
 }

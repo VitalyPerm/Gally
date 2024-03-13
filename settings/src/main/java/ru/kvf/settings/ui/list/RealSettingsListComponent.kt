@@ -4,8 +4,8 @@ import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import ru.kvf.core.domain.entities.ThemeType
-import ru.kvf.core.domain.usecase.LoadPhotosUseCase
-import ru.kvf.core.domain.usecase.PhotosSortByUseCase
+import ru.kvf.core.domain.usecase.LoadMediaUseCase
+import ru.kvf.core.domain.usecase.MediaSortByUseCase
 import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.componentCoroutineScope
 import ru.kvf.core.utils.safeLaunch
@@ -16,8 +16,8 @@ class RealSettingsListComponent(
     componentContext: ComponentContext,
     private val themeUseCase: ThemeUseCase,
     private val edgeUseCase: EdgeToEdgeUseCase,
-    private val sortByUseCase: PhotosSortByUseCase,
-    private val loadPhotosUseCase: LoadPhotosUseCase
+    private val sortByUseCase: MediaSortByUseCase,
+    private val loadMediaUseCase: LoadMediaUseCase
 ) : ComponentContext by componentContext, SettingsListComponent {
 
     private val scope = componentCoroutineScope()
@@ -44,7 +44,7 @@ class RealSettingsListComponent(
     override fun onSortByChanged(value: Int) {
         scope.safeLaunch {
             sortByUseCase.set(value)
-            loadPhotosUseCase()
+            loadMediaUseCase()
         }
     }
 

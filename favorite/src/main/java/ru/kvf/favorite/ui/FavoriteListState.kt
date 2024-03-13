@@ -1,12 +1,12 @@
 package ru.kvf.favorite.ui
 
 import androidx.compose.runtime.Stable
-import ru.kvf.core.domain.entities.Photo
+import ru.kvf.core.domain.entities.Media
 
 @Stable
 data class FavoriteListState(
-    val photos: List<Photo> = emptyList(),
-    val noPhotosFound: Boolean = false,
+    val media: List<Media> = emptyList(),
+    val noMediaFound: Boolean = false,
     val reversed: Boolean = false
 )
 

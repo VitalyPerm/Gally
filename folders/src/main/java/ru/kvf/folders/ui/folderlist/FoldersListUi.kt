@@ -70,7 +70,7 @@ private fun FoldersList(
     ) {
         items(folders) { folder ->
             FolderItem(
-                uri = folder.photos.firstOrNull()?.uri,
+                uri = folder.media.firstOrNull()?.uri,
                 name = folder.name,
                 onClick = { onFolderClick(folder.name) }
             )

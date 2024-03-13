@@ -27,6 +27,7 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         private const val READ_PHOTO_PERMISSION = Manifest.permission.READ_MEDIA_IMAGES
+        private const val READ_VIDEO_PERMISSION = Manifest.permission.READ_MEDIA_VIDEO
     }
     private var permissionGranted by mutableStateOf(false)
 
@@ -38,13 +39,14 @@ class MainActivity : ComponentActivity() {
         )
 
         val permissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { granted -> permissionGranted = granted }
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { result -> permissionGranted = result.values.all { true } }
 
         permissionGranted = checkSelfPermission(READ_PHOTO_PERMISSION) == PackageManager.PERMISSION_GRANTED
+                && checkSelfPermission(READ_VIDEO_PERMISSION) == PackageManager.PERMISSION_GRANTED
 
         if (permissionGranted.not()) {
-            permissionLauncher.launch(READ_PHOTO_PERMISSION)
+            permissionLauncher.launch(arrayOf(READ_VIDEO_PERMISSION, READ_PHOTO_PERMISSION))
         }
         val componentFactory = application.koin.get<ComponentFactory>()
         val rootComponent = componentFactory.createRootComponent(defaultComponentContext())

@@ -23,5 +23,5 @@ fun ComponentFactory.createSettingsListComponent(
     themeUseCase = get(),
     edgeUseCase = get(),
     sortByUseCase = get(),
-    loadPhotosUseCase = get()
+    loadMediaUseCase = get()
 )

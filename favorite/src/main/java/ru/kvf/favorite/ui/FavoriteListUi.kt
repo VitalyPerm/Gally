@@ -13,10 +13,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
-import ru.kvf.core.domain.entities.Photo
+import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.utils.collectSideEffect
 import ru.kvf.core.widgets.DefaultContainer
-import ru.kvf.core.widgets.PhotoItem
+import ru.kvf.core.widgets.MediaItem
 import ru.kvf.favorite.R
 
 @Composable
@@ -35,7 +35,7 @@ fun FavoriteListUi(
         }
     }
 
-    val photos = with(state) { remember(reversed) { if (reversed) photos.reversed() else photos } }
+    val media = with(state) { remember(reversed) { if (reversed) media.reversed() else media } }
 
     DefaultContainer(
         titleRes = R.string.likes,
@@ -44,22 +44,22 @@ fun FavoriteListUi(
         modifier = Modifier
             .padding(bottom = navBarPadding)
     ) {
-        PhotosList(
-            photos = photos,
+        MediaList(
+            media = media,
             gridState = favoriteListGridState,
-            onPhotoClick = component::onPhotoClick,
+            onMediaClick = component::onMediaClick,
             onLikedClick = component::onLikeClick,
-            onPhotoLongClick = {}
+            onMediaLongClick = {}
         )
     }
 }
 
 @Composable
-private fun PhotosList(
-    photos: List<Photo>,
+private fun MediaList(
+    media: List<Media>,
     gridState: LazyGridState,
-    onPhotoClick: (Long) -> Unit,
-    onPhotoLongClick: (Long) -> Unit,
+    onMediaClick: (Long) -> Unit,
+    onMediaLongClick: (Long) -> Unit,
     onLikedClick: (Long) -> Unit
 ) {
     LazyVerticalGrid(
@@ -68,14 +68,14 @@ private fun PhotosList(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        items(photos, key = { item: Photo -> item.id }) { photo ->
-            PhotoItem(
-                model = photo.uri,
+        items(media, key = { item: Media -> item.id }) { media ->
+            MediaItem(
+                model = media.uri,
                 liked = true,
                 shouldShowLikeIcon = false,
-                onClick = { onPhotoClick(photo.id) },
-                onLongClick = { onPhotoLongClick(photo.id) },
-                onLiked = { onLikedClick(photo.id) },
+                onClick = { onMediaClick(media.id) },
+                onLongClick = { onMediaLongClick(media.id) },
+                onLiked = { onLikedClick(media.id) },
             )
         }
     }

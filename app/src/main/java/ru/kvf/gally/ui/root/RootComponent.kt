@@ -5,8 +5,8 @@ import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.core.domain.entities.ThemeType
 import ru.kvf.gally.ui.home.HomeComponent
-import ru.kvf.photos.ui.detail.PhotoComponent
-import ru.kvf.photos.ui.list.PhotosListComponent
+import ru.kvf.media.ui.detail.MediaComponent
+import ru.kvf.media.ui.list.MediaListComponent
 
 interface RootComponent {
 
@@ -16,7 +16,7 @@ interface RootComponent {
 
     sealed interface Child {
         class Home(val component: HomeComponent) : Child
-        class Photo(val component: PhotoComponent) : Child
-        class FolderPhotosList(val component: PhotosListComponent) : Child
+        class Media(val component: MediaComponent) : Child
+        class FolderMediaList(val component: MediaListComponent) : Child
     }
 }

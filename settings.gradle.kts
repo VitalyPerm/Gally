@@ -39,6 +39,7 @@ dependencyResolutionManagement {
             val kotlinSerializationVersion = "1.6.0"
             val zoomableVersion = "1.5.3"
             val decomposeVersion = "2.2.2"
+            val media3Version = "1.2.0"
 
             library("koin-core", "io.insert-koin:koin-core:$koinVersion")
             library("koin-android", "io.insert-koin:koin-androidx-compose:$koinVersion")
@@ -48,7 +49,9 @@ dependencyResolutionManagement {
             library("coroutines-android", "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
             bundle("coroutines", listOf("coroutines-core", "coroutines-android"))
 
-            library("coil", "io.coil-kt:coil-compose:$coilVersion")
+            library("coil-base", "io.coil-kt:coil-compose:$coilVersion")
+            library("coil-video", "io.coil-kt:coil-video:$coilVersion")
+            bundle("coil", listOf("coil-base", "coil-video"))
 
             library("android-core", "androidx.core:core-ktx:$coreKtxVersion")
             library("android-lifecycle", "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleKtx")
@@ -94,6 +97,10 @@ dependencyResolutionManagement {
             )
 
             library("zoomable", "net.engawapg.lib:zoomable:$zoomableVersion")
+
+            library("exoplayer", "androidx.media3:media3-exoplayer:$media3Version")
+            library("media3-ui", "androidx.media3:media3-ui:$media3Version")
+            bundle("media3", listOf("exoplayer", "media3-ui"))
         }
     }
 }
@@ -101,7 +108,7 @@ dependencyResolutionManagement {
 rootProject.name = "Gally"
 include(":app")
 include(":core")
-include(":photos")
+include(":media")
 include(":favorite")
 include(":settings")
 include(":design")

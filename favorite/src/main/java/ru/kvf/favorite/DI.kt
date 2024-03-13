@@ -12,6 +12,6 @@ fun ComponentFactory.createFavoriteListComponent(
 ): FavoriteListComponent = RealFavoriteListComponent(
     componentContext = componentContext,
     onOutput = output,
-    getLikedPhotosUseCase = get(),
+    getLikedMediaUseCase = get(),
     handleLikeClickUseCase = get()
 )

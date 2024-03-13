@@ -3,6 +3,7 @@ package ru.kvf.gally.ui
 import android.app.Application
 import coil.ImageLoader
 import coil.ImageLoaderFactory
+import coil.decode.VideoFrameDecoder
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.request.CachePolicy
@@ -14,7 +15,7 @@ import ru.kvf.core.KoinProvider
 import ru.kvf.core.coreModule
 import ru.kvf.folders.foldersModule
 import ru.kvf.gally.appModule
-import ru.kvf.photos.photosModule
+import ru.kvf.media.mediaModule
 import ru.kvf.settings.settingsModule
 
 class App : Application(), KoinProvider, ImageLoaderFactory {
@@ -29,7 +30,7 @@ class App : Application(), KoinProvider, ImageLoaderFactory {
             modules(
                 listOf(
                     appModule,
-                    photosModule,
+                    mediaModule,
                     foldersModule,
                     coreModule,
                     settingsModule
@@ -53,6 +54,9 @@ class App : Application(), KoinProvider, ImageLoaderFactory {
                 .maxSizePercent(0.05)
                 .directory(cacheDir.resolve("coil_cache"))
                 .build()
+        }
+        .components {
+            add(VideoFrameDecoder.Factory())
         }
         .build()
 }

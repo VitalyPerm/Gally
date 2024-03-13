@@ -9,10 +9,10 @@ interface FavoriteListComponent {
     val sideEffect: Flow<FavoriteListSideEffect>
 
     fun onLikeClick(id: Long)
-    fun onPhotoClick(photoId: Long)
+    fun onMediaClick(mediaId: Long)
     fun onReverseClick()
 
     sealed interface Output {
-        data class OpenPhotoRequested(val index: Int, val reversed: Boolean) : Output
+        data class OpenMediaRequested(val index: Int, val reversed: Boolean) : Output
     }
 }

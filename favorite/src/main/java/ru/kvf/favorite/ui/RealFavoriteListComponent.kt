@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.kvf.core.domain.usecase.GetLikedPhotosUseCase
+import ru.kvf.core.domain.usecase.GetLikedMediaUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
 import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.componentCoroutineScope
@@ -14,7 +14,7 @@ import ru.kvf.core.utils.safeLaunch
 class RealFavoriteListComponent(
     componentContext: ComponentContext,
     private val onOutput: (FavoriteListComponent.Output) -> Unit,
-    getLikedPhotosUseCase: GetLikedPhotosUseCase,
+    getLikedMediaUseCase: GetLikedMediaUseCase,
     private val handleLikeClickUseCase: HandleLikeClickUseCase,
 ) : ComponentContext by componentContext, FavoriteListComponent {
 
@@ -23,11 +23,11 @@ class RealFavoriteListComponent(
     override val sideEffect = MutableSharedFlow<FavoriteListSideEffect>()
 
     init {
-        scope.collectFlow(getLikedPhotosUseCase()) { photos ->
+        scope.collectFlow(getLikedMediaUseCase()) { media ->
             state.update {
                 state.value.copy(
-                    photos = photos,
-                    noPhotosFound = photos.isEmpty()
+                    media = media,
+                    noMediaFound = media.isEmpty()
                 )
             }
         }
@@ -37,9 +37,9 @@ class RealFavoriteListComponent(
         scope.safeLaunch { handleLikeClickUseCase(id) }
     }
 
-    override fun onPhotoClick(photoId: Long) {
-        val index = state.value.photos.indexOfFirst { it.id == photoId }
-        onOutput(FavoriteListComponent.Output.OpenPhotoRequested(index, state.value.reversed))
+    override fun onMediaClick(mediaId: Long) {
+        val index = state.value.media.indexOfFirst { it.id == mediaId }
+        onOutput(FavoriteListComponent.Output.OpenMediaRequested(index, state.value.reversed))
     }
 
     override fun onReverseClick() {

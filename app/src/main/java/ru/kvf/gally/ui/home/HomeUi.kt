@@ -45,7 +45,7 @@ import ru.kvf.design.DesignUi
 import ru.kvf.favorite.ui.FavoriteListUi
 import ru.kvf.folders.ui.folderlist.FoldersListUi
 import ru.kvf.gally.BuildConfig
-import ru.kvf.photos.ui.list.PhotosListUi
+import ru.kvf.media.ui.list.MediaListUi
 import ru.kvf.settings.ui.list.SettingsListUi
 
 private const val NAV_BAR_VISIBILITY_DELAY = 1500L
@@ -94,7 +94,7 @@ fun HomeUi(
                 animation = stackAnimation(slide())
             ) {
                 when (val child = it.instance) {
-                    is HomeComponent.Child.Photos -> PhotosListUi(
+                    is HomeComponent.Child.Media -> MediaListUi(
                         component = child.component,
                         isScrollInProgress = isScrollInProgress
                     )
@@ -143,8 +143,8 @@ private fun BottomBar(
     ) {
         NavBarItem(
             icon = Icons.Filled.Photo,
-            isSelected = current is HomeComponent.Child.Photos,
-            onClick = { onPageSelected(HomeComponent.Page.Photos) }
+            isSelected = current is HomeComponent.Child.Media,
+            onClick = { onPageSelected(HomeComponent.Page.Media) }
         )
 
         NavBarItem(

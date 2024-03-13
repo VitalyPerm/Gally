@@ -2,35 +2,35 @@ package ru.kvf.core
 
 import org.koin.dsl.module
 import ru.kvf.core.data.repository.LikesRepositoryImpl
-import ru.kvf.core.data.repository.PhotosRepositoryImpl
-import ru.kvf.core.data.usecase.GetAllPhotosUseCaseImpl
+import ru.kvf.core.data.repository.MediaRepositoryImpl
+import ru.kvf.core.data.usecase.GetMediaUseCaseImpl
 import ru.kvf.core.data.usecase.GetLikedIdsListUseCaseImpl
-import ru.kvf.core.data.usecase.GetLikedPhotosUseCaseImpl
+import ru.kvf.core.data.usecase.GetLikedMediaUseCaseImpl
 import ru.kvf.core.data.usecase.GridCellsCountChangeUseCaseImpl
 import ru.kvf.core.data.usecase.HandleLikeClickUseCaseImpl
-import ru.kvf.core.data.usecase.LoadPhotosUseCaseImpl
+import ru.kvf.core.data.usecase.LoadMediaUseCaseImpl
 import ru.kvf.core.data.usecase.PerformHapticFeedBackUseCaseImpl
-import ru.kvf.core.data.usecase.PhotosSortByUseCaseImpl
+import ru.kvf.core.data.usecase.MediaSortByUseCaseImpl
 import ru.kvf.core.domain.repository.LikesRepository
-import ru.kvf.core.domain.repository.PhotosRepository
-import ru.kvf.core.domain.usecase.GetAllPhotosUseCase
+import ru.kvf.core.domain.repository.MediaRepository
+import ru.kvf.core.domain.usecase.GetMediaUseCase
 import ru.kvf.core.domain.usecase.GetLikedIdsListUseCase
-import ru.kvf.core.domain.usecase.GetLikedPhotosUseCase
+import ru.kvf.core.domain.usecase.GetLikedMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
-import ru.kvf.core.domain.usecase.LoadPhotosUseCase
+import ru.kvf.core.domain.usecase.LoadMediaUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
-import ru.kvf.core.domain.usecase.PhotosSortByUseCase
+import ru.kvf.core.domain.usecase.MediaSortByUseCase
 
 val coreModule = module {
-    single<PhotosRepository> { PhotosRepositoryImpl(get()) }
+    single<MediaRepository> { MediaRepositoryImpl(get()) }
     single<LikesRepository> { LikesRepositoryImpl(get()) }
     single<GetLikedIdsListUseCase> { GetLikedIdsListUseCaseImpl(get()) }
     single<HandleLikeClickUseCase> { HandleLikeClickUseCaseImpl(get(), get()) }
-    single<GetAllPhotosUseCase> { GetAllPhotosUseCaseImpl(get()) }
+    single<GetMediaUseCase> { GetMediaUseCaseImpl(get()) }
     single<PerformHapticFeedBackUseCase> { PerformHapticFeedBackUseCaseImpl() }
-    single<PhotosSortByUseCase> { PhotosSortByUseCaseImpl(get()) }
-    single<LoadPhotosUseCase> { LoadPhotosUseCaseImpl(get()) }
+    single<MediaSortByUseCase> { MediaSortByUseCaseImpl(get()) }
+    single<LoadMediaUseCase> { LoadMediaUseCaseImpl(get()) }
     single<GridCellsCountChangeUseCase> { GridCellsCountChangeUseCaseImpl(get()) }
-    single<GetLikedPhotosUseCase> { GetLikedPhotosUseCaseImpl(get(), get()) }
+    single<GetLikedMediaUseCase> { GetLikedMediaUseCaseImpl(get(), get()) }
 }

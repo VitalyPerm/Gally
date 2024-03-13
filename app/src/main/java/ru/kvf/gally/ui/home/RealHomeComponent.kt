@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import ru.kvf.core.ComponentFactory
-import ru.kvf.core.domain.usecase.LoadPhotosUseCase
+import ru.kvf.core.domain.usecase.LoadMediaUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
 import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.componentCoroutineScope
@@ -25,8 +25,8 @@ import ru.kvf.favorite.createFavoriteListComponent
 import ru.kvf.favorite.ui.FavoriteListComponent
 import ru.kvf.folders.createFoldersListComponent
 import ru.kvf.folders.ui.folderlist.FoldersListComponent
-import ru.kvf.photos.createPhotosListComponent
-import ru.kvf.photos.ui.list.PhotosListComponent
+import ru.kvf.media.createMediaListComponent
+import ru.kvf.media.ui.list.MediaListComponent
 import ru.kvf.settings.createSettingsListComponent
 import ru.kvf.settings.domain.EdgeToEdgeUseCase
 
@@ -34,7 +34,7 @@ class RealHomeComponent(
     componentContext: ComponentContext,
     private val onOutput: (HomeComponent.Output) -> Unit,
     private val componentFactory: ComponentFactory,
-    private val loadPhotosUseCase: LoadPhotosUseCase,
+    private val loadMediaUseCase: LoadMediaUseCase,
     edgeToEdgeUseCase: EdgeToEdgeUseCase,
     performHapticFeedBackUseCase: PerformHapticFeedBackUseCase,
 ) : ComponentContext by componentContext, HomeComponent {
@@ -44,7 +44,7 @@ class RealHomeComponent(
     override val childStack: Value<ChildStack<*, HomeComponent.Child>> =
         childStack(
             source = navigation,
-            initialConfiguration = Config.Photos,
+            initialConfiguration = Config.Media,
             handleBackButton = true,
             childFactory = ::child
         )
@@ -64,7 +64,7 @@ class RealHomeComponent(
         lifecycle.doOnPause { state.update { state.value.copy(loading = true) } }
         lifecycle.doOnResume {
             scope.safeLaunch {
-                loadPhotosUseCase()
+                loadMediaUseCase()
                 state.update { state.value.copy(loading = false) }
             }
         }
@@ -72,8 +72,8 @@ class RealHomeComponent(
 
     private fun child(config: Config, componentContext: ComponentContext): HomeComponent.Child =
         when (config) {
-            Config.Photos -> HomeComponent.Child.Photos(
-                componentFactory.createPhotosListComponent(componentContext, ::photosListOutput)
+            Config.Media -> HomeComponent.Child.Media(
+                componentFactory.createMediaListComponent(componentContext, ::mediaListOutput)
             )
 
             Config.Folders -> HomeComponent.Child.Folders(
@@ -91,10 +91,10 @@ class RealHomeComponent(
             Config.Design -> HomeComponent.Child.Design(RealDesignComponent(componentContext))
         }
 
-    private fun photosListOutput(output: PhotosListComponent.Output) {
+    private fun mediaListOutput(output: MediaListComponent.Output) {
         when (output) {
-            is PhotosListComponent.Output.OpenPhotoRequested -> onOutput(
-                HomeComponent.Output.OpenPhotoRequested(
+            is MediaListComponent.Output.OpenMediaRequested -> onOutput(
+                HomeComponent.Output.OpenMediaRequested(
                     index = output.index,
                     reversed = output.reversed
                 )
@@ -112,8 +112,8 @@ class RealHomeComponent(
 
     private fun favoriteListOutput(output: FavoriteListComponent.Output) {
         when (output) {
-            is FavoriteListComponent.Output.OpenPhotoRequested -> onOutput(
-                HomeComponent.Output.OpenPhotoRequested(
+            is FavoriteListComponent.Output.OpenMediaRequested -> onOutput(
+                HomeComponent.Output.OpenMediaRequested(
                     index = output.index,
                     reversed = output.reversed,
                     isFavoriteOnly = true
@@ -124,7 +124,7 @@ class RealHomeComponent(
 
     override fun onPageSelected(page: HomeComponent.Page) {
         val newConfig = when (page) {
-            HomeComponent.Page.Photos -> Config.Photos
+            HomeComponent.Page.Media -> Config.Media
             HomeComponent.Page.Folders -> Config.Folders
             HomeComponent.Page.Favorite -> Config.Favorite
             HomeComponent.Page.Settings -> Config.Settings
@@ -134,7 +134,7 @@ class RealHomeComponent(
     }
 
     private sealed interface Config : Parcelable {
-        @Parcelize data object Photos : Config
+        @Parcelize data object Media : Config
 
         @Parcelize data object Folders : Config
 

@@ -12,7 +12,7 @@ class HandleLikeClickUseCaseImpl(
 ) : HandleLikeClickUseCase {
     override suspend fun invoke(id: Long) {
         performHapticFeedBackUseCase()
-        delay(Constants.PHOTO_ITEM_LIKE_DURATION)
+        delay(Constants.MEDIA_ITEM_LIKE_DURATION)
         likesRepository.addToLikedList(id)
     }
 }

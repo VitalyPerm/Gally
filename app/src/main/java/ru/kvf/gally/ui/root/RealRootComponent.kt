@@ -15,9 +15,9 @@ import ru.kvf.core.domain.entities.ThemeType
 import ru.kvf.core.utils.componentCoroutineScope
 import ru.kvf.gally.createHomeComponent
 import ru.kvf.gally.ui.home.HomeComponent
-import ru.kvf.photos.createPhotoComponent
-import ru.kvf.photos.createPhotosListComponent
-import ru.kvf.photos.ui.list.PhotosListComponent
+import ru.kvf.media.createMediaComponent
+import ru.kvf.media.createMediaListComponent
+import ru.kvf.media.ui.list.MediaListComponent
 import ru.kvf.settings.domain.ThemeUseCase
 
 class RealRootComponent(
@@ -49,8 +49,8 @@ class RealRootComponent(
                 componentFactory.createHomeComponent(componentContext, ::homeOutput)
             )
 
-            is Config.Photo -> RootComponent.Child.Photo(
-                componentFactory.createPhotoComponent(
+            is Config.Media -> RootComponent.Child.Media(
+                componentFactory.createMediaComponent(
                     componentContext = componentContext,
                     startIndex = config.index,
                     reversed = config.reversed,
@@ -59,30 +59,30 @@ class RealRootComponent(
                 )
             )
 
-            is Config.PhotosList -> RootComponent.Child.FolderPhotosList(
-                componentFactory.createPhotosListComponent(componentContext, ::folderPhotosOutput, config.folderName)
+            is Config.MediaList -> RootComponent.Child.FolderMediaList(
+                componentFactory.createMediaListComponent(componentContext, ::folderMediaOutput, config.folderName)
             )
         }
 
     private fun homeOutput(output: HomeComponent.Output) {
         when (output) {
-            is HomeComponent.Output.OpenPhotoRequested -> {
+            is HomeComponent.Output.OpenMediaRequested -> {
                 navigation.push(
-                    Config.Photo(
+                    Config.Media(
                         index = output.index,
                         reversed = output.reversed,
                         isFavoriteOnly = output.isFavoriteOnly
                     )
                 )
             }
-            is HomeComponent.Output.OpenFolderRequested -> navigation.push(Config.PhotosList(output.name))
+            is HomeComponent.Output.OpenFolderRequested -> navigation.push(Config.MediaList(output.name))
         }
     }
 
-    private fun folderPhotosOutput(output: PhotosListComponent.Output) {
+    private fun folderMediaOutput(output: MediaListComponent.Output) {
         when (output) {
-            is PhotosListComponent.Output.OpenPhotoRequested -> navigation.push(
-                Config.Photo(
+            is MediaListComponent.Output.OpenMediaRequested -> navigation.push(
+                Config.Media(
                     index = output.index,
                     reversed = output.reversed,
                     folder = output.folder
@@ -94,13 +94,13 @@ class RealRootComponent(
     private sealed interface Config : Parcelable {
         @Parcelize data object Home : Config
 
-        @Parcelize data class Photo(
+        @Parcelize data class Media(
             val index: Int,
             val reversed: Boolean,
             val isFavoriteOnly: Boolean = false,
             val folder: String? = null
         ) : Config
 
-        @Parcelize data class PhotosList(val folderName: String) : Config
+        @Parcelize data class MediaList(val folderName: String) : Config
     }
 }

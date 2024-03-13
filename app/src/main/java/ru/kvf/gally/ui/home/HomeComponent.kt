@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.design.DesignComponent
 import ru.kvf.favorite.ui.FavoriteListComponent
 import ru.kvf.folders.ui.folderlist.FoldersListComponent
-import ru.kvf.photos.ui.list.PhotosListComponent
+import ru.kvf.media.ui.list.MediaListComponent
 import ru.kvf.settings.ui.list.SettingsListComponent
 
 interface HomeComponent {
@@ -15,7 +15,7 @@ interface HomeComponent {
     val sideEffect: SharedFlow<RootSideEffect>
 
     enum class Page {
-        Photos, Folders, Favorite, Settings, Design
+        Media, Folders, Favorite, Settings, Design
     }
 
     val childStack: Value<ChildStack<*, Child>>
@@ -23,7 +23,7 @@ interface HomeComponent {
     fun onPageSelected(page: Page)
 
     sealed interface Child {
-        class Photos(val component: PhotosListComponent) : Child
+        class Media(val component: MediaListComponent) : Child
         class Folders(val component: FoldersListComponent) : Child
         class Favorite(val component: FavoriteListComponent) : Child
         class Settings(val component: SettingsListComponent) : Child
@@ -31,7 +31,7 @@ interface HomeComponent {
     }
 
     sealed interface Output {
-        data class OpenPhotoRequested(
+        data class OpenMediaRequested(
             val index: Int,
             val reversed: Boolean,
             val isFavoriteOnly: Boolean = false
