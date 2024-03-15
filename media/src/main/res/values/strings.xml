@@ -1,6 +1,7 @@
 <resources>
 <string name="media">Галарея</string>
-    <string name="delete_media_bsh_title">Подтверждаете удаление?</string>
+    <string name="delete_media_bsh_title">Медиа будет отправлено\nв корзину (%d)</string>
     <string name="delete_media_bsh_btn_ok">Подтверждаю</string>
-    <string name="delete_media_bsh_btn_no">Нет</string>
+    <string name="delete_media_bsh_btn_no">Отмена</string>
+    <string name="selected_items_count">Выбрано %d</string>
 </resources>

@@ -8,12 +8,15 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.PlayCircleFilled
 import androidx.compose.material.icons.rounded.HeartBroken
 import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material3.Icon
@@ -28,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -45,7 +49,8 @@ fun MediaItem(
     onClick: (() -> Unit)? = null,
     onLongClick: (() -> Unit)? = null,
     onLiked: (() -> Unit)? = null,
-    size: Size = Size(250, 250)
+    size: Size = Size(250, 250),
+    selected: Boolean = false
 ) {
     var showLike by remember { mutableStateOf(false) }
     val hearSize by animateFloatAsState(targetValue = if (showLike) 100f else 0f, label = "")
@@ -56,22 +61,23 @@ fun MediaItem(
 
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-
+            .aspectRatio(1f)
+            .padding(1.dp)
+            .border(
+                BorderStroke(4.dp, MaterialTheme.colorScheme.onPrimary),
+                MaterialTheme.shapes.medium
+            )
     ) {
+        val scale by animateFloatAsState(targetValue = if (selected) 0.7f else 1f, label = "")
+
         ImageWithLoader(
             model = model,
             contentScale = ContentScale.Crop,
             size = size,
             modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
-                .padding(1.dp)
+                .fillMaxSize()
+                .scale(scale)
                 .clip(MaterialTheme.shapes.medium)
-                .border(
-                    BorderStroke(3.dp, MaterialTheme.colorScheme.onPrimary),
-                    MaterialTheme.shapes.medium
-                )
                 .pointerInput(Unit) {
                     detectTapGestures(
                         onDoubleTap = {
@@ -113,16 +119,16 @@ fun MediaItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     text = it,
                     style = MaterialTheme.typography.labelSmall,
                     modifier = Modifier
-                        .background(MaterialTheme.colorScheme.primaryContainer, CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
                         .padding(2.dp)
                 )
                 Icon(
-                    Icons.Rounded.PlayCircle, contentDescription = "play",
-                    tint = MaterialTheme.colorScheme.primaryContainer
+                    Icons.Default.PlayArrow, contentDescription = "play",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

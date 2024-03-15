@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import ru.kvf.core.domain.entities.Media
+import ru.kvf.core.domain.entities.MimeType
 import ru.kvf.core.domain.repository.MediaRepository
 
 class MediaRepositoryImpl(
@@ -51,7 +52,7 @@ class MediaRepositoryImpl(
         mediaFlow.value = media.sortedByDescending { it.timeStamp }
     }
 
-    private fun getMedia(cursor: Cursor?, photos: Boolean) = mutableListOf<Media>().apply {
+    private fun getMedia(cursor: Cursor?, isPhotos: Boolean) = mutableListOf<Media>().apply {
         cursor?.use {
             val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
             val nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
@@ -62,7 +63,7 @@ class MediaRepositoryImpl(
                 val id = cursor.getLong(idColumn)
                 val name = cursor.getString(nameColumn)
                 val date = cursor.getLong(dateColumn)
-                val contentUri = if (photos) {
+                val contentUri = if (isPhotos) {
                     ContentUris.withAppendedId(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         id
@@ -81,7 +82,8 @@ class MediaRepositoryImpl(
                     timeStamp = date,
                     uri = contentUri,
                     folder = folder,
-                    duration = getDuration(cursor, photos)
+                    mimeType = MimeType.get(isPhotos),
+                    duration = getDuration(cursor, isPhotos)
                 )
                 add(media)
             }

@@ -60,6 +60,7 @@ fun HomeUi(
     val currentChild = remember(stackState) { stackState.active.instance }
     val navigationBarHeight = remember { mutableIntStateOf(0) }
     val isScrollInProgress = remember { mutableStateOf(false) }
+    val editModeEnable = remember { mutableStateOf(false) }
     var bottomBarVisible by remember { mutableStateOf(true) }
     val debug = remember { BuildConfig.DEBUG }
     val ld = LocalDensity.current
@@ -81,7 +82,11 @@ fun HomeUi(
         if (state.edgeToEdgeEnable.not()) return@LaunchedEffect
         val needDelay = bottomBarVisible.not()
         if (needDelay) delay(NAV_BAR_VISIBILITY_DELAY)
-        bottomBarVisible = isScrollInProgress.value.not()
+        bottomBarVisible = isScrollInProgress.value.not() && editModeEnable.value.not()
+    }
+
+    LaunchedEffect(editModeEnable.value) {
+        bottomBarVisible = editModeEnable.value.not()
     }
 
     LoadableContent(loading = state.loading) {
@@ -96,10 +101,16 @@ fun HomeUi(
                 when (val child = it.instance) {
                     is HomeComponent.Child.Media -> MediaListUi(
                         component = child.component,
-                        isScrollInProgress = isScrollInProgress
+                        isScrollInProgress = isScrollInProgress,
+                        selectMediaModeEnable = editModeEnable
                     )
+
                     is HomeComponent.Child.Folders -> FoldersListUi(child.component, navBarPadding)
-                    is HomeComponent.Child.Favorite -> FavoriteListUi(child.component, navBarPadding)
+                    is HomeComponent.Child.Favorite -> FavoriteListUi(
+                        child.component,
+                        navBarPadding
+                    )
+
                     is HomeComponent.Child.Settings -> SettingsListUi(child.component)
                     is HomeComponent.Child.Design -> DesignUi(navBarPadding)
                 }
@@ -139,7 +150,9 @@ private fun BottomBar(
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.inversePrimary,
         modifier = Modifier
-            .onSizeChanged { if (navigationBarHeight.value == 0) navigationBarHeight.value = it.height }
+            .onSizeChanged {
+                if (navigationBarHeight.value == 0) navigationBarHeight.value = it.height
+            }
     ) {
         NavBarItem(
             icon = Icons.Filled.Photo,

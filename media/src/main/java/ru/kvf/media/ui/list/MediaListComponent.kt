@@ -14,8 +14,11 @@ interface MediaListComponent {
     fun onMediaClick(mediaId: Long)
     fun onMediaLongClick(media: Media)
     fun onDeleteMediaClick()
-    fun onDismissDeleteMedia()
+    fun onDismissTrashMedia()
     fun savePosition(position: Int)
+    fun onDismissSelectMedia()
+    fun selectModeOnClickShare()
+    fun selectModeOnClickTrash()
 
     sealed interface Output {
         data class OpenMediaRequested(

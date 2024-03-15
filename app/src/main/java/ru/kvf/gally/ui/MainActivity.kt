@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import com.arkivanov.decompose.defaultComponentContext
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.koin
@@ -38,12 +39,14 @@ class MainActivity : ComponentActivity() {
             navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
         )
 
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         val permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { result -> permissionGranted = result.values.all { true } }
 
-        permissionGranted = checkSelfPermission(READ_PHOTO_PERMISSION) == PackageManager.PERMISSION_GRANTED
-                && checkSelfPermission(READ_VIDEO_PERMISSION) == PackageManager.PERMISSION_GRANTED
+        permissionGranted = checkSelfPermission(READ_PHOTO_PERMISSION) == PackageManager.PERMISSION_GRANTED &&
+            checkSelfPermission(READ_VIDEO_PERMISSION) == PackageManager.PERMISSION_GRANTED
 
         if (permissionGranted.not()) {
             permissionLauncher.launch(arrayOf(READ_VIDEO_PERMISSION, READ_PHOTO_PERMISSION))

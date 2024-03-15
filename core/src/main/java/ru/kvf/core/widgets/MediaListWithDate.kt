@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.ImmutableSet
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
 
@@ -25,7 +26,8 @@ fun MediaListWithDate(
     cellsCount: Int = 3,
     onMediaClick: (Long) -> Unit,
     onMediaLongClick: (Media) -> Unit,
-    onLikedClick: (Long) -> Unit
+    onLikedClick: (Long) -> Unit,
+    selectedMediaIds: ImmutableSet<Long>
 ) {
     LazyVerticalGrid(
         state = gridState,
@@ -42,14 +44,15 @@ fun MediaListWithDate(
                         .padding(10.dp)
                 )
             }
-            items(media, key = { item: Media -> item.id }) { media ->
+            items(media, key = { item: Media -> item.id }) { item ->
                 MediaItem(
-                    model = media.uri,
-                    liked = media.id in likedMedia,
-                    duration = media.duration,
-                    onClick = { onMediaClick(media.id) },
-                    onLiked = { onLikedClick(media.id) },
-                    onLongClick = { onMediaLongClick(media) }
+                    model = item.uri,
+                    liked = item.id in likedMedia,
+                    duration = item.duration,
+                    onClick = { onMediaClick(item.id) },
+                    onLiked = { onLikedClick(item.id) },
+                    onLongClick = { onMediaLongClick(item) },
+                    selected = item.id in selectedMediaIds
                 )
             }
         }
