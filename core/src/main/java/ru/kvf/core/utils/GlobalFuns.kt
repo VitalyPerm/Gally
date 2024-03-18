@@ -52,7 +52,7 @@ fun Context.shareMedia(mediaList: List<Media>) {
     intent.startChooser()
 }
 
-fun Context.createTrashMediaRequest(uris: List<Uri>): IntentSenderRequest {
+fun Context.createTrashMediaRequest(uris: Set<Uri>): IntentSenderRequest {
     val intent = MediaStore.createTrashRequest(
         contentResolver,
         uris,

@@ -31,7 +31,6 @@ dependencyResolutionManagement {
             val coreKtxVersion = "1.12.0"
             val lifecycleKtx = "2.6.2"
             val activityVersion = "1.8.2"
-            val immutableCollectionsVersion = "0.3.6"
             val composeVersion = "1.5.4"
             val composeMaterial3Version = "1.1.2"
             val splashVersion = "1.0.0"
@@ -57,11 +56,6 @@ dependencyResolutionManagement {
             library("android-lifecycle", "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleKtx")
             library("android-activity", "androidx.activity:activity-compose:$activityVersion")
             bundle("android", listOf("android-core", "android-lifecycle", "android-activity"))
-
-            library(
-                "immutable-collections",
-                "org.jetbrains.kotlinx:kotlinx-collections-immutable:$immutableCollectionsVersion"
-            )
 
             library("compose-ui", "androidx.compose.ui:ui:$composeVersion")
             library("compose-ui-util", "androidx.compose.ui:ui-util:$composeVersion")

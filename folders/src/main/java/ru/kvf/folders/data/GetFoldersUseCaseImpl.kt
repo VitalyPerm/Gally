@@ -5,10 +5,11 @@ import kotlinx.coroutines.flow.map
 import ru.kvf.core.domain.entities.Folder
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.repository.MediaRepository
+import ru.kvf.folders.domain.GetFoldersUseCase
 
 class GetFoldersUseCaseImpl(
     private val mediaRepository: MediaRepository
-) : ru.kvf.folders.domain.GetFoldersUseCase {
+) : GetFoldersUseCase {
 
     override fun invoke(): Flow<List<Folder>> = mediaRepository.mediaFlow.map { media ->
         media.groupBy(Media::folder).map { (folder, foldermedia) ->

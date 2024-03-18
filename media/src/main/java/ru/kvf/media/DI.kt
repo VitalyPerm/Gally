@@ -25,7 +25,7 @@ fun ComponentFactory.createMediaListComponent(
 ): MediaListComponent = RealMediaListComponent(
     componentContext = componentContext,
     onOutput = output,
-    folder = folderName,
+    folderName = folderName,
     getSortedMediaUseCase = get(),
     getFolderMediaUseCase = get(),
     getLikedIdsListUseCase = get(),
@@ -37,13 +37,13 @@ fun ComponentFactory.createMediaListComponent(
 fun ComponentFactory.createMediaComponent(
     componentContext: ComponentContext,
     startIndex: Int,
-    reversed: Boolean,
+    isReversed: Boolean,
     isFavoriteOnly: Boolean,
     folder: String?
 ): MediaComponent = RealMediaComponent(
     componentContext = componentContext,
     startIndex = startIndex,
-    reversed = reversed,
+    isReversed = isReversed,
     isFavoriteOnly = isFavoriteOnly,
     folder = folder,
     getMediaUseCase = get(),

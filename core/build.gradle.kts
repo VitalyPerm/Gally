@@ -49,7 +49,6 @@ dependencies {
     api(libs.bundles.coil)
     api(libs.bundles.koin)
     api(libs.proto)
-    api(libs.immutable.collections)
     api(libs.zoomable)
     api(libs.bundles.decompose)
     api(libs.bundles.media3)

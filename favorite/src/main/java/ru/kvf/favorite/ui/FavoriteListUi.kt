@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import ru.kvf.core.domain.entities.Media
@@ -24,7 +23,9 @@ fun FavoriteListUi(
     component: FavoriteListComponent,
     navBarPadding: Dp
 ) {
-    val state by component.state.collectAsState()
+    val media by component.media.collectAsState()
+    val isReversed by component.isReversed.collectAsState()
+
     val favoriteListGridState = rememberLazyGridState()
 
     component.sideEffect.collectSideEffect {
@@ -35,7 +36,7 @@ fun FavoriteListUi(
         }
     }
 
-    val media = with(state) { remember(reversed) { if (reversed) media.reversed() else media } }
+    val mediaList = if (isReversed) media.reversed() else media
 
     DefaultContainer(
         titleRes = R.string.likes,
@@ -45,7 +46,7 @@ fun FavoriteListUi(
             .padding(bottom = navBarPadding)
     ) {
         MediaList(
-            media = media,
+            media = mediaList,
             gridState = favoriteListGridState,
             onMediaClick = component::onMediaClick,
             onLikedClick = component::onLikeClick,

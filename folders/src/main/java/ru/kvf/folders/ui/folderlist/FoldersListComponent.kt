@@ -1,10 +1,12 @@
 package ru.kvf.folders.ui.folderlist
 
 import kotlinx.coroutines.flow.StateFlow
+import ru.kvf.core.domain.entities.Folder
 
 interface FoldersListComponent {
 
-    val state: StateFlow<FoldersListState>
+    val folders: StateFlow<List<Folder>>
+    val gridCellsCount: StateFlow<Int>
 
     fun onGridCountClick()
 

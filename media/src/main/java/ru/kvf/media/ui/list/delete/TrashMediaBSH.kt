@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,14 +28,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 import ru.kvf.media.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrashMediaBSH(
-    media: ImmutableList<Uri>,
+    media: Set<Uri>,
     onDeleteClick: () -> Unit,
     onDismissClick: () -> Unit,
 ) {
@@ -68,11 +65,11 @@ fun TrashMediaBSH(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                LazyRow(
+                Row(
                     modifier = Modifier
                         .weight(1f)
                 ) {
-                    items(media) { uri ->
+                    media.forEach { uri ->
                         AsyncImage(
                             model = uri,
                             contentDescription = null,

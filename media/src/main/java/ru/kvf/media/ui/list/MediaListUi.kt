@@ -36,13 +36,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityOptionsCompat
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.ImmutableSet
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
 import ru.kvf.core.utils.collectSideEffect
@@ -59,16 +58,24 @@ fun MediaListUi(
     isScrollInProgress: MutableState<Boolean>? = null,
     selectMediaModeEnable: MutableState<Boolean>? = null
 ) {
-    val state by component.state.collectAsState()
+    val selectedMediaIds by component.selectedMediaIds.collectAsState()
+    val media by component.media.collectAsState()
+    val cellsCount by component.gridCellsCount.collectAsState()
+    val sortReversed by component.sortReversed.collectAsState()
+    val likedMedia by component.likedMedia.collectAsState()
+    val selectedMediaDates by component.selectedMediaDates.collectAsState()
+    val mediaToTrashUris by component.mediaToTrashUris.collectAsState()
+
     val mediaListGridState = rememberLazyGridState(
-        initialFirstVisibleItemIndex = state.lastPosition
+        initialFirstVisibleItemIndex = component.lastPosition
     )
     val ctx = LocalContext.current
     val deleteMediaLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
     ) { _ -> }
+    val haptic = LocalHapticFeedback.current
 
-    BackHandler(enabled = state.selectedMediaIds.isNotEmpty()) {
+    BackHandler(enabled = selectedMediaIds.isNotEmpty()) {
         component.onDismissSelectMedia()
     }
 
@@ -80,8 +87,8 @@ fun MediaListUi(
         onDispose { component.savePosition(mediaListGridState.firstVisibleItemIndex) }
     }
 
-    LaunchedEffect(state.selectMediaModeEnable) {
-        selectMediaModeEnable?.value = state.selectMediaModeEnable
+    LaunchedEffect(selectedMediaIds) {
+        selectMediaModeEnable?.value = selectedMediaIds.isNotEmpty()
     }
 
     component.sideEffect.collectSideEffect {
@@ -98,30 +105,35 @@ fun MediaListUi(
             is MediaListSideEffect.ShareMedia -> {
                 ctx.shareMedia(it.media)
             }
+
+            MediaListSideEffect.Vibrate -> haptic.performHapticFeedback(HapticFeedbackType.LongPress)
         }
     }
 
     Content(
-        media = state.media,
-        reversedMedia = state.reversedMedia,
-        folderName = state.folderName,
-        cellsCount = state.gridCellsCount,
+        media = media.first,
+        reversedMedia = media.second,
+        folderName = component.folderName,
+        cellsCount = cellsCount,
         gridState = mediaListGridState,
         onGridCountClick = component::onGridCountClick,
-        reversed = state.reversed,
+        sortReversed = sortReversed,
         onReverseClick = component::onReverseClick,
-        likedMedia = state.likedMedia,
+        likedMedia = likedMedia,
         onMediaClick = component::onMediaClick,
         onMediaLongClick = component::onMediaLongClick,
         onLikedClick = component::onLikeClick,
-        selectedMediaIds = state.selectedMediaIds,
+        selectedMediaIds = selectedMediaIds,
         selectModeOnClickShare = component::selectModeOnClickShare,
         selectModeOnClickTrash = component::selectModeOnClickTrash,
-        selectModeOnClickClose = component::onDismissSelectMedia
+        selectModeOnClickClose = component::onDismissSelectMedia,
+        editMode = selectMediaModeEnable?.value ?: false,
+        onSelectDateClick = component::onSelectDateClick,
+        selectedMediaDates = selectedMediaDates
     )
 
     TrashMediaBSH(
-        media = state.mediaToTrashUris,
+        media = mediaToTrashUris,
         onDeleteClick = component::onDeleteMediaClick,
         onDismissClick = component::onDismissTrashMedia
     )
@@ -129,22 +141,25 @@ fun MediaListUi(
 
 @Composable
 private fun Content(
-    media: ImmutableMap<MediaDate, List<Media>>,
-    reversedMedia: ImmutableMap<MediaDate, List<Media>>,
+    media: Map<MediaDate, List<Media>>,
+    reversedMedia: Map<MediaDate, List<Media>>,
     folderName: String?,
     cellsCount: Int,
     gridState: LazyGridState,
     onGridCountClick: () -> Unit,
-    reversed: Boolean,
+    sortReversed: Boolean,
     onReverseClick: () -> Unit,
-    likedMedia: ImmutableList<Long>,
+    likedMedia: List<Long>,
     onMediaClick: (Long) -> Unit,
     onMediaLongClick: (Media) -> Unit,
     onLikedClick: (Long) -> Unit,
-    selectedMediaIds: ImmutableSet<Long>,
+    selectedMediaIds: Set<Long>,
     selectModeOnClickShare: () -> Unit,
     selectModeOnClickClose: () -> Unit,
-    selectModeOnClickTrash: () -> Unit
+    selectModeOnClickTrash: () -> Unit,
+    onSelectDateClick: (MediaDate) -> Unit,
+    selectedMediaDates: Set<MediaDate>,
+    editMode: Boolean
 ) {
     Box {
         DefaultContainer(
@@ -156,7 +171,7 @@ private fun Content(
             reverseActionEnable = true,
             onReverseClick = onReverseClick
         ) {
-            val mediaMap = remember(reversed) { if (reversed) reversedMedia else media }
+            val mediaMap = remember(sortReversed) { if (sortReversed) reversedMedia else media }
             MediaListWithDate(
                 media = mediaMap,
                 likedMedia = likedMedia,
@@ -165,12 +180,14 @@ private fun Content(
                 onMediaClick = onMediaClick,
                 onLikedClick = onLikedClick,
                 onMediaLongClick = onMediaLongClick,
-                selectedMediaIds = selectedMediaIds
+                selectedMediaIds = selectedMediaIds,
+                selectedMediaDates = selectedMediaDates,
+                onSelectDateClick = onSelectDateClick
             )
         }
 
         MediaSelectModeMenu(
-            visible = selectedMediaIds.isNotEmpty(),
+            visible = editMode,
             onClickShare = selectModeOnClickShare,
             onClickTrash = selectModeOnClickTrash,
             selectedMediaCount = selectedMediaIds.size,

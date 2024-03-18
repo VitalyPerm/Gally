@@ -18,7 +18,7 @@ import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.usecase.LoadMediaUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
 import ru.kvf.core.utils.collectFlow
-import ru.kvf.core.utils.componentCoroutineScope
+import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.design.RealDesignComponent
 import ru.kvf.favorite.createFavoriteListComponent
@@ -39,7 +39,7 @@ class RealHomeComponent(
     performHapticFeedBackUseCase: PerformHapticFeedBackUseCase,
 ) : ComponentContext by componentContext, HomeComponent {
     private val navigation = StackNavigation<Config>()
-    private val scope = componentCoroutineScope()
+    private val componentScope = lifecycle.coroutineScope()
 
     override val childStack: Value<ChildStack<*, HomeComponent.Child>> =
         childStack(
@@ -53,17 +53,17 @@ class RealHomeComponent(
     override val sideEffect = MutableSharedFlow<RootSideEffect>()
 
     init {
-        scope.collectFlow(edgeToEdgeUseCase.getEnabled()) { edgeToEdgeEnable ->
+        componentScope.collectFlow(edgeToEdgeUseCase.getEnabled()) { edgeToEdgeEnable ->
             state.update { state.value.copy(edgeToEdgeEnable = edgeToEdgeEnable) }
         }
 
-        scope.collectFlow(performHapticFeedBackUseCase.collect()) {
-            scope.launch { sideEffect.emit(RootSideEffect.Vibrate) }
+        componentScope.collectFlow(performHapticFeedBackUseCase.collect()) {
+            componentScope.launch { sideEffect.emit(RootSideEffect.Vibrate) }
         }
 
         lifecycle.doOnPause { state.update { state.value.copy(loading = true) } }
         lifecycle.doOnResume {
-            scope.safeLaunch {
+            componentScope.safeLaunch {
                 loadMediaUseCase()
                 state.update { state.value.copy(loading = false) }
             }

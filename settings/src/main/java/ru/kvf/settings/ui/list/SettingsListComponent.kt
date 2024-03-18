@@ -4,7 +4,9 @@ import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.core.domain.entities.ThemeType
 
 interface SettingsListComponent {
-    val state: StateFlow<SettingsListState>
+    val edgeToEdgeEnable: StateFlow<Boolean>
+    val theme: StateFlow<ThemeType>
+    val sortBy: StateFlow<Int>
 
     fun onThemeChanged(themeType: ThemeType)
     fun onEdgeToEdgeChanged(enable: Boolean)

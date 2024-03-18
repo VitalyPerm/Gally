@@ -41,10 +41,13 @@ import java.util.Calendar
 fun SettingsListUi(
     component: SettingsListComponent,
 ) {
-    val state by component.state.collectAsState()
-
+    val edgeToEdgEnable by component.edgeToEdgeEnable.collectAsState()
+    val sortBy by component.sortBy.collectAsState()
+    val theme by component.theme.collectAsState()
     Content(
-        state = state,
+        edgeToEdgEnable = edgeToEdgEnable,
+        sortBy = sortBy,
+        theme = theme,
         onEdgeToEdgeChanged = component::onEdgeToEdgeChanged,
         onThemeTypeSelected = component::onThemeChanged,
         onSortByChanged = component::onSortByChanged
@@ -53,7 +56,9 @@ fun SettingsListUi(
 
 @Composable
 private fun Content(
-    state: SettingsListState,
+    edgeToEdgEnable: Boolean,
+    sortBy: Int,
+    theme: ThemeType,
     onEdgeToEdgeChanged: (Boolean) -> Unit,
     onThemeTypeSelected: (ThemeType) -> Unit,
     onSortByChanged: (Int) -> Unit
@@ -62,22 +67,22 @@ private fun Content(
 
     DefaultContainer(titleRes = R.string.settings) {
         EdgeToEdge(
-            enable = state.edgeToEdge,
+            enable = edgeToEdgEnable,
             onCheckedChange = onEdgeToEdgeChanged
         )
         Theme(
-            currentTheme = state.theme,
+            currentTheme = theme,
             onCurrentThemeClick = { chooseThemeBSHVisible.value = true }
         )
 
         SortBy(
-            currentSortBy = state.sortBy,
+            currentSortBy = sortBy,
             onSortByChanged = onSortByChanged
         )
         ChooseThemeBSH(
             visible = chooseThemeBSHVisible,
             onTypeSelected = onThemeTypeSelected,
-            currentTheme = state.theme
+            currentTheme = theme
         )
     }
 }

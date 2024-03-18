@@ -30,18 +30,15 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
-import kotlinx.collections.immutable.ImmutableList
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 import ru.kvf.core.domain.entities.Media
-import ru.kvf.core.utils.enableFullScreen
-import ru.kvf.core.utils.disableFullScreen
 import kotlin.math.absoluteValue
 
 @Composable
 fun MediaPager(
     modifier: Modifier = Modifier,
-    media: ImmutableList<Media>,
+    media: List<Media>,
     pagerState: PagerState,
     reversePager: Boolean = false,
     onTap: () -> Unit = { },
@@ -58,7 +55,7 @@ fun MediaPager(
 @Composable
 private fun PagerContent(
     modifier: Modifier = Modifier,
-    mediaList: ImmutableList<Media>,
+    mediaList: List<Media>,
     reversePager: Boolean = false,
     pagerState: PagerState,
     onTap: () -> Unit,

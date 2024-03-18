@@ -1,14 +1,13 @@
 package ru.kvf.media.ui.list
 
+import android.net.Uri
 import com.arkivanov.decompose.ComponentContext
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.persistentSetOf
-import kotlinx.collections.immutable.toImmutableList
-import kotlinx.collections.immutable.toImmutableMap
-import kotlinx.collections.immutable.toImmutableSet
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.kvf.core.domain.entities.Media
@@ -18,7 +17,7 @@ import ru.kvf.core.domain.usecase.GetMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
 import ru.kvf.core.utils.collectFlow
-import ru.kvf.core.utils.componentCoroutineScope
+import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.media.domain.GetFolderMediaUseCase
 import ru.kvf.media.domain.GetSortedMediaUseCase
@@ -26,7 +25,7 @@ import ru.kvf.media.domain.GetSortedMediaUseCase
 class RealMediaListComponent(
     componentContext: ComponentContext,
     private val onOutput: (MediaListComponent.Output) -> Unit,
-    private val folder: String? = null,
+    override val folderName: String? = null,
     getSortedMediaUseCase: GetSortedMediaUseCase,
     private val getFolderMediaUseCase: GetFolderMediaUseCase,
     getLikedIdsListUseCase: GetLikedIdsListUseCase,
@@ -35,40 +34,44 @@ class RealMediaListComponent(
     private val handleLikeClickUseCase: HandleLikeClickUseCase
 ) : ComponentContext by componentContext, MediaListComponent {
 
-    private companion object {
-        const val BSH_ANIM_DELAY = 1000L
-    }
+    private val componentScope = lifecycle.coroutineScope()
 
-    private val scope = componentCoroutineScope()
-
-    override val state = MutableStateFlow(MediaListState())
-
+    override val gridCellsCount = gridCellsCountChangeUseCase
+        .get(GridCellsCountChangeUseCase.Screen.MediaList)
+        .stateIn(componentScope, SharingStarted.Lazily, 1)
+    override val media = MutableStateFlow(
+        mapOf<MediaDate, List<Media>>() to
+            mapOf<MediaDate, List<Media>>()
+    )
+    override val likedMedia = getLikedIdsListUseCase()
+        .stateIn(componentScope, SharingStarted.Lazily, emptyList())
+    override val sortReversed = MutableStateFlow(false)
+    override val selectedMediaIds = MutableStateFlow(emptySet<Long>())
+    override val mediaToTrashUris = MutableStateFlow(emptySet<Uri>())
+    override val selectedMediaDates = MutableStateFlow(emptySet<MediaDate>())
+    override var lastPosition = 0
     override val sideEffect = MutableSharedFlow<MediaListSideEffect>()
 
+    private var allMediaList: List<Media> = emptyList()
+    private var mediaDateToIdMap: Map<MediaDate, List<Long>> = emptyMap()
+
     init {
-        scope.collectFlow(getLikedIdsListUseCase()) { list ->
-            state.update { state.value.copy(likedMedia = list.toImmutableList()) }
-        }
-
-        scope.collectFlow(
-            gridCellsCountChangeUseCase.get(GridCellsCountChangeUseCase.Screen.MediaList)
-        ) { count ->
-            state.update { state.value.copy(gridCellsCount = count) }
-        }
-
-        if (folder != null) {
-            scope.collectFlow(getFolderMediaUseCase.sorted(folder)) { media ->
+        if (folderName != null) {
+            componentScope.collectFlow(getFolderMediaUseCase.sorted(folderName)) { media ->
                 updateMedia(media)
             }
-            state.update { state.value.copy(folderName = folder) }
         } else {
-            scope.collectFlow(getSortedMediaUseCase()) { updateMedia(it) }
+            componentScope.collectFlow(getSortedMediaUseCase()) { value ->
+                allMediaList = value.values.flatten()
+                mediaDateToIdMap = value.mapValues { it.value.map(Media::id) }
+                updateMedia(value)
+            }
         }
     }
 
     override fun onGridCountClick() {
-        scope.safeLaunch {
-            val value = if (state.value.gridCellsCount == 4) 1 else state.value.gridCellsCount + 1
+        componentScope.safeLaunch {
+            val value = if (gridCellsCount.value == 4) 1 else gridCellsCount.value + 1
             gridCellsCountChangeUseCase.set(
                 value = value,
                 screen = GridCellsCountChangeUseCase.Screen.MediaList
@@ -77,21 +80,21 @@ class RealMediaListComponent(
     }
 
     override fun onLikeClick(id: Long) {
-        scope.safeLaunch { handleLikeClickUseCase(id) }
+        componentScope.safeLaunch { handleLikeClickUseCase(id) }
     }
 
     override fun onReverseClick() {
-        state.update { state.value.copy(reversed = state.value.reversed.not()) }
-        scope.launch { sideEffect.emit(MediaListSideEffect.ScrollUp) }
+        sortReversed.update { it.not() }
+        componentScope.launch { sideEffect.emit(MediaListSideEffect.ScrollUp) }
     }
 
     override fun onMediaClick(mediaId: Long) {
-        scope.safeLaunch {
-            if (state.value.selectMediaModeEnable) {
-                addSelectedMedia(mediaId)
+        componentScope.safeLaunch {
+            if (selectedMediaIds.value.isNotEmpty()) {
+                editSelectedMedia(mediaId)
             } else {
-                if (folder != null) {
-                    getFolderMediaUseCase(folder).firstOrNull()
+                if (folderName != null) {
+                    getFolderMediaUseCase(folderName).firstOrNull()
                 } else {
                     getMediaUseCase().firstOrNull()
                 }?.let { list ->
@@ -99,8 +102,8 @@ class RealMediaListComponent(
                     onOutput(
                         MediaListComponent.Output.OpenMediaRequested(
                             index = index,
-                            reversed = state.value.reversed,
-                            folder = folder
+                            reversed = sortReversed.value,
+                            folder = folderName
                         )
                     )
                 }
@@ -108,80 +111,98 @@ class RealMediaListComponent(
         }
     }
 
-    override fun savePosition(position: Int) {
-        state.update { state.value.copy(lastPosition = position) }
-    }
+    override fun savePosition(position: Int) { lastPosition = position }
 
     override fun onMediaLongClick(media: Media) {
-        state.update {
-            state.value.copy(selectedMediaIds = persistentSetOf(media.id))
+        if (selectedMediaIds.value.isNotEmpty()) return
+        componentScope.launch {
+            selectedMediaIds.value = setOf(media.id)
+            sideEffect.emit(MediaListSideEffect.Vibrate)
         }
     }
 
     override fun onDismissSelectMedia() {
-        state.update {
-            state.value.copy(selectedMediaIds = persistentSetOf())
-        }
+        selectedMediaIds.value = emptySet()
+        selectedMediaDates.value = emptySet()
     }
 
     override fun selectModeOnClickShare() {
-        scope.launch {
-            val allMedia = state.value.media.values.flatten()
-            val mediaList = state.value.selectedMediaIds.mapNotNull {
-                allMedia.find { media -> media.id == it }
+        componentScope.launch {
+            val mediaList = selectedMediaIds.value.mapNotNull {
+                allMediaList.find { media -> media.id == it }
             }
-            state.update {
-                state.value.copy(selectedMediaIds = persistentSetOf())
-            }
+            selectedMediaIds.value = emptySet()
             sideEffect.emit(MediaListSideEffect.ShareMedia(mediaList))
         }
     }
 
     override fun selectModeOnClickTrash() {
-        scope.launch {
-            val allMedia = state.value.media.values.flatten()
-            val mediaList = state.value.selectedMediaIds.mapNotNull {
-                allMedia.find { media -> media.id == it }?.uri
-            }.toImmutableList()
-            state.update {
-                state.value.copy(
-                    mediaToTrashUris = mediaList,
-                    selectedMediaIds = persistentSetOf()
-                )
+        componentScope.launch {
+            val mediaList = selectedMediaIds.value.mapNotNull {
+                allMediaList.find { media -> media.id == it }?.uri
+            }
+            mediaToTrashUris.value = mediaList.toSet()
+            selectedMediaIds.value = emptySet()
+        }
+    }
+
+    override fun onSelectDateClick(mediaDate: MediaDate) {
+        selectedMediaIds.update { value ->
+            value.toMutableSet().apply {
+                val newSelectedMediaIds = allMediaList.filter { it.date == mediaDate }
+                    .map(Media::id).toSet()
+                val wasAlreadySelected = mediaDate in selectedMediaDates.value
+                if (wasAlreadySelected) {
+                    removeAll(newSelectedMediaIds)
+                } else {
+                    addAll(newSelectedMediaIds)
+                }
+            }
+        }
+        selectedMediaDates.update { value ->
+            value.toMutableSet().apply {
+                if (contains(mediaDate)) remove(mediaDate) else add(mediaDate)
             }
         }
     }
 
     override fun onDeleteMediaClick() {
-        scope.launch {
-            val uris = state.value.mediaToTrashUris
+        componentScope.launch {
+            val uris = mediaToTrashUris.value
             onDismissTrashMedia()
             sideEffect.emit(MediaListSideEffect.DeleteMedia(uris))
         }
     }
 
     override fun onDismissTrashMedia() {
-        state.update {
-            state.value.copy(
-                mediaToTrashUris = persistentListOf(),
-                selectedMediaIds = persistentSetOf()
-            )
-        }
+        mediaToTrashUris.value = emptySet()
+        selectedMediaIds.value = emptySet()
     }
 
-    private fun updateMedia(media: Map<MediaDate, List<Media>>) {
-        state.update {
-            state.value.copy(
-                media = media.toImmutableMap(),
-                reversedMedia = media.mapValues { it.value.reversed() }.toSortedMap().toImmutableMap()
-            )
-        }
+    private fun updateMedia(data: Map<MediaDate, List<Media>>) {
+        media.value = data to data.mapValues { it.value.reversed() }.toSortedMap()
     }
 
-    private fun addSelectedMedia(id: Long) {
-        val newSet = state.value.selectedMediaIds.toMutableList().apply {
-            add(id)
+    private fun editSelectedMedia(id: Long) {
+        componentScope.safeLaunch(Dispatchers.Default) {
+            sideEffect.emit(MediaListSideEffect.Vibrate)
+            val value = selectedMediaIds.value.toMutableList().apply {
+                if (contains(id)) remove(id) else add(id)
+            }.toSet()
+            selectedMediaIds.value = value
+            checkAllMediaOfDaySelected(id)
         }
-        state.update { state.value.copy(selectedMediaIds = newSet.toImmutableSet()) }
+    }
+    private fun checkAllMediaOfDaySelected(id: Long) {
+        componentScope.safeLaunch(Dispatchers.Default) {
+            val dateToCheck = allMediaList.find { it.id == id }?.date ?: return@safeLaunch
+            val isAllMediaSelected = allMediaList.filter { it.date == dateToCheck }.map { it.id }
+                .all { it in selectedMediaIds.value }
+            selectedMediaDates.update { value ->
+                value.toMutableSet().apply {
+                    if (isAllMediaSelected) add(dateToCheck) else remove(dateToCheck)
+                }
+            }
+        }
     }
 }

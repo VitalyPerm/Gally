@@ -2,12 +2,14 @@ package ru.kvf.core.domain.entities
 
 import android.annotation.SuppressLint
 import android.content.res.Resources
+import androidx.compose.runtime.Stable
 import org.koin.java.KoinJavaComponent
 import ru.kvf.core.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+@Stable
 class MediaDate(
     val date: Calendar,
     private val sortBy: Int = Calendar.DAY_OF_YEAR

@@ -24,8 +24,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.size.Size
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import ru.kvf.core.domain.entities.Folder
 import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.ImageWithLoader
@@ -36,28 +34,29 @@ fun FoldersListUi(
     component: FoldersListComponent,
     navBarPadding: Dp
 ) {
-    val state by component.state.collectAsState()
+    val folders by component.folders.collectAsState()
+    val gridCellsCount by component.gridCellsCount.collectAsState()
     val foldersListGridState = rememberLazyGridState()
 
     DefaultContainer(
         titleRes = R.string.folders,
         gridCountActionEnable = true,
-        gridCount = state.gridCellsCount,
+        gridCount = gridCellsCount,
         onGridCountClick = component::onGridCountClick,
         modifier = Modifier.padding(bottom = navBarPadding)
     ) {
         FoldersList(
-            folders = state.folders.toImmutableList(),
+            folders = folders,
             onFolderClick = component::onFolderClick,
             gridState = foldersListGridState,
-            cellsCount = state.gridCellsCount,
+            cellsCount = gridCellsCount,
         )
     }
 }
 
 @Composable
 private fun FoldersList(
-    folders: ImmutableList<Folder>,
+    folders: List<Folder>,
     onFolderClick: (String) -> Unit,
     gridState: LazyGridState,
     cellsCount: Int

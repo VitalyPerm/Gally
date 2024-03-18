@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.parcelize.Parcelize
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.entities.ThemeType
-import ru.kvf.core.utils.componentCoroutineScope
+import ru.kvf.core.utils.coroutineScope
 import ru.kvf.gally.createHomeComponent
 import ru.kvf.gally.ui.home.HomeComponent
 import ru.kvf.media.createMediaComponent
@@ -27,10 +27,10 @@ class RealRootComponent(
 ) : ComponentContext by componentContext, RootComponent {
 
     private val navigation = StackNavigation<Config>()
-    private val scope = componentCoroutineScope()
+    private val componentScope = lifecycle.coroutineScope()
 
     override val theme = themeUseCase.getTheme().stateIn(
-        scope,
+        componentScope,
         SharingStarted.Eagerly,
         ThemeType.System
     )
@@ -53,7 +53,7 @@ class RealRootComponent(
                 componentFactory.createMediaComponent(
                     componentContext = componentContext,
                     startIndex = config.index,
-                    reversed = config.reversed,
+                    isReversed = config.reversed,
                     isFavoriteOnly = config.isFavoriteOnly,
                     folder = config.folder
                 )
