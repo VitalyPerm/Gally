@@ -1,64 +1,59 @@
 package ru.kvf.core.widgets
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.PlayCircleFilled
-import androidx.compose.material.icons.rounded.HeartBroken
-import androidx.compose.material.icons.rounded.PlayCircle
+import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.size.Size
-import kotlinx.coroutines.delay
-import ru.kvf.core.utils.Constants
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MediaItem(
-    model: Any,
-    liked: Boolean = false,
-    shouldShowLikeIcon: Boolean = true,
+fun LazyGridItemScope.MediaItem(
+    model: Any?,
+    title: String? = null,
+    favorite: Boolean = false,
+    shouldShowFavoriteIcon: Boolean = true,
     duration: String? = null,
     onClick: (() -> Unit)? = null,
     onLongClick: (() -> Unit)? = null,
-    onLiked: (() -> Unit)? = null,
-    size: Size = Size(250, 250),
-    selected: Boolean = false
+    isSelected: Boolean = false,
+    editMode: Boolean = false,
+    cellsCount: Int
 ) {
-    var showLike by remember { mutableStateOf(false) }
-    val hearSize by animateFloatAsState(targetValue = if (showLike) 100f else 0f, label = "")
-    LaunchedEffect(key1 = showLike, block = {
-        delay(Constants.MEDIA_ITEM_LIKE_DURATION)
-        showLike = false
-    })
-
     Box(
         modifier = Modifier
             .aspectRatio(1f)
@@ -67,46 +62,55 @@ fun MediaItem(
                 BorderStroke(4.dp, MaterialTheme.colorScheme.onPrimary),
                 MaterialTheme.shapes.medium
             )
+            .animateItemPlacement()
     ) {
-        val scale by animateFloatAsState(targetValue = if (selected) 0.7f else 1f, label = "")
+        val scale by animateFloatAsState(targetValue = if (isSelected) 0.7f else 1f, label = "")
+        val imageSize = remember(cellsCount) { calculatePhotoSize(cellsCount) }
+        val favoriteIconSize = remember(cellsCount) { calculateFavoriteIconSize(cellsCount) }
 
-        ImageWithLoader(
-            model = model,
-            contentScale = ContentScale.Crop,
-            size = size,
-            modifier = Modifier
-                .fillMaxSize()
-                .scale(scale)
-                .clip(MaterialTheme.shapes.medium)
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onDoubleTap = {
-                            showLike = true
-                            onLiked?.invoke()
-                        },
-                        onTap = { onClick?.invoke() },
-                        onLongPress = { onLongClick?.invoke() }
+        Column {
+            ImageWithLoader(
+                model = model,
+                contentScale = ContentScale.Crop,
+                size = imageSize,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .scale(scale)
+                    .clip(MaterialTheme.shapes.medium)
+                    .combinedClickable(
+                        onClick = { onClick?.invoke() },
+                        onLongClick = { onLongClick?.invoke() }
                     )
-                }
-        )
+            )
+        }
 
-        Icon(
-            tint = Color.Red,
-            imageVector = if (liked) Icons.Rounded.HeartBroken else Icons.Filled.Favorite,
-            contentDescription = null,
-            modifier = Modifier
-                .size(hearSize.dp)
-                .align(Alignment.Center)
-        )
+        title?.let {
+            Text(
+                text = it,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxWidth(0.7f)
+                    .padding(3.dp)
+                    .background(
+                        MaterialTheme.colorScheme.onPrimary,
+                        MaterialTheme.shapes.extraLarge
+                    )
+                    .padding(6.dp)
+            )
+        }
 
-        if (liked && shouldShowLikeIcon) {
+        if (favorite && shouldShowFavoriteIcon) {
             Icon(
-                tint = Color.Red.copy(alpha = 0.3f),
+                tint = Color.Red.copy(alpha = 0.5f),
                 imageVector = Icons.Filled.Favorite,
                 contentDescription = null,
                 modifier = Modifier
-                    .padding(5.dp)
-                    .size(15.dp)
+                    .padding(10.dp)
+                    .size(favoriteIconSize)
                     .align(Alignment.TopEnd)
             )
         }
@@ -127,10 +131,36 @@ fun MediaItem(
                         .padding(2.dp)
                 )
                 Icon(
-                    Icons.Default.PlayArrow, contentDescription = "play",
+                    Icons.Default.PlayArrow,
+                    contentDescription = "play",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
+
+        AnimatedVisibility(editMode) {
+            Icon(
+                imageVector = if (isSelected) Icons.Filled.CheckCircle else Icons.Outlined.Circle,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(8.dp)
+            )
+        }
     }
+}
+
+private fun calculateFavoriteIconSize(cellsCount: Int): Dp = when (cellsCount) {
+    1 -> 48.dp
+    2 -> 36.dp
+    3 -> 24.dp
+    else -> 16.dp
+}
+
+private fun calculatePhotoSize(cellsCount: Int): Size = when (cellsCount) {
+    1 -> Size(1000, 1000)
+    2 -> Size(750, 750)
+    3 -> Size(500, 500)
+    else -> Size(250, 250)
 }

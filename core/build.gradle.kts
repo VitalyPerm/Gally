@@ -34,6 +34,18 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+        if (project.findProperty("composeCompilerReports") == "true") {
+            freeCompilerArgs += listOf(
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${project.buildDir.absolutePath}/compose_compiler"
+            )
+        }
+        if (project.findProperty("composeCompilerMetrics") == "true") {
+            freeCompilerArgs += listOf(
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=${project.buildDir.absolutePath}/compose_compiler"
+            )
+        }
     }
     buildFeatures {
         compose = true
@@ -49,7 +61,6 @@ dependencies {
     api(libs.bundles.coil)
     api(libs.bundles.koin)
     api(libs.proto)
-    api(libs.immutable.collections)
     api(libs.zoomable)
     api(libs.bundles.decompose)
     api(libs.bundles.media3)

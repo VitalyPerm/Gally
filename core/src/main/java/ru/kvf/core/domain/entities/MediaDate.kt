@@ -2,12 +2,14 @@ package ru.kvf.core.domain.entities
 
 import android.annotation.SuppressLint
 import android.content.res.Resources
+import androidx.compose.runtime.Immutable
 import org.koin.java.KoinJavaComponent
 import ru.kvf.core.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+@Immutable
 class MediaDate(
     val date: Calendar,
     private val sortBy: Int = Calendar.DAY_OF_YEAR
@@ -52,7 +54,11 @@ class MediaDate(
             else -> sdfDaily.format(date.time)
         }
     } else {
-        sdfMonthly.format(date.time)
+        if (isUnknown()) {
+            resources.getString(R.string.date_unknown)
+        } else {
+            sdfMonthly.format(date.time)
+        }
     }
 
     private fun isToday() = this == today
@@ -61,9 +67,10 @@ class MediaDate(
 }
 
 @SuppressLint("ConstantLocale")
-private val sdfDaily = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+private val sdfDaily = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+
 @SuppressLint("ConstantLocale")
-private val sdfMonthly = SimpleDateFormat("MMM yy", Locale.getDefault())
+private val sdfMonthly = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
 private val today = MediaDate(Calendar.getInstance())
 private val yesterday = MediaDate(
     Calendar.getInstance().apply {

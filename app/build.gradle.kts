@@ -2,7 +2,6 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("plugin.serialization")
-    kotlin("plugin.parcelize")
 }
 
 android {
@@ -47,12 +46,25 @@ android {
             resValue("string", "app_name", "GalDebug")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
         jvmTarget = "17"
+        if (project.findProperty("composeCompilerReports") == "true") {
+            freeCompilerArgs += listOf(
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${project.buildDir.absolutePath}/compose_compiler"
+            )
+        }
+        if (project.findProperty("composeCompilerMetrics") == "true") {
+            freeCompilerArgs += listOf(
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=${project.buildDir.absolutePath}/compose_compiler"
+            )
+        }
     }
     buildFeatures {
         compose = true
@@ -70,10 +82,6 @@ android {
 
 dependencies {
     implementation(project(":core"))
-    implementation(project(":media"))
-    implementation(project(":folders"))
-    implementation(project(":favorite"))
-    implementation(project(":settings"))
-    implementation(project(":design"))
+    implementation(project(":feature"))
     implementation(libs.splash)
 }

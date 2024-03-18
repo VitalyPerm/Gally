@@ -1,0 +1,57 @@
+plugins {
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
+    kotlin("plugin.serialization")
+}
+
+android {
+    val minSdkVersion: Int by rootProject.extra
+    namespace = "ru.kvf.feature"
+    compileSdk = 34
+
+    defaultConfig {
+        minSdk = minSdkVersion
+
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+        if (project.findProperty("composeCompilerReports") == "true") {
+            freeCompilerArgs += listOf(
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${project.buildDir.absolutePath}/compose_compiler"
+            )
+        }
+        if (project.findProperty("composeCompilerMetrics") == "true") {
+            freeCompilerArgs += listOf(
+                "-P",
+                "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=${project.buildDir.absolutePath}/compose_compiler"
+            )
+        }
+    }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.7"
+    }
+}
+
+dependencies {
+    implementation(project(":core"))
+    debugImplementation(libs.compose.debug.ui.tooling)
+}

@@ -10,10 +10,10 @@ import com.arkivanov.decompose.ComponentContext
 import org.koin.core.component.get
 import org.koin.dsl.module
 import ru.kvf.core.ComponentFactory
-import ru.kvf.gally.ui.home.HomeComponent
-import ru.kvf.gally.ui.home.RealHomeComponent
-import ru.kvf.gally.ui.root.RealRootComponent
-import ru.kvf.gally.ui.root.RootComponent
+import ru.kvf.gally.home.HomeComponent
+import ru.kvf.gally.home.RealHomeComponent
+import ru.kvf.gally.root.RealRootComponent
+import ru.kvf.gally.root.RootComponent
 
 private const val DATA_STORE_NAME = "data_store"
 
@@ -29,19 +29,23 @@ val appModule = module {
 fun ComponentFactory.createRootComponent(
     componentContext: ComponentContext
 ): RootComponent = RealRootComponent(
-    componentContext = componentContext,
-    componentFactory = get(),
-    themeUseCase = get(),
+    componentContext,
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
 )
 
 fun ComponentFactory.createHomeComponent(
     componentContext: ComponentContext,
     output: (HomeComponent.Output) -> Unit
 ): HomeComponent = RealHomeComponent(
-    componentContext = componentContext,
-    onOutput = output,
-    componentFactory = get(),
-    loadMediaUseCase = get(),
-    edgeToEdgeUseCase = get(),
-    performHapticFeedBackUseCase = get()
+    componentContext,
+    output,
+    get(),
+    get(),
+    get(),
 )

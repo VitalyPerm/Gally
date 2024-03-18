@@ -5,81 +5,80 @@ package ru.kvf.core.widgets
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.util.lerp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.media3.common.C
-import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
+import androidx.compose.ui.layout.ScaleFactor
+import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.ui.PlayerView
-import kotlinx.collections.immutable.ImmutableList
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 import ru.kvf.core.domain.entities.Media
-import ru.kvf.core.utils.enableFullScreen
-import ru.kvf.core.utils.disableFullScreen
+import ru.kvf.core.domain.entities.MimeType
+import ru.kvf.core.utils.MediaList
 import kotlin.math.absoluteValue
 
 @Composable
 fun MediaPager(
     modifier: Modifier = Modifier,
-    media: ImmutableList<Media>,
+    media: MediaList,
     pagerState: PagerState,
-    reversePager: Boolean = false,
-    onTap: () -> Unit = { },
+    onClick: () -> Unit = { },
+    onPlayVideoClick: () -> Unit,
 ) {
     PagerContent(
         mediaList = media,
         pagerState = pagerState,
         modifier = modifier,
-        reversePager = reversePager,
-        onTap = onTap,
+        onClick = onClick,
+        onPlayVideoClick = onPlayVideoClick
     )
 }
 
 @Composable
 private fun PagerContent(
     modifier: Modifier = Modifier,
-    mediaList: ImmutableList<Media>,
-    reversePager: Boolean = false,
+    mediaList: MediaList,
     pagerState: PagerState,
-    onTap: () -> Unit,
+    onClick: () -> Unit,
+    onPlayVideoClick: () -> Unit,
 ) {
     HorizontalPager(
         state = pagerState,
-        reverseLayout = reversePager,
         modifier = modifier
-            .background(MaterialTheme.colorScheme.inverseSurface)
     ) { page ->
-        val media = mediaList[page]
-        if (media.duration != null) {
-            VideoItem(
+        val media = mediaList.data[page]
+        when (media.mimeType) {
+            MimeType.Video -> VideoItem(
                 video = media,
+                onClick = onClick,
+                onPlayClick = onPlayVideoClick
             )
-        } else {
-            PhotoItem(
+
+            MimeType.Photo -> PhotoItem(
                 pagerState = pagerState,
                 page = page,
                 model = media.uri,
-                onTap = { onTap() }
+                onTap = { onClick() }
             )
         }
     }
@@ -90,38 +89,44 @@ private fun PagerContent(
 @Composable
 private fun VideoItem(
     video: Media,
+    onClick: () -> Unit,
+    onPlayClick: () -> Unit,
 ) {
-    val context = LocalContext.current
-    val exoPlayer = remember(context) {
-        ExoPlayer.Builder(context)
-            .build().apply {
-                videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
-                repeatMode = Player.REPEAT_MODE_ONE
-                setMediaItem(MediaItem.fromUri(video.uri))
-                prepare()
-                playWhenReady = true
-            }
-    }
-    DisposableEffect(
-        Box(
+    Box {
+        ImageWithLoader(
+            model = video.uri,
+            contentScale = ContentScale.Fit,
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primaryContainer),
-            contentAlignment = Alignment.Center
+                .background(MaterialTheme.colorScheme.scrim)
+                .clickable(onClick = onClick)
+        )
+
+        IconButton(
+            onClick = onPlayClick,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .size(64.dp)
         ) {
-            AndroidView(
-                factory = { ctx ->
-                    PlayerView(ctx).apply {
-                        player = exoPlayer
-                    }
-                },
+            Icon(
+                imageVector = Icons.Default.PlayCircle,
+                contentDescription = null,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .size(64.dp)
             )
         }
-    ) {
-        onDispose {
-            exoPlayer.release()
+
+        video.duration?.let {
+            Text(
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                text = it,
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(32.dp)
+                    .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
+                    .padding(horizontal = 3.dp, vertical = 4.dp)
+            )
         }
     }
 }
@@ -137,32 +142,19 @@ private fun PhotoItem(
     Card(
         modifier = Modifier
             .graphicsLayer {
-                val pageOffset = (
-                    (pagerState.currentPage - page) +
-                        pagerState.currentPageOffsetFraction
-                    )
+                val direction = pagerState.currentPage - page
+                val pageOffset =
+                    (direction + pagerState.currentPageOffsetFraction).absoluteValue
 
-                alpha = lerp(
-                    start = 0.4f,
-                    stop = 1f,
-                    fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f),
+                val scale = androidx.compose.ui.layout.lerp(
+                    start = ScaleFactor(0.9f, 0.9f),
+                    stop = ScaleFactor(1f, 1f),
+                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
                 )
 
-                cameraDistance = 8 * density
-                rotationY = lerp(
-                    start = 0f,
-                    stop = 40f,
-                    fraction = pageOffset.coerceIn(-1f, 1f),
-                )
-
-                lerp(
-                    start = 0.5f,
-                    stop = 1f,
-                    fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f),
-                ).also { scale ->
-                    scaleX = scale
-                    scaleY = scale
-                }
+                scaleX = scale.scaleX
+                scaleY = scale.scaleY
+                translationX = (1 - scale.scaleX) * direction * size.width / 2f
             }
     ) {
         ImageWithLoader(
@@ -170,7 +162,7 @@ private fun PhotoItem(
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.inversePrimary)
+                .background(MaterialTheme.colorScheme.scrim)
                 .zoomable(
                     zoomState = zoomState,
                     onTap = onTap

@@ -1,0 +1,18 @@
+<resources>
+    <string name="delete_media_bsh_title">Медиа будет отправлено\nв корзину (%d)</string>
+    <string name="delete_media_bsh_btn_ok">Подтверждаю</string>
+    <string name="delete_media_bsh_btn_no">Отмена</string>
+    <string name="colors">Цвета</string>
+    <string name="typo">Шрифты</string>
+    <string name="shape">Формы</string>
+
+
+    <string name="theme">Тема</string>
+    <string name="edge_to_edge">Анимированные панели</string>
+    <string name="sort_by">Сортировать фото по:</string>
+    <string name="sort_by_days">дням</string>
+    <string name="sort_by_moth">месяцам</string>
+
+    <string name="trash">Корзина</string>
+    <string name="trash_days_till_delete">Медиа будет удалено\n%s</string>
+</resources>

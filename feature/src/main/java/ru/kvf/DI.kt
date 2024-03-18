@@ -1,0 +1,174 @@
+package ru.kvf
+
+import android.content.Context
+import android.content.res.Resources
+import androidx.media3.exoplayer.ExoPlayer
+import com.arkivanov.decompose.ComponentContext
+import org.koin.core.component.get
+import org.koin.dsl.module
+import ru.kvf.core.ComponentFactory
+import ru.kvf.feature.favorite.FavoriteComponent
+import ru.kvf.feature.favorite.RealFavoriteComponent
+import ru.kvf.feature.favorite.folders.FavoriteFoldersComponent
+import ru.kvf.feature.favorite.folders.RealFavoriteFoldersComponent
+import ru.kvf.feature.favorite.media.FavoriteMediaComponent
+import ru.kvf.feature.favorite.media.RealFavoriteMediaComponent
+import ru.kvf.feature.folders.details.FolderDetailsComponent
+import ru.kvf.feature.folders.details.RealFolderDetailsComponent
+import ru.kvf.feature.folders.list.FoldersListComponent
+import ru.kvf.feature.folders.list.RealFoldersListComponent
+import ru.kvf.feature.media.data.GetSortedMediaUseCaseImpl
+import ru.kvf.feature.media.data.MediaFilterUseCaseImpl
+import ru.kvf.feature.media.domain.GetSortedMediaUseCase
+import ru.kvf.feature.media.domain.MediaFilterUseCase
+import ru.kvf.feature.media.ui.MediaListComponent
+import ru.kvf.feature.media.ui.RealMediaListComponent
+import ru.kvf.feature.mediadetails.MediaDetailsComponent
+import ru.kvf.feature.mediadetails.RealMediaDetailsComponent
+import ru.kvf.feature.settings.RealSettingsListComponent
+import ru.kvf.feature.settings.SettingsListComponent
+import ru.kvf.feature.trash.RealTrashComponent
+import ru.kvf.feature.trash.TrashComponent
+import ru.kvf.feature.video.RealVideoPlayerComponent
+import ru.kvf.feature.video.VideoPlayerComponent
+
+val featureModule = module {
+    single<Resources> { get<Context>().resources }
+    single<GetSortedMediaUseCase> { GetSortedMediaUseCaseImpl(get(), get(), get()) }
+    single<MediaFilterUseCase> { MediaFilterUseCaseImpl() }
+    factory<ExoPlayer> { ExoPlayer.Builder(get<Context>()).build() }
+}
+
+fun ComponentFactory.createMediaListComponent(
+    componentContext: ComponentContext,
+    output: (MediaListComponent.Output) -> Unit
+): MediaListComponent = RealMediaListComponent(
+    componentContext,
+    output,
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get()
+)
+
+fun ComponentFactory.createFolderDetailsComponent(
+    componentContext: ComponentContext,
+    output: (FolderDetailsComponent.Output) -> Unit,
+    folderName: String,
+): FolderDetailsComponent = RealFolderDetailsComponent(
+    componentContext,
+    output,
+    folderName,
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get()
+)
+
+fun ComponentFactory.createFavoriteComponent(
+    componentContext: ComponentContext,
+    output: (FavoriteComponent.Output) -> Unit
+): FavoriteComponent = RealFavoriteComponent(
+    componentContext,
+    get(),
+    output,
+    get()
+)
+
+fun ComponentFactory.createFavoriteFoldersComponent(
+    componentContext: ComponentContext,
+    output: (FavoriteFoldersComponent.Output) -> Unit
+): FavoriteFoldersComponent = RealFavoriteFoldersComponent(
+    componentContext,
+    output,
+    get(),
+    get()
+)
+
+fun ComponentFactory.createFavoriteMediaComponent(
+    componentContext: ComponentContext,
+    onOutput: (FavoriteMediaComponent.Output) -> Unit
+): FavoriteMediaComponent = RealFavoriteMediaComponent(
+    componentContext,
+    onOutput,
+    get(),
+    get()
+)
+
+fun ComponentFactory.createFoldersListComponent(
+    componentContext: ComponentContext,
+    output: (FoldersListComponent.Output) -> Unit
+): FoldersListComponent = RealFoldersListComponent(
+    componentContext,
+    output,
+    get(),
+    get(),
+    get(),
+    get()
+)
+
+fun ComponentFactory.createSettingsListComponent(
+    componentContext: ComponentContext
+): SettingsListComponent = RealSettingsListComponent(
+    componentContext,
+    get(),
+    get(),
+    get(),
+    get()
+)
+
+fun ComponentFactory.createTrashComponent(
+    componentContext: ComponentContext,
+    onOutput: (TrashComponent.Output) -> Unit
+): TrashComponent = RealTrashComponent(
+    componentContext,
+    onOutput,
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get()
+)
+
+fun ComponentFactory.createMediaDetailsComponent(
+    componentContext: ComponentContext,
+    output: (MediaDetailsComponent.Output) -> Unit,
+    type: MediaDetailsComponent.Type,
+    mediaId: Long
+): MediaDetailsComponent = RealMediaDetailsComponent(
+    componentContext,
+    output,
+    type,
+    mediaId,
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+)
+
+fun ComponentFactory.createVideoPlayerComponent(
+    componentContext: ComponentContext,
+    output: (VideoPlayerComponent.Output) -> Unit,
+    mediaId: Long
+): VideoPlayerComponent = RealVideoPlayerComponent(
+    componentContext,
+    output,
+    mediaId,
+    get(),
+    get()
+)

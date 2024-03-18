@@ -52,11 +52,21 @@ fun Context.shareMedia(mediaList: List<Media>) {
     intent.startChooser()
 }
 
-fun Context.createTrashMediaRequest(uris: List<Uri>): IntentSenderRequest {
+fun Context.createTrashMediaRequest(uris: Set<Uri>, trash: Boolean): IntentSenderRequest {
     val intent = MediaStore.createTrashRequest(
         contentResolver,
         uris,
-        true
+        trash
+    )
+    return IntentSenderRequest.Builder(intent)
+        .setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION, 0)
+        .build()
+}
+
+fun Context.createDeleteMediaRequest(uris: Set<Uri>): IntentSenderRequest {
+    val intent = MediaStore.createDeleteRequest(
+        contentResolver,
+        uris
     )
     return IntentSenderRequest.Builder(intent)
         .setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION, 0)

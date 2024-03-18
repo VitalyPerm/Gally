@@ -1,10 +1,13 @@
 package ru.kvf.core.domain.entities
 
-enum class MimeType(val value: String) {
-    Video("video/*"),
-    Image("image/*");
+enum class MimeType() {
+    Video,
+    Photo;
 
     companion object {
-        fun get(isPhoto: Boolean) = if (isPhoto) Image else Video
+        private const val IMAGE = "image"
+        private const val VIDEO = "video"
+
+        fun fromString(value: String) = if (value.contains(IMAGE)) Photo else Video
     }
 }
