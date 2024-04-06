@@ -23,11 +23,11 @@ class GetFolderMediaUseCaseImpl(
 
     override fun sorted(folderName: String): Flow<Map<MediaDate, List<Media>>> =
         combine(mediaRepository.mediaFlow, mediaSortByUseCase.get()) { media, sortBy ->
-            media.filter { it.folder == folderName }.map { media ->
-                media.copy(
+            media.filter { it.folder == folderName }.map { data ->
+                data.copy(
                     date = MediaDate(
                         Calendar.getInstance().apply {
-                            time = Date(media.timeStamp)
+                            time = Date(data.timeStamp)
                         },
                         sortBy.toCalendarSort()
                     )

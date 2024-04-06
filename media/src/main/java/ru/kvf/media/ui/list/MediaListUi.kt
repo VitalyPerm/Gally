@@ -44,6 +44,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityOptionsCompat
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
+import ru.kvf.core.utils.LongSet
+import ru.kvf.core.utils.MediaDateSet
+import ru.kvf.core.utils.MediaMap
 import ru.kvf.core.utils.collectSideEffect
 import ru.kvf.core.utils.createTrashMediaRequest
 import ru.kvf.core.utils.shareMedia
@@ -75,7 +78,7 @@ fun MediaListUi(
     ) { _ -> }
     val haptic = LocalHapticFeedback.current
 
-    BackHandler(enabled = selectedMediaIds.isNotEmpty()) {
+    BackHandler(enabled = selectedMediaIds.data.isNotEmpty()) {
         component.onDismissSelectMedia()
     }
 
@@ -88,7 +91,7 @@ fun MediaListUi(
     }
 
     LaunchedEffect(selectedMediaIds) {
-        selectMediaModeEnable?.value = selectedMediaIds.isNotEmpty()
+        selectMediaModeEnable?.value = selectedMediaIds.data.isNotEmpty()
     }
 
     component.sideEffect.collectSideEffect {
@@ -141,24 +144,24 @@ fun MediaListUi(
 
 @Composable
 private fun Content(
-    media: Map<MediaDate, List<Media>>,
-    reversedMedia: Map<MediaDate, List<Media>>,
+    media: MediaMap,
+    reversedMedia: MediaMap,
     folderName: String?,
     cellsCount: Int,
     gridState: LazyGridState,
     onGridCountClick: () -> Unit,
     sortReversed: Boolean,
     onReverseClick: () -> Unit,
-    likedMedia: List<Long>,
+    likedMedia: LongSet,
     onMediaClick: (Long) -> Unit,
     onMediaLongClick: (Media) -> Unit,
     onLikedClick: (Long) -> Unit,
-    selectedMediaIds: Set<Long>,
+    selectedMediaIds: LongSet,
     selectModeOnClickShare: () -> Unit,
     selectModeOnClickClose: () -> Unit,
     selectModeOnClickTrash: () -> Unit,
     onSelectDateClick: (MediaDate) -> Unit,
-    selectedMediaDates: Set<MediaDate>,
+    selectedMediaDates: MediaDateSet,
     editMode: Boolean
 ) {
     Box {
@@ -190,7 +193,7 @@ private fun Content(
             visible = editMode,
             onClickShare = selectModeOnClickShare,
             onClickTrash = selectModeOnClickTrash,
-            selectedMediaCount = selectedMediaIds.size,
+            selectedMediaCount = selectedMediaIds.data.size,
             onCloseClick = selectModeOnClickClose
         )
     }

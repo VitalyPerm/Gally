@@ -16,13 +16,13 @@ class LikesRepositoryImpl(
     private val dataStore: DataStore<Preferences>
 ) : LikesRepository {
 
-    override fun getLikedListFlow(): Flow<List<Long>> = dataStore.data.map {
-        it[stringPreferencesKey(LIKE_LIST_KEY)].toLikeList()
+    override fun getLikedListFlow(): Flow<Set<Long>> = dataStore.data.map {
+        it[stringPreferencesKey(LIKE_LIST_KEY)].toLikeSet()
     }
 
     override suspend fun addToLikedList(id: Long) {
         dataStore.edit { prefs ->
-            val list = prefs[stringPreferencesKey(LIKE_LIST_KEY)].toLikeList().toMutableList()
+            val list = prefs[stringPreferencesKey(LIKE_LIST_KEY)].toLikeSet().toMutableList()
             if (id in list) {
                 list.remove(id)
             } else {
@@ -32,10 +32,10 @@ class LikesRepositoryImpl(
         }
     }
 
-    private fun String?.toLikeList(): List<Long> = try {
-        Json.decodeFromString<List<Long>>(this!!)
+    private fun String?.toLikeSet(): Set<Long> = try {
+        Json.decodeFromString<Set<Long>>(this!!)
     } catch (e: Exception) {
-        emptyList()
+        emptySet()
     }
 
     private fun List<Long>.toLikeString(): String = try {

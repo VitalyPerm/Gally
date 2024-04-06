@@ -25,18 +25,21 @@ import androidx.compose.ui.unit.dp
 import coil.size.Size
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
+import ru.kvf.core.utils.LongSet
+import ru.kvf.core.utils.MediaDateSet
+import ru.kvf.core.utils.MediaMap
 
 @Composable
 fun MediaListWithDate(
-    media: Map<MediaDate, List<Media>>,
-    likedMedia: List<Long>,
+    media: MediaMap,
+    likedMedia: LongSet,
     gridState: LazyGridState,
     cellsCount: Int = 3,
     onMediaClick: (Long) -> Unit,
     onMediaLongClick: (Media) -> Unit,
     onLikedClick: (Long) -> Unit,
-    selectedMediaIds: Set<Long>,
-    selectedMediaDates: Set<MediaDate>,
+    selectedMediaIds: LongSet,
+    selectedMediaDates: MediaDateSet,
     onSelectDateClick: (MediaDate) -> Unit
 ) {
     LazyVerticalGrid(
@@ -45,7 +48,7 @@ fun MediaListWithDate(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        media.forEach { (date, media) ->
+        media.data.forEach { (date, media) ->
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -57,8 +60,8 @@ fun MediaListWithDate(
                         modifier = Modifier
                             .padding(10.dp)
                     )
-                    AnimatedVisibility(visible = selectedMediaIds.isNotEmpty()) {
-                        val selected = remember(selectedMediaDates) { date in selectedMediaDates }
+                    AnimatedVisibility(visible = selectedMediaIds.data.isNotEmpty()) {
+                        val selected = remember(selectedMediaDates) { date in selectedMediaDates.data }
                         IconButton(onClick = { onSelectDateClick(date) }) {
                             Icon(
                                 imageVector = if (selected) Icons.Filled.CheckCircle else Icons.Outlined.Circle,
@@ -74,14 +77,14 @@ fun MediaListWithDate(
             items(media, key = { item: Media -> item.id }) { item ->
                 MediaItem(
                     model = item.uri,
-                    liked = item.id in likedMedia,
+                    liked = item.id in likedMedia.data,
                     duration = item.duration,
                     onClick = { onMediaClick(item.id) },
                     onLiked = { onLikedClick(item.id) },
                     onLongClick = { onMediaLongClick(item) },
-                    isSelected = item.id in selectedMediaIds,
+                    isSelected = item.id in selectedMediaIds.data,
                     size = calculatePhotoSize(cellsCount),
-                    editMode = selectedMediaIds.isNotEmpty()
+                    editMode = selectedMediaIds.data.isNotEmpty()
                 )
             }
         }

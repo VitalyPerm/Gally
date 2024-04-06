@@ -19,11 +19,11 @@ class GetSortedMediaUseCaseImpl(
 
     override fun invoke(): Flow<Map<MediaDate, List<Media>>> =
         combine(mediaRepository.mediaFlow, mediaSortByUseCase.get()) { media, sortBy ->
-            media.map { media ->
-                media.copy(
+            media.map {
+                it.copy(
                     date = MediaDate(
                         Calendar.getInstance().apply {
-                            time = Date(media.timeStamp)
+                            time = Date(it.timeStamp)
                         },
                         sortBy.toCalendarSort()
                     )

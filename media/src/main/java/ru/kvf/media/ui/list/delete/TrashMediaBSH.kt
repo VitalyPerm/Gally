@@ -1,6 +1,5 @@
 package ru.kvf.media.ui.list.delete
 
-import android.net.Uri
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,19 +28,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
+import ru.kvf.core.utils.UriSet
 import ru.kvf.media.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrashMediaBSH(
-    media: Set<Uri>,
+    media: UriSet,
     onDeleteClick: () -> Unit,
     onDismissClick: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    if (media.isNotEmpty()) {
+    if (media.data.isNotEmpty()) {
         ModalBottomSheet(
             onDismissRequest = {
                 scope.launch { sheetState.hide() }.invokeOnCompletion { onDismissClick() }
@@ -56,7 +56,7 @@ fun TrashMediaBSH(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = stringResource(R.string.delete_media_bsh_title, media.size),
+                    text = stringResource(R.string.delete_media_bsh_title, media.data.size),
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
@@ -69,7 +69,7 @@ fun TrashMediaBSH(
                     modifier = Modifier
                         .weight(1f)
                 ) {
-                    media.forEach { uri ->
+                    media.data.forEach { uri ->
                         AsyncImage(
                             model = uri,
                             contentDescription = null,

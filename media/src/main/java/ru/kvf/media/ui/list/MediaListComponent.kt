@@ -5,15 +5,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
+import ru.kvf.core.utils.LongSet
+import ru.kvf.core.utils.MediaDateSet
+import ru.kvf.core.utils.MediaMap
+import ru.kvf.core.utils.UriSet
 
 interface MediaListComponent {
-    val media: StateFlow<Pair<Map<MediaDate, List<Media>>, Map<MediaDate, List<Media>>>>
-    val likedMedia: StateFlow<List<Long>>
+    val media: StateFlow<Pair<MediaMap, MediaMap>>
+    val likedMedia: StateFlow<LongSet>
     val sortReversed: StateFlow<Boolean>
     val gridCellsCount: StateFlow<Int>
-    val selectedMediaIds: StateFlow<Set<Long>>
-    val mediaToTrashUris: StateFlow<Set<Uri>>
-    val selectedMediaDates: StateFlow<Set<MediaDate>>
+    val selectedMediaIds: StateFlow<LongSet>
+    val mediaToTrashUris: StateFlow<UriSet>
+    val selectedMediaDates: StateFlow<MediaDateSet>
     val sideEffect: Flow<MediaListSideEffect>
     val lastPosition: Int
     val folderName: String?
