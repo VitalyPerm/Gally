@@ -45,7 +45,7 @@ fun DesignUi(
         modifier = Modifier
             .fillMaxSize()
             .padding(2.dp)
-            .padding(bottom = navBarPadding)
+            .padding(bottom = navBarPadding + 6.dp)
     ) {
         TopAppBar(
             title = {

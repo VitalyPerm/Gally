@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackAnimation
+import ru.kvf.core.dialog.BottomSheet
 import ru.kvf.core.domain.entities.ThemeType
 import ru.kvf.core.theme.GallyTheme
 import ru.kvf.gally.ui.home.HomeUi
@@ -48,6 +49,13 @@ fun RootUi(
                 is RootComponent.Child.Media -> MediaUi(component = child.component)
                 is RootComponent.Child.FolderMediaList -> MediaListUi(component = child.component)
             }
+        }
+
+        BottomSheet(
+            component.mediaDetailsDialogControl,
+            skipPartiallyExpanded = true
+        ) {
+            MediaUi(it)
         }
     }
 }

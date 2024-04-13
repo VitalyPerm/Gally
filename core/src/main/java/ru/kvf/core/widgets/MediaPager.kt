@@ -65,7 +65,6 @@ private fun PagerContent(
         state = pagerState,
         reverseLayout = reversePager,
         modifier = modifier
-            .background(MaterialTheme.colorScheme.inverseSurface)
     ) { page ->
         val media = mediaList[page]
         if (media.duration != null) {
@@ -152,7 +151,7 @@ private fun PhotoItem(
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.inversePrimary)
+                .background(MaterialTheme.colorScheme.scrim)
                 .zoomable(
                     zoomState = zoomState,
                     onTap = onTap

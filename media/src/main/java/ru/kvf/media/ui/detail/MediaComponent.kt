@@ -12,4 +12,11 @@ interface MediaComponent {
 
     fun onPageChanged(page: Int)
     fun onSingleTap()
+
+    data class Config(
+        val startIndex: Int,
+        val isReversed: Boolean,
+        val isFavoriteOnly: Boolean,
+        val folder: String?
+    )
 }

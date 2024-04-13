@@ -13,17 +13,13 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import ru.kvf.core.utils.disableFullScreen
-import ru.kvf.core.utils.enableFullScreen
 import ru.kvf.core.widgets.MediaPager
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -34,15 +30,9 @@ fun MediaUi(component: MediaComponent) {
     val titleVisible by component.titleVisible.collectAsState()
 
     val pagerState = rememberPagerState(initialPage = component.startIndex) { media.size }
-    val ctx = LocalContext.current
 
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect(component::onPageChanged)
-    }
-
-    DisposableEffect(Unit) {
-        ctx.enableFullScreen()
-        onDispose { ctx.disableFullScreen() }
     }
     Box(
         modifier = Modifier
@@ -52,7 +42,7 @@ fun MediaUi(component: MediaComponent) {
             media = media,
             pagerState = pagerState,
             reversePager = component.isReversed,
-            onTap = component::onSingleTap,
+            onTap = component::onSingleTap
         )
 
         Title(
