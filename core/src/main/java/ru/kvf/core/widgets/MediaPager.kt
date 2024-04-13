@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ScaleFactor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.util.lerp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -68,9 +69,7 @@ private fun PagerContent(
     ) { page ->
         val media = mediaList[page]
         if (media.duration != null) {
-            VideoItem(
-                video = media,
-            )
+            VideoItem(video = media,)
         } else {
             PhotoItem(
                 pagerState = pagerState,
@@ -96,7 +95,6 @@ private fun VideoItem(
                 repeatMode = Player.REPEAT_MODE_ONE
                 setMediaItem(MediaItem.fromUri(video.uri))
                 prepare()
-                playWhenReady = true
             }
     }
     DisposableEffect(
@@ -134,32 +132,19 @@ private fun PhotoItem(
     Card(
         modifier = Modifier
             .graphicsLayer {
-                val pageOffset = (
-                    (pagerState.currentPage - page) +
-                        pagerState.currentPageOffsetFraction
-                    )
+                val direction = pagerState.currentPage - page
+                val pageOffset =
+                    (direction + pagerState.currentPageOffsetFraction).absoluteValue
 
-                alpha = lerp(
-                    start = 0.4f,
-                    stop = 1f,
-                    fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f),
+                val scale = androidx.compose.ui.layout.lerp(
+                    start = ScaleFactor(0.9f, 0.9f),
+                    stop = ScaleFactor(1f, 1f),
+                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
                 )
 
-                cameraDistance = 8 * density
-                rotationY = lerp(
-                    start = 0f,
-                    stop = 40f,
-                    fraction = pageOffset.coerceIn(-1f, 1f),
-                )
-
-                lerp(
-                    start = 0.5f,
-                    stop = 1f,
-                    fraction = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f),
-                ).also { scale ->
-                    scaleX = scale
-                    scaleY = scale
-                }
+                scaleX = scale.scaleX
+                scaleY = scale.scaleY
+                translationX = (1 - scale.scaleX) * direction * size.width / 2f
             }
     ) {
         ImageWithLoader(

@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
-import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.slide
+import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackAnimation
 import ru.kvf.core.domain.entities.ThemeType
 import ru.kvf.core.theme.GallyTheme
@@ -28,7 +28,20 @@ fun RootUi(
     ) {
         Children(
             stack = component.childStack,
-            animation = stackAnimation(slide())
+            animation = stackAnimation { child ->
+                when (child.instance) {
+                    is RootComponent.Child.FolderMediaList -> scale(
+                        frontFactor = 1.5f,
+                        backFactor = 0.7f
+                    )
+                    is RootComponent.Child.Home -> scale()
+
+                    is RootComponent.Child.Media -> scale(
+                        frontFactor = 1.5f,
+                        backFactor = 0.7f
+                    )
+                }
+            }
         ) {
             when (val child = it.instance) {
                 is RootComponent.Child.Home -> HomeUi(component = child.component)

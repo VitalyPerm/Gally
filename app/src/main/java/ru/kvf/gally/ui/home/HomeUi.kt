@@ -3,6 +3,7 @@ package ru.kvf.gally.ui.home
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -96,7 +97,7 @@ fun HomeUi(
         ) {
             Children(
                 stack = component.childStack,
-                animation = stackAnimation(slide())
+                animation = stackAnimation(slide(orientation = Orientation.Vertical))
             ) {
                 when (val child = it.instance) {
                     is HomeComponent.Child.Media -> MediaListUi(
