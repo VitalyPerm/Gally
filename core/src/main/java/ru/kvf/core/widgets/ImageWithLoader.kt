@@ -18,13 +18,12 @@ import coil.size.Size
 fun ImageWithLoader(
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Fit,
-    size: Size = Size.ORIGINAL,
     model: Any?
 ) {
     SubcomposeAsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
             .data(model)
-            .size(size)
+            .size(Size.ORIGINAL)
             .build(),
         contentDescription = null,
         contentScale = contentScale,

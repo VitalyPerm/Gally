@@ -23,7 +23,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.size.Size
 import ru.kvf.core.domain.entities.Folder
 import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.ImageWithLoader
@@ -98,7 +97,6 @@ private fun FolderItem(
         ImageWithLoader(
             model = uri,
             contentScale = ContentScale.Crop,
-            size = Size(500, 500),
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)

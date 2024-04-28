@@ -1,6 +1,7 @@
 package ru.kvf.media.ui.list.delete
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -68,6 +70,7 @@ fun TrashMediaBSH(
                 Row(
                     modifier = Modifier
                         .weight(1f)
+                        .horizontalScroll(rememberScrollState())
                 ) {
                     media.data.forEach { uri ->
                         AsyncImage(
@@ -75,7 +78,11 @@ fun TrashMediaBSH(
                             contentDescription = null,
                             modifier = Modifier
                                 .padding(4.dp)
-                                .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(16.dp))
+                                .border(
+                                    2.dp,
+                                    MaterialTheme.colorScheme.primary,
+                                    RoundedCornerShape(16.dp)
+                                )
                                 .clip(RoundedCornerShape(16.dp))
                         )
                     }
@@ -89,19 +96,19 @@ fun TrashMediaBSH(
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     Button(onClick = {
-                        scope.launch { sheetState.hide() }.invokeOnCompletion { onDeleteClick() }
+                        scope.launch { sheetState.hide() }.invokeOnCompletion { onDismissClick() }
                     }) {
                         Text(
-                            text = stringResource(R.string.delete_media_bsh_btn_ok),
+                            text = stringResource(R.string.delete_media_bsh_btn_no),
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
 
                     Button(onClick = {
-                        scope.launch { sheetState.hide() }.invokeOnCompletion { onDismissClick() }
+                        scope.launch { sheetState.hide() }.invokeOnCompletion { onDeleteClick() }
                     }) {
                         Text(
-                            text = stringResource(R.string.delete_media_bsh_btn_no),
+                            text = stringResource(R.string.delete_media_bsh_btn_ok),
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }

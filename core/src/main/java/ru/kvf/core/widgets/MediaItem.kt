@@ -36,7 +36,6 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import coil.size.Size
 import kotlinx.coroutines.delay
 import ru.kvf.core.utils.Constants
 
@@ -50,7 +49,6 @@ fun MediaItem(
     onClick: (() -> Unit)? = null,
     onLongClick: (() -> Unit)? = null,
     onLiked: (() -> Unit)? = null,
-    size: Size = Size(250, 250),
     isSelected: Boolean = false,
     editMode: Boolean = false
 ) {
@@ -75,7 +73,6 @@ fun MediaItem(
         ImageWithLoader(
             model = model,
             contentScale = ContentScale.Crop,
-            size = size,
             modifier = Modifier
                 .fillMaxSize()
                 .scale(scale)
