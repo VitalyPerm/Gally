@@ -24,4 +24,5 @@ fun ComponentFactory.createFavoriteMediaComponent(
     componentContext = componentContext,
     getLikedMediaUseCase = get(),
     handleLikeClickUseCase = get(),
+    componentFactory = get()
 )

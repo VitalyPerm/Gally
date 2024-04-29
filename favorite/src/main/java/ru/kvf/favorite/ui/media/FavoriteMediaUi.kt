@@ -25,7 +25,6 @@ fun FavoriteMediaUi(
     val isReversed by component.isReversed.collectAsState()
     val favoriteListGridState = rememberLazyGridState()
     val showDetailsBSH by component.showDetailsBSH.collectAsState()
-    val selectedMediaIndex by component.selectedMediaIndex.collectAsState()
 
     val mediaList = if (isReversed) media.reversed() else media
 
@@ -37,43 +36,8 @@ fun FavoriteMediaUi(
         onMediaLongClick = {}
     )
 
-    BSHDetails(
-        showDetailsBSH = showDetailsBSH,
-        onDismissRequest = component::onDismissDetailsBSH,
-        media = media,
-        startIndex = selectedMediaIndex,
-        onTap = {},
-        title = "",
-        optionsVisible = false,
-        onShareClick = {},
-        onTrashClick = {}
-    )
-}
-
-@Composable
-private fun BSHDetails(
-    showDetailsBSH: Boolean,
-    onDismissRequest: () -> Unit,
-    media: List<Media>,
-    startIndex: Int,
-    onTap: () -> Unit,
-    title: String,
-    optionsVisible: Boolean,
-    onShareClick: () -> Unit,
-    onTrashClick: () -> Unit
-) {
     if (showDetailsBSH) {
-        MediaBottomSheet(
-            media = media,
-            startIndex = startIndex,
-            isReversed = false,
-            onTap = onTap,
-            title = title,
-            optionsVisible = optionsVisible,
-            onShareClick = onShareClick,
-            onTrashClick = onTrashClick,
-            onDismissRequest = onDismissRequest
-        )
+        MediaBottomSheet(component.mediaBSHComponent)
     }
 }
 

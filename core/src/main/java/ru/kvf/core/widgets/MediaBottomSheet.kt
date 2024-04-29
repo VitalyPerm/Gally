@@ -17,31 +17,30 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
-import ru.kvf.core.domain.entities.Media
+import ru.kvf.core.mediabsh.MediaBSHComponent
 import ru.kvf.core.utils.navigationBarWithImePaddingDp
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MediaBottomSheet(
-    media: List<Media>,
-    startIndex: Int,
-    isReversed: Boolean,
-    onTap: () -> Unit,
-    title: String,
-    optionsVisible: Boolean,
-    onShareClick: () -> Unit,
-    onTrashClick: () -> Unit,
-    onDismissRequest: () -> Unit,
+    component: MediaBSHComponent,
+    isReversed: Boolean = false,
 ) {
-    val pagerState = rememberPagerState(initialPage = startIndex) { media.size }
+    val media by component.media.collectAsState()
+    val title by component.title.collectAsState()
+    val index by component.index.collectAsState()
+    val optionsVisible by component.optionsVisible.collectAsState()
+    val pagerState = rememberPagerState(initialPage = index) { media.size }
     val navigationBarWithImePadding = navigationBarWithImePaddingDp()
     ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = component::onDismissRequest,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         shape = RectangleShape,
         containerColor = Color.Black,
@@ -58,7 +57,7 @@ fun MediaBottomSheet(
                     media = media,
                     pagerState = pagerState,
                     reversePager = isReversed,
-                    onTap = onTap
+                    onTap = component::onTap
                 )
 
                 Title(
@@ -67,14 +66,13 @@ fun MediaBottomSheet(
                 )
 
                 Actions(
-                    onShareClick = onShareClick,
-                    onTrashClick = onTrashClick,
+                    onShareClick = component::onShareClick,
+                    onTrashClick = component::onTrashClick,
                     optionsVisible = optionsVisible
                 )
             }
         }
     )
-
 }
 
 @Composable

@@ -1,26 +1,31 @@
 package ru.kvf.core
 
+import com.arkivanov.decompose.ComponentContext
+import kotlinx.coroutines.flow.StateFlow
 import org.koin.dsl.module
 import ru.kvf.core.data.repository.LikesRepositoryImpl
 import ru.kvf.core.data.repository.MediaRepositoryImpl
-import ru.kvf.core.data.usecase.GetMediaUseCaseImpl
 import ru.kvf.core.data.usecase.GetLikedIdsListUseCaseImpl
 import ru.kvf.core.data.usecase.GetLikedMediaUseCaseImpl
+import ru.kvf.core.data.usecase.GetMediaUseCaseImpl
 import ru.kvf.core.data.usecase.GridCellsCountChangeUseCaseImpl
 import ru.kvf.core.data.usecase.HandleLikeClickUseCaseImpl
 import ru.kvf.core.data.usecase.LoadMediaUseCaseImpl
-import ru.kvf.core.data.usecase.PerformHapticFeedBackUseCaseImpl
 import ru.kvf.core.data.usecase.MediaSortByUseCaseImpl
+import ru.kvf.core.data.usecase.PerformHapticFeedBackUseCaseImpl
+import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.repository.LikesRepository
 import ru.kvf.core.domain.repository.MediaRepository
-import ru.kvf.core.domain.usecase.GetMediaUseCase
 import ru.kvf.core.domain.usecase.GetLikedIdsListUseCase
 import ru.kvf.core.domain.usecase.GetLikedMediaUseCase
+import ru.kvf.core.domain.usecase.GetMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
 import ru.kvf.core.domain.usecase.LoadMediaUseCase
-import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
 import ru.kvf.core.domain.usecase.MediaSortByUseCase
+import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
+import ru.kvf.core.mediabsh.MediaBSHComponent
+import ru.kvf.core.mediabsh.RealMediaBSHComponent
 
 val coreModule = module {
     single<MediaRepository> { MediaRepositoryImpl(get()) }
@@ -34,3 +39,13 @@ val coreModule = module {
     single<GridCellsCountChangeUseCase> { GridCellsCountChangeUseCaseImpl(get()) }
     single<GetLikedMediaUseCase> { GetLikedMediaUseCaseImpl(get(), get()) }
 }
+
+fun ComponentFactory.createMediaBSHComponent(
+    componentContext: ComponentContext,
+    media: StateFlow<List<Media>>,
+    output: (MediaBSHComponent.Output) -> Unit,
+): MediaBSHComponent = RealMediaBSHComponent(
+    componentContext = componentContext,
+    media = media,
+    onOutput = output
+)
