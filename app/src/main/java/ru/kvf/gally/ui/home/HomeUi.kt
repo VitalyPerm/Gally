@@ -67,7 +67,7 @@ fun HomeUi(
     val ld = LocalDensity.current
     val navBarPadding = remember(navigationBarHeight.intValue) {
         with(ld) {
-            navigationBarHeight.intValue.toDp().plus(4.dp)
+            navigationBarHeight.intValue.toDp().plus(22.dp)
         }
     }
 
@@ -107,7 +107,10 @@ fun HomeUi(
                     )
 
                     is HomeComponent.Child.Folders -> FoldersListUi(child.component, navBarPadding)
-                    is HomeComponent.Child.Favorite -> FavoriteUi(child.component)
+                    is HomeComponent.Child.Favorite -> FavoriteUi(
+                        component = child.component,
+                        navBarPadding = navBarPadding
+                    )
                     is HomeComponent.Child.Settings -> SettingsListUi(child.component)
                     is HomeComponent.Child.Design -> DesignUi(navBarPadding)
                 }

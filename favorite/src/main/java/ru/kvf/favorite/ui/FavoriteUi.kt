@@ -31,6 +31,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.favorite.R
@@ -39,12 +40,15 @@ import ru.kvf.favorite.ui.media.FavoriteMediaUi
 
 @Composable
 fun FavoriteUi(
-    component: FavoriteComponent
+    component: FavoriteComponent,
+    navBarPadding: Dp
 ) {
     val pagerState = rememberPagerState { Pages.entries.size }
 
     DefaultContainer(
         titleRes = R.string.favorite,
+        modifier = Modifier
+        .padding(bottom = navBarPadding)
     ) {
         Spacer(modifier = Modifier.height(8.dp))
         TabRow(pagerState)
@@ -68,12 +72,12 @@ private fun TabRow(pagerState: PagerState) {
             .fillMaxWidth(),
         contentAlignment = Alignment.Center,
     ) {
-        val ovalColor = MaterialTheme.colorScheme.onPrimary
+        val ovalColor = MaterialTheme.colorScheme.surfaceVariant
         val ld = LocalDensity.current
         Row(
             modifier = Modifier
                 .fillMaxWidth(0.4f)
-                .background(MaterialTheme.colorScheme.inversePrimary, MaterialTheme.shapes.extraLarge)
+                .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.extraLarge)
                 .drawWithContent {
                     drawRoundRect(
                         color = ovalColor,
@@ -104,6 +108,7 @@ private fun RowScope.TabRowItem(page: Pages) {
         text = stringResource(page.getString()),
         style = MaterialTheme.typography.labelLarge,
         textAlign = TextAlign.Center,
+        color = MaterialTheme.colorScheme.onSurface,
         modifier = Modifier
             .padding(vertical = 6.dp)
             .weight(1f)
