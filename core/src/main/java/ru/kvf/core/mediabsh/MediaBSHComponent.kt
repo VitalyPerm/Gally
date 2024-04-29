@@ -14,6 +14,7 @@ interface MediaBSHComponent {
     fun onShareClick()
     fun onTrashClick()
     fun onDismissRequest()
+    fun setup(startIndex: Int)
 
     sealed interface Output {
         data object DismissRequested : Output

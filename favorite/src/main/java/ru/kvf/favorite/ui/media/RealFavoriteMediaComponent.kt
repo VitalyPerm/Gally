@@ -48,9 +48,8 @@ class RealFavoriteMediaComponent(
     }
 
     override fun onMediaClick(mediaId: Long) {
-        selectedMediaIndex.update {
-            media.value.indexOfFirst { it.id == mediaId }.takeIf { it.notNegative() } ?: 0
-        }
+        val index = media.value.indexOfFirst { it.id == mediaId }.takeIf { it.notNegative() } ?: return
+        mediaBSHComponent.setup(index)
         showDetailsBSH.update { true }
     }
 

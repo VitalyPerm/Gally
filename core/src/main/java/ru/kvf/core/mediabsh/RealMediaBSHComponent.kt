@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.utils.coroutineScope
 import java.text.SimpleDateFormat
@@ -48,5 +49,9 @@ class RealMediaBSHComponent(
 
     override fun onDismissRequest() {
         onOutput(MediaBSHComponent.Output.DismissRequested)
+    }
+
+    override fun setup(startIndex: Int) {
+        index.update { startIndex }
     }
 }

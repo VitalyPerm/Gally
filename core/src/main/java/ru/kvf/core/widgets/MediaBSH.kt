@@ -29,7 +29,7 @@ import ru.kvf.core.utils.navigationBarWithImePaddingDp
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun MediaBottomSheet(
+fun MediaBSH(
     component: MediaBSHComponent,
     isReversed: Boolean = false,
 ) {

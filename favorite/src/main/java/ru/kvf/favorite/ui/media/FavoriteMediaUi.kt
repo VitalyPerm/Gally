@@ -14,7 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import ru.kvf.core.domain.entities.Media
-import ru.kvf.core.widgets.MediaBottomSheet
+import ru.kvf.core.widgets.MediaBSH
 import ru.kvf.core.widgets.MediaItem
 
 @Composable
@@ -37,7 +37,7 @@ fun FavoriteMediaUi(
     )
 
     if (showDetailsBSH) {
-        MediaBottomSheet(component.mediaBSHComponent)
+        MediaBSH(component.mediaBSHComponent)
     }
 }
 
