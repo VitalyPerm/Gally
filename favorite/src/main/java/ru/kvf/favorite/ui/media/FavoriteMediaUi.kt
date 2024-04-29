@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package ru.kvf.favorite.ui.media
 
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -6,14 +8,14 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import ru.kvf.core.domain.entities.Media
-import ru.kvf.core.widgets.DefaultContainer
+import ru.kvf.core.widgets.MediaBottomSheet
 import ru.kvf.core.widgets.MediaItem
-import ru.kvf.favorite.R
 
 @Composable
 fun FavoriteMediaUi(
@@ -22,6 +24,8 @@ fun FavoriteMediaUi(
     val media by component.media.collectAsState()
     val isReversed by component.isReversed.collectAsState()
     val favoriteListGridState = rememberLazyGridState()
+    val showDetailsBSH by component.showDetailsBSH.collectAsState()
+    val selectedMediaIndex by component.selectedMediaIndex.collectAsState()
 
     val mediaList = if (isReversed) media.reversed() else media
 
@@ -32,6 +36,45 @@ fun FavoriteMediaUi(
         onLikedClick = component::onLikeClick,
         onMediaLongClick = {}
     )
+
+    BSHDetails(
+        showDetailsBSH = showDetailsBSH,
+        onDismissRequest = component::onDismissDetailsBSH,
+        media = media,
+        startIndex = selectedMediaIndex,
+        onTap = {},
+        title = "",
+        optionsVisible = false,
+        onShareClick = {},
+        onTrashClick = {}
+    )
+}
+
+@Composable
+private fun BSHDetails(
+    showDetailsBSH: Boolean,
+    onDismissRequest: () -> Unit,
+    media: List<Media>,
+    startIndex: Int,
+    onTap: () -> Unit,
+    title: String,
+    optionsVisible: Boolean,
+    onShareClick: () -> Unit,
+    onTrashClick: () -> Unit
+) {
+    if (showDetailsBSH) {
+        MediaBottomSheet(
+            media = media,
+            startIndex = startIndex,
+            isReversed = false,
+            onTap = onTap,
+            title = title,
+            optionsVisible = optionsVisible,
+            onShareClick = onShareClick,
+            onTrashClick = onTrashClick,
+            onDismissRequest = onDismissRequest
+        )
+    }
 }
 
 @Composable

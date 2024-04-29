@@ -6,9 +6,12 @@ import ru.kvf.core.domain.entities.Media
 interface FavoriteMediaComponent {
 
     val media: StateFlow<List<Media>>
+    val selectedMediaIndex: StateFlow<Int>
     val isReversed: StateFlow<Boolean>
+    val showDetailsBSH: StateFlow<Boolean>
 
     fun onLikeClick(id: Long)
     fun onMediaClick(mediaId: Long)
     fun onReverseClick()
+    fun onDismissDetailsBSH()
 }

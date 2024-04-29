@@ -10,6 +10,7 @@ import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.usecase.GetLikedMediaUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
 import ru.kvf.core.utils.coroutineScope
+import ru.kvf.core.utils.notNegative
 import ru.kvf.core.utils.safeLaunch
 
 class RealFavoriteMediaComponent(
@@ -23,7 +24,9 @@ class RealFavoriteMediaComponent(
     override val media: StateFlow<List<Media>> = getLikedMediaUseCase()
         .stateIn(componentScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    override val selectedMediaIndex = MutableStateFlow(0)
     override val isReversed = MutableStateFlow(false)
+    override val showDetailsBSH = MutableStateFlow(false)
 
     override fun onReverseClick() {
         isReversed.update { !it }
@@ -34,6 +37,13 @@ class RealFavoriteMediaComponent(
     }
 
     override fun onMediaClick(mediaId: Long) {
+        selectedMediaIndex.update {
+            media.value.indexOfFirst { it.id == mediaId }.takeIf { it.notNegative() } ?: 0
+        }
+        showDetailsBSH.update { true }
+    }
 
+    override fun onDismissDetailsBSH() {
+        showDetailsBSH.update { false }
     }
 }
