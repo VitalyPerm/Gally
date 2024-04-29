@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.core.domain.entities.Media
 
-interface FavoriteListComponent {
+interface FavoriteListComponentOld {
 
     val media: StateFlow<List<Media>>
     val isReversed: StateFlow<Boolean>

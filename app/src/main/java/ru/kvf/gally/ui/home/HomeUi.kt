@@ -43,7 +43,7 @@ import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import kotlinx.coroutines.delay
 import ru.kvf.core.widgets.LoadableContent
 import ru.kvf.design.DesignUi
-import ru.kvf.favorite.ui.FavoriteListUi
+import ru.kvf.favorite.ui.FavoriteUi
 import ru.kvf.folders.ui.folderlist.FoldersListUi
 import ru.kvf.gally.BuildConfig
 import ru.kvf.media.ui.list.MediaListUi
@@ -107,11 +107,7 @@ fun HomeUi(
                     )
 
                     is HomeComponent.Child.Folders -> FoldersListUi(child.component, navBarPadding)
-                    is HomeComponent.Child.Favorite -> FavoriteListUi(
-                        child.component,
-                        navBarPadding
-                    )
-
+                    is HomeComponent.Child.Favorite -> FavoriteUi(child.component)
                     is HomeComponent.Child.Settings -> SettingsListUi(child.component)
                     is HomeComponent.Child.Design -> DesignUi(navBarPadding)
                 }

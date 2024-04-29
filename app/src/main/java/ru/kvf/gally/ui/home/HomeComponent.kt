@@ -5,7 +5,8 @@ import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.design.DesignComponent
-import ru.kvf.favorite.ui.FavoriteListComponent
+import ru.kvf.favorite.ui.FavoriteComponent
+import ru.kvf.favorite.ui.FavoriteListComponentOld
 import ru.kvf.folders.ui.folderlist.FoldersListComponent
 import ru.kvf.media.ui.list.MediaListComponent
 import ru.kvf.settings.ui.list.SettingsListComponent
@@ -25,7 +26,7 @@ interface HomeComponent {
     sealed interface Child {
         class Media(val component: MediaListComponent) : Child
         class Folders(val component: FoldersListComponent) : Child
-        class Favorite(val component: FavoriteListComponent) : Child
+        class Favorite(val component: FavoriteComponent) : Child
         class Settings(val component: SettingsListComponent) : Child
         class Design(val component: DesignComponent) : Child
     }

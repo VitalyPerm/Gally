@@ -1,0 +1,124 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
+package ru.kvf.favorite.ui
+
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import ru.kvf.core.widgets.DefaultContainer
+import ru.kvf.favorite.R
+import ru.kvf.favorite.ui.folders.FavoriteFoldersUi
+import ru.kvf.favorite.ui.media.FavoriteMediaUi
+
+@Composable
+fun FavoriteUi(
+    component: FavoriteComponent
+) {
+    val pagerState = rememberPagerState { Pages.entries.size }
+
+    DefaultContainer(
+        titleRes = R.string.favorite,
+    ) {
+        Spacer(modifier = Modifier.height(8.dp))
+        TabRow(pagerState)
+
+        HorizontalPager(state = pagerState) {
+            when (val page = Pages.fromIndex(it)) {
+                Pages.Media -> FavoriteMediaUi(component = component.favoriteMediaComponent)
+                Pages.Folders -> FavoriteFoldersUi(component = component.favoriteFoldersComponent)
+            }
+        }
+    }
+}
+
+@Composable
+private fun TabRow(pagerState: PagerState) {
+    val currentOffset by remember {
+        derivedStateOf { pagerState.getOffsetFractionForPage(0).takeIf { it != 0f } ?: 0.0001f }
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center,
+    ) {
+        val ovalColor = MaterialTheme.colorScheme.onPrimary
+        val ld = LocalDensity.current
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(0.4f)
+                .background(MaterialTheme.colorScheme.inversePrimary, MaterialTheme.shapes.extraLarge)
+                .drawWithContent {
+                    drawRoundRect(
+                        color = ovalColor,
+                        size = Size(
+                            width = size.width.div(2).minus(12 * ld.density),
+                            height = size.height.minus(12 * ld.density)
+                        ),
+                        cornerRadius = CornerRadius(16f * ld.density, 16f * ld.density),
+                        topLeft = Offset(
+                            x = 6 * ld.density + (size.width.div(2)).times(currentOffset),
+                            y = 6 * ld.density
+                        )
+                    )
+                    drawContent()
+                },
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Pages.entries.forEach {
+                TabRowItem(page = it)
+            }
+        }
+    }
+}
+
+@Composable
+private fun RowScope.TabRowItem(page: Pages) {
+    Text(
+        text = stringResource(page.getString()),
+        style = MaterialTheme.typography.labelLarge,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .padding(vertical = 6.dp)
+            .weight(1f)
+    )
+}
+
+private enum class Pages {
+    Media, Folders;
+
+    fun getString() = when (this) {
+        Media -> R.string.media
+        Folders -> R.string.folders
+    }
+
+    companion object {
+        fun fromIndex(index: Int) = if (index == 0) Media else Folders
+    }
+}

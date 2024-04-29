@@ -21,8 +21,9 @@ import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.design.RealDesignComponent
-import ru.kvf.favorite.createFavoriteListComponent
-import ru.kvf.favorite.ui.FavoriteListComponent
+import ru.kvf.favorite.createFavoriteComponent
+import ru.kvf.favorite.createFavoriteListComponentOkd
+import ru.kvf.favorite.ui.FavoriteListComponentOld
 import ru.kvf.folders.createFoldersListComponent
 import ru.kvf.folders.ui.folderlist.FoldersListComponent
 import ru.kvf.media.createMediaListComponent
@@ -81,7 +82,7 @@ class RealHomeComponent(
             )
 
             Config.Favorite -> HomeComponent.Child.Favorite(
-                componentFactory.createFavoriteListComponent(componentContext, ::favoriteListOutput)
+                componentFactory.createFavoriteComponent(componentContext)
             )
 
             Config.Settings -> HomeComponent.Child.Settings(
@@ -110,9 +111,9 @@ class RealHomeComponent(
         }
     }
 
-    private fun favoriteListOutput(output: FavoriteListComponent.Output) {
+    private fun favoriteListOutput(output: FavoriteListComponentOld.Output) {
         when (output) {
-            is FavoriteListComponent.Output.OpenMediaRequested -> onOutput(
+            is FavoriteListComponentOld.Output.OpenMediaRequested -> onOutput(
                 HomeComponent.Output.OpenMediaRequested(
                     index = output.index,
                     reversed = output.reversed,

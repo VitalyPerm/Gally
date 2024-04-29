@@ -12,12 +12,12 @@ import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
 
-class RealFavoriteListComponent(
+class RealFavoriteListComponentOld(
     componentContext: ComponentContext,
-    private val onOutput: (FavoriteListComponent.Output) -> Unit,
+    private val onOutput: (FavoriteListComponentOld.Output) -> Unit,
     getLikedMediaUseCase: GetLikedMediaUseCase,
     private val handleLikeClickUseCase: HandleLikeClickUseCase,
-) : ComponentContext by componentContext, FavoriteListComponent {
+) : ComponentContext by componentContext, FavoriteListComponentOld {
 
     private val componentScope = lifecycle.coroutineScope()
 
@@ -35,7 +35,7 @@ class RealFavoriteListComponent(
 
     override fun onMediaClick(mediaId: Long) {
         val index = media.value.indexOfFirst { it.id == mediaId }
-        onOutput(FavoriteListComponent.Output.OpenMediaRequested(index, isReversed.value))
+        onOutput(FavoriteListComponentOld.Output.OpenMediaRequested(index, isReversed.value))
     }
 
     override fun onReverseClick() {

@@ -20,7 +20,7 @@ import ru.kvf.favorite.R
 
 @Composable
 fun FavoriteListUi(
-    component: FavoriteListComponent,
+    component: FavoriteListComponentOld,
     navBarPadding: Dp
 ) {
     val media by component.media.collectAsState()
@@ -39,7 +39,7 @@ fun FavoriteListUi(
     val mediaList = if (isReversed) media.reversed() else media
 
     DefaultContainer(
-        titleRes = R.string.likes,
+        titleRes = R.string.favorite,
         reverseActionEnable = true,
         onReverseClick = component::onReverseClick,
         modifier = Modifier
