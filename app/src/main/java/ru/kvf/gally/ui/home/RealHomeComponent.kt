@@ -22,8 +22,6 @@ import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.design.RealDesignComponent
 import ru.kvf.favorite.createFavoriteComponent
-import ru.kvf.favorite.createFavoriteListComponentOkd
-import ru.kvf.favorite.ui.FavoriteListComponentOld
 import ru.kvf.folders.createFoldersListComponent
 import ru.kvf.folders.ui.folderlist.FoldersListComponent
 import ru.kvf.media.createMediaListComponent
@@ -107,18 +105,6 @@ class RealHomeComponent(
         when (output) {
             is FoldersListComponent.Output.OpenFolderRequested -> onOutput(
                 HomeComponent.Output.OpenFolderRequested(output.name)
-            )
-        }
-    }
-
-    private fun favoriteListOutput(output: FavoriteListComponentOld.Output) {
-        when (output) {
-            is FavoriteListComponentOld.Output.OpenMediaRequested -> onOutput(
-                HomeComponent.Output.OpenMediaRequested(
-                    index = output.index,
-                    reversed = output.reversed,
-                    isFavoriteOnly = true
-                )
             )
         }
     }

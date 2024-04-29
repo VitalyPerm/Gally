@@ -48,7 +48,7 @@ fun FavoriteUi(
     ) {
         Spacer(modifier = Modifier.height(8.dp))
         TabRow(pagerState)
-
+        Spacer(modifier = Modifier.height(8.dp))
         HorizontalPager(state = pagerState) {
             when (val page = Pages.fromIndex(it)) {
                 Pages.Media -> FavoriteMediaUi(component = component.favoriteMediaComponent)

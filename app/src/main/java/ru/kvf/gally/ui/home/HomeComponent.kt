@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.design.DesignComponent
 import ru.kvf.favorite.ui.FavoriteComponent
-import ru.kvf.favorite.ui.FavoriteListComponentOld
 import ru.kvf.folders.ui.folderlist.FoldersListComponent
 import ru.kvf.media.ui.list.MediaListComponent
 import ru.kvf.settings.ui.list.SettingsListComponent
