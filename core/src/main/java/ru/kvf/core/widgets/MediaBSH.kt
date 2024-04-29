@@ -1,5 +1,8 @@
 package ru.kvf.core.widgets
 
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -17,15 +20,21 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityOptionsCompat
 import ru.kvf.core.mediabsh.MediaBSHComponent
-import ru.kvf.core.utils.navigationBarWithImePaddingDp
+import ru.kvf.core.utils.collectSideEffect
+import ru.kvf.core.utils.createTrashMediaRequest
+import ru.kvf.core.utils.shareMedia
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -35,10 +44,29 @@ fun MediaBSH(
 ) {
     val media by component.media.collectAsState()
     val title by component.title.collectAsState()
-    val index by component.index.collectAsState()
+    val index by component.currentIndex.collectAsState()
     val optionsVisible by component.optionsVisible.collectAsState()
     val pagerState = rememberPagerState(initialPage = index) { media.size }
-    val navigationBarWithImePadding = navigationBarWithImePaddingDp()
+
+    val ctx = LocalContext.current
+    val deleteMediaLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) { result -> if (result.resultCode == Activity.RESULT_OK) component.trashedSuccess() }
+
+    component.sideEffect.collectSideEffect {
+        when (it) {
+            is MediaBSHComponent.SideEffect.ShareMedia -> ctx.shareMedia(listOf(it.media))
+            is MediaBSHComponent.SideEffect.TrashMedia -> {
+                val request = ctx.createTrashMediaRequest(setOf(it.uri))
+                deleteMediaLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
+            }
+        }
+    }
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }.collect(component::onPageChanged)
+    }
+
     ModalBottomSheet(
         onDismissRequest = component::onDismissRequest,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
@@ -51,7 +79,6 @@ fun MediaBSH(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(navigationBarWithImePadding)
             ) {
                 MediaPager(
                     media = media,
