@@ -51,7 +51,7 @@ class RealMediaListComponent(
     override val mediaToTrashUris = MutableStateFlow(UriSet.EMPTY)
     override val selectedMediaDates = MutableStateFlow(MediaDateSet.EMPTY)
     override var lastPosition = 0
-    override val sideEffect = MutableSharedFlow<MediaListSideEffect>()
+    override val sideEffect = MutableSharedFlow<MediaListComponent.SideEffect>()
 
     private var allMediaList: List<Media> = emptyList()
     private var mediaDateToIdMap: Map<MediaDate, List<Long>> = emptyMap()
@@ -86,7 +86,7 @@ class RealMediaListComponent(
 
     override fun onReverseClick() {
         sortReversed.update { it.not() }
-        componentScope.launch { sideEffect.emit(MediaListSideEffect.ScrollUp) }
+        componentScope.launch { sideEffect.emit(MediaListComponent.SideEffect.ScrollUp) }
     }
 
     override fun onMediaClick(mediaId: Long) {
@@ -118,7 +118,7 @@ class RealMediaListComponent(
         if (selectedMediaIds.value.data.isNotEmpty()) return
         componentScope.launch {
             selectedMediaIds.value = LongSet.from(setOf(media.id))
-            sideEffect.emit(MediaListSideEffect.Vibrate)
+            sideEffect.emit(MediaListComponent.SideEffect.Vibrate)
         }
     }
 
@@ -133,7 +133,7 @@ class RealMediaListComponent(
                 allMediaList.find { media -> media.id == it }
             }
             selectedMediaIds.value = LongSet.EMPTY
-            sideEffect.emit(MediaListSideEffect.ShareMedia(mediaList))
+            sideEffect.emit(MediaListComponent.SideEffect.ShareMedia(mediaList))
         }
     }
 
@@ -173,7 +173,7 @@ class RealMediaListComponent(
         componentScope.launch {
             val uris = mediaToTrashUris.value
             onDismissTrashMedia()
-            sideEffect.emit(MediaListSideEffect.DeleteMedia(uris.data))
+            sideEffect.emit(MediaListComponent.SideEffect.TrashMedia(uris.data))
         }
     }
 
@@ -188,7 +188,7 @@ class RealMediaListComponent(
 
     private fun editSelectedMedia(id: Long) {
         componentScope.safeLaunch(Dispatchers.Default) {
-            sideEffect.emit(MediaListSideEffect.Vibrate)
+            sideEffect.emit(MediaListComponent.SideEffect.Vibrate)
             val value = selectedMediaIds.value.data.toMutableList().apply {
                 if (contains(id)) remove(id) else add(id)
             }.toSet()

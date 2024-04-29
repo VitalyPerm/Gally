@@ -3,8 +3,13 @@ package ru.kvf.media.ui.detail
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.usecase.GetLikedMediaUseCase
@@ -25,15 +30,24 @@ class RealMediaComponent(
     getLikedMediaUseCase: GetLikedMediaUseCase,
 ) : ComponentContext by componentContext, MediaComponent {
 
+    private companion object {
+        const val TITLE_HIDING_TIMEOUT = 5000L
+        const val TITLE_TIME_FORMAT = "dd.MM.yyyy HH:mm"
+    }
+
     private val componentScope = lifecycle.coroutineScope()
 
     override val media = MutableStateFlow(emptyList<Media>())
-    override val title = MutableStateFlow("")
-    override val titleVisible = MutableStateFlow(false)
+    override val optionsVisible = MutableStateFlow(false)
+    override val sideEffect = MutableSharedFlow<MediaComponent.SideEffect>()
 
     private var titleHidingJob: Job? = null
-    private val titleHidingTimeout = 5000L
-    private val titleTimeFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+    private val titleTimeFormat = SimpleDateFormat(TITLE_TIME_FORMAT, Locale.getDefault())
+
+    private val currentPage = MutableStateFlow(startIndex)
+    override val title: StateFlow<String> = combine(media, currentPage) { all, page ->
+        titleTimeFormat.format(Date(all[page].timeStamp))
+    }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), "")
 
     init {
         componentScope.safeLaunch {
@@ -48,22 +62,38 @@ class RealMediaComponent(
     }
 
     override fun onPageChanged(page: Int) {
-        val currentMedia = media.value[page]
-        val mediaDate = titleTimeFormat.format(Date(currentMedia.timeStamp))
-        title.value = mediaDate
+        currentPage.value = page
     }
 
     override fun onSingleTap() {
-        titleVisible.update { it.not() }
+        optionsVisible.update { it.not() }
         titleHidingTimer()
     }
 
+    override fun onShareClick() {
+        componentScope.safeLaunch {
+            sideEffect.emit(MediaComponent.SideEffect.ShareMedia(getCurrentMedia()))
+        }
+    }
+
+    override fun onTrashClick() {
+        componentScope.safeLaunch {
+            sideEffect.emit(MediaComponent.SideEffect.TrashMedia(getCurrentMedia().uri))
+        }
+    }
+
+    override fun trashedSuccess() {
+        media.update { it.toMutableList().apply { remove(getCurrentMedia()) } }
+    }
+
+    private fun getCurrentMedia() = media.value[currentPage.value]
+
     private fun titleHidingTimer() {
-        if (titleVisible.value.not()) return
+        if (optionsVisible.value.not()) return
         titleHidingJob?.cancel()
         titleHidingJob = componentScope.safeLaunch {
-            delay(titleHidingTimeout)
-            titleVisible.value = false
+            delay(TITLE_HIDING_TIMEOUT)
+            optionsVisible.value = false
         }
     }
 }

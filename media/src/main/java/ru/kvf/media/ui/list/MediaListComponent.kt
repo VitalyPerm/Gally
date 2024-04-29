@@ -18,7 +18,7 @@ interface MediaListComponent {
     val selectedMediaIds: StateFlow<LongSet>
     val mediaToTrashUris: StateFlow<UriSet>
     val selectedMediaDates: StateFlow<MediaDateSet>
-    val sideEffect: Flow<MediaListSideEffect>
+    val sideEffect: Flow<SideEffect>
     val lastPosition: Int
     val folderName: String?
 
@@ -42,11 +42,11 @@ interface MediaListComponent {
             val folder: String? = null
         ) : Output
     }
-}
 
-sealed interface MediaListSideEffect {
-    data object ScrollUp : MediaListSideEffect
-    data class DeleteMedia(val uris: Set<Uri>) : MediaListSideEffect
-    data class ShareMedia(val media: List<Media>) : MediaListSideEffect
-    data object Vibrate : MediaListSideEffect
+    sealed interface SideEffect {
+        data object ScrollUp : SideEffect
+        data class TrashMedia(val uris: Set<Uri>) : SideEffect
+        data class ShareMedia(val media: List<Media>) : SideEffect
+        data object Vibrate : SideEffect
+    }
 }

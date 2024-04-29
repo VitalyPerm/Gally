@@ -18,8 +18,6 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -52,6 +49,7 @@ import ru.kvf.core.utils.createTrashMediaRequest
 import ru.kvf.core.utils.shareMedia
 import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.MediaListWithDate
+import ru.kvf.core.widgets.SelectModeMenuItems
 import ru.kvf.media.R
 import ru.kvf.media.ui.list.delete.TrashMediaBSH
 
@@ -96,20 +94,20 @@ fun MediaListUi(
 
     component.sideEffect.collectSideEffect {
         when (it) {
-            MediaListSideEffect.ScrollUp -> {
+            MediaListComponent.SideEffect.ScrollUp -> {
                 mediaListGridState.animateScrollToItem(0)
             }
 
-            is MediaListSideEffect.DeleteMedia -> {
+            is MediaListComponent.SideEffect.TrashMedia -> {
                 val request = ctx.createTrashMediaRequest(it.uris)
                 deleteMediaLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
             }
 
-            is MediaListSideEffect.ShareMedia -> {
+            is MediaListComponent.SideEffect.ShareMedia -> {
                 ctx.shareMedia(it.media)
             }
 
-            MediaListSideEffect.Vibrate -> haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+            MediaListComponent.SideEffect.Vibrate -> haptic.performHapticFeedback(HapticFeedbackType.LongPress)
         }
     }
 
@@ -250,40 +248,12 @@ fun BoxScope.MediaSelectModeMenu(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
-                ) {
-                    MediaSelectModeMenuItem(
-                        onClick = onClickShare,
-                        imageVector = Icons.Default.Share
-                    )
 
-                    MediaSelectModeMenuItem(
-                        onClick = onClickTrash,
-                        imageVector = Icons.Default.Delete
-                    )
-                }
+                SelectModeMenuItems(
+                    onShareClick = onClickShare,
+                    onTrashClick = onClickTrash
+                )
             }
         }
-    }
-}
-
-@Composable
-private fun MediaSelectModeMenuItem(
-    imageVector: ImageVector,
-    onClick: () -> Unit,
-) {
-    IconButton(
-        onClick = onClick,
-        modifier = Modifier
-            .padding(24.dp)
-    ) {
-        Icon(
-            imageVector = imageVector,
-            contentDescription = null,
-            modifier = Modifier
-                .size(36.dp)
-        )
     }
 }

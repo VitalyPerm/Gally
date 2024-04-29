@@ -48,13 +48,6 @@ class App : Application(), KoinProvider, ImageLoaderFactory {
                 .strongReferencesEnabled(true)
                 .build()
         }
-        .diskCachePolicy(CachePolicy.ENABLED)
-        .diskCache {
-            DiskCache.Builder()
-                .maxSizePercent(0.05)
-                .directory(cacheDir.resolve("coil_cache"))
-                .build()
-        }
         .components {
             add(VideoFrameDecoder.Factory())
         }
