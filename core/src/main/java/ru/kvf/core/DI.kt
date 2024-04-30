@@ -43,9 +43,7 @@ val coreModule = module {
 fun ComponentFactory.createMediaBSHComponent(
     componentContext: ComponentContext,
     media: StateFlow<List<Media>>,
-    output: (MediaBSHComponent.Output) -> Unit,
 ): MediaBSHComponent = RealMediaBSHComponent(
     componentContext = componentContext,
-    media = media,
-    onOutput = output
+    media = media
 )

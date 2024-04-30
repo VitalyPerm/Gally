@@ -8,10 +8,10 @@ import ru.kvf.core.domain.entities.Media
 interface MediaBSHComponent {
 
     val media: StateFlow<List<Media>>
-    val currentIndex: StateFlow<Int>
     val title: StateFlow<String>
     val optionsVisible: StateFlow<Boolean>
     val sideEffect: Flow<SideEffect>
+    val visible: StateFlow<Boolean>
 
     fun onTap()
     fun onShareClick()
@@ -28,5 +28,6 @@ interface MediaBSHComponent {
     sealed interface SideEffect {
         data class TrashMedia(val uri: Uri) : SideEffect
         data class ShareMedia(val media: Media) : SideEffect
+        data class SetIndex(val index: Int) : SideEffect
     }
 }

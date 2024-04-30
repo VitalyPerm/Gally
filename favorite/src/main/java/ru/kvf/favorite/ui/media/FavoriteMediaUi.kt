@@ -27,8 +27,6 @@ fun FavoriteMediaUi(
     val media by component.media.collectAsState()
     val isReversed by component.isReversed.collectAsState()
     val favoriteListGridState = rememberLazyGridState()
-    val showDetailsBSH by component.showDetailsBSH.collectAsState()
-
     val mediaList = if (isReversed) media.reversed() else media
 
     Box(
@@ -44,9 +42,7 @@ fun FavoriteMediaUi(
         )
     }
 
-    if (showDetailsBSH) {
-        MediaBSH(component.mediaBSHComponent)
-    }
+    MediaBSH(component.mediaBSHComponent)
 }
 
 @Composable

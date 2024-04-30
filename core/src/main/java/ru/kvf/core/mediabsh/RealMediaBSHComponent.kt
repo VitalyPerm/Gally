@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
@@ -19,7 +20,6 @@ import java.util.Locale
 class RealMediaBSHComponent(
     componentContext: ComponentContext,
     override val media: StateFlow<List<Media>>,
-    private val onOutput: (MediaBSHComponent.Output) -> Unit,
 ) : ComponentContext by componentContext, MediaBSHComponent {
 
     private companion object {
@@ -28,9 +28,7 @@ class RealMediaBSHComponent(
     }
 
     private val componentScope = lifecycle.coroutineScope()
-
-    override val currentIndex = MutableStateFlow(0)
-
+    private val currentIndex = MutableStateFlow(0)
     private var titleHidingJob: Job? = null
     private val titleTimeFormat = SimpleDateFormat(TITLE_TIME_FORMAT, Locale.getDefault())
 
@@ -39,8 +37,8 @@ class RealMediaBSHComponent(
     }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), "")
 
     override val sideEffect = MutableSharedFlow<MediaBSHComponent.SideEffect>()
-
     override val optionsVisible = MutableStateFlow(false)
+    override val visible = MutableStateFlow(false)
 
     override fun onShareClick() {
         componentScope.safeLaunch {
@@ -60,7 +58,7 @@ class RealMediaBSHComponent(
     }
 
     override fun onDismissRequest() {
-        onOutput(MediaBSHComponent.Output.DismissRequested)
+        visible.update { false }
     }
 
     override fun onPageChanged(page: Int) {
@@ -68,7 +66,11 @@ class RealMediaBSHComponent(
     }
 
     override fun setup(startIndex: Int) {
-        currentIndex.update { startIndex }
+        componentScope.launch {
+            currentIndex.update { startIndex }
+            visible.update { true }
+            sideEffect.emit(MediaBSHComponent.SideEffect.SetIndex(startIndex))
+        }
     }
 
     override fun trashedSuccess() {

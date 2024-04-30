@@ -31,8 +31,7 @@ class RealFavoriteMediaComponent(
 
     override val mediaBSHComponent: MediaBSHComponent = componentFactory.createMediaBSHComponent(
         componentContext = childContext("favoriteMediaBSH"),
-        media = media,
-        output = ::mediaBSHOutput
+        media = media
     )
 
     override val selectedMediaIndex = MutableStateFlow(0)
@@ -50,12 +49,5 @@ class RealFavoriteMediaComponent(
     override fun onMediaClick(mediaId: Long) {
         val index = media.value.indexOfFirst { it.id == mediaId }.takeIf { it.notNegative() } ?: return
         mediaBSHComponent.setup(index)
-        showDetailsBSH.update { true }
-    }
-
-    private fun mediaBSHOutput(output: MediaBSHComponent.Output) {
-        when (output) {
-            MediaBSHComponent.Output.DismissRequested -> showDetailsBSH.update { false }
-        }
     }
 }

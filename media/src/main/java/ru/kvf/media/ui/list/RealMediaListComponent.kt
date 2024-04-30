@@ -62,8 +62,7 @@ class RealMediaListComponent(
     private val allMedia = MutableStateFlow<List<Media>>(emptyList())
     override val mediaBSHComponent: MediaBSHComponent = componentFactory.createMediaBSHComponent(
         componentContext = childContext("mediaListBSH"),
-        media = allMedia,
-        output = ::mediaBSHOutput
+        media = allMedia
     )
 
     private var allMediaList: List<Media> = emptyList()
@@ -221,12 +220,6 @@ class RealMediaListComponent(
                 }
                 MediaDateSet.from(newValue)
             }
-        }
-    }
-
-    private fun mediaBSHOutput(output: MediaBSHComponent.Output) {
-        when (output) {
-            MediaBSHComponent.Output.DismissRequested -> {}
         }
     }
 }

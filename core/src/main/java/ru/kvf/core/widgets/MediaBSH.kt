@@ -44,9 +44,9 @@ fun MediaBSH(
 ) {
     val media by component.media.collectAsState()
     val title by component.title.collectAsState()
-    val index by component.currentIndex.collectAsState()
     val optionsVisible by component.optionsVisible.collectAsState()
-    val pagerState = rememberPagerState(initialPage = index) { media.size }
+    val pagerState = rememberPagerState { media.size }
+    val visible by component.visible.collectAsState()
 
     val ctx = LocalContext.current
     val deleteMediaLauncher = rememberLauncherForActivityResult(
@@ -60,6 +60,8 @@ fun MediaBSH(
                 val request = ctx.createTrashMediaRequest(setOf(it.uri))
                 deleteMediaLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
             }
+
+            is MediaBSHComponent.SideEffect.SetIndex -> { pagerState.scrollToPage(it.index) }
         }
     }
 
@@ -67,39 +69,41 @@ fun MediaBSH(
         snapshotFlow { pagerState.currentPage }.collect(component::onPageChanged)
     }
 
-    ModalBottomSheet(
-        onDismissRequest = component::onDismissRequest,
-        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        shape = RectangleShape,
-        containerColor = Color.Black,
-        scrimColor = Color.Black.copy(alpha = 0.4f),
-        windowInsets = WindowInsets(0, 0, 0, 0),
-        dragHandle = null,
-        content = {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                MediaPager(
-                    media = media,
-                    pagerState = pagerState,
-                    reversePager = isReversed,
-                    onTap = component::onTap
-                )
+    if (visible) {
+        ModalBottomSheet(
+            onDismissRequest = component::onDismissRequest,
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            shape = RectangleShape,
+            containerColor = Color.Black,
+            scrimColor = Color.Black.copy(alpha = 0.4f),
+            windowInsets = WindowInsets(0, 0, 0, 0),
+            dragHandle = null,
+            content = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    MediaPager(
+                        media = media,
+                        pagerState = pagerState,
+                        reversePager = isReversed,
+                        onTap = component::onTap
+                    )
 
-                Title(
-                    name = title,
-                    optionsVisible = optionsVisible
-                )
+                    Title(
+                        name = title,
+                        optionsVisible = optionsVisible
+                    )
 
-                Actions(
-                    onShareClick = component::onShareClick,
-                    onTrashClick = component::onTrashClick,
-                    optionsVisible = optionsVisible
-                )
+                    Actions(
+                        onShareClick = component::onShareClick,
+                        onTrashClick = component::onTrashClick,
+                        optionsVisible = optionsVisible
+                    )
+                }
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable
