@@ -48,6 +48,7 @@ import ru.kvf.core.utils.collectSideEffect
 import ru.kvf.core.utils.createTrashMediaRequest
 import ru.kvf.core.utils.shareMedia
 import ru.kvf.core.widgets.DefaultContainer
+import ru.kvf.core.widgets.MediaBSH
 import ru.kvf.core.widgets.MediaListWithDate
 import ru.kvf.core.widgets.SelectModeMenuItems
 import ru.kvf.media.R
@@ -137,6 +138,11 @@ fun MediaListUi(
         media = mediaToTrashUris,
         onDeleteClick = component::onDeleteMediaClick,
         onDismissClick = component::onDismissTrashMedia
+    )
+
+    MediaBSH(
+        component = component.mediaBSHComponent,
+        isReversed = sortReversed
     )
 }
 

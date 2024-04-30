@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,13 +25,13 @@ import ru.kvf.core.utils.MediaMap
 import ru.kvf.core.utils.UriSet
 import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.coroutineScope
+import ru.kvf.core.utils.notNegative
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.media.domain.GetFolderMediaUseCase
 import ru.kvf.media.domain.GetSortedMediaUseCase
 
 class RealMediaListComponent(
     componentContext: ComponentContext,
-    private val onOutput: (MediaListComponent.Output) -> Unit,
     override val folderName: String? = null,
     getSortedMediaUseCase: GetSortedMediaUseCase,
     private val getFolderMediaUseCase: GetFolderMediaUseCase,
@@ -106,20 +105,9 @@ class RealMediaListComponent(
             if (selectedMediaIds.value.data.isNotEmpty()) {
                 editSelectedMedia(mediaId)
             } else {
-                if (folderName != null) {
-                    getFolderMediaUseCase(folderName).firstOrNull()
-                } else {
-                    getMediaUseCase().firstOrNull()
-                }?.let { list ->
-                    val index = list.indexOfFirst { it.id == mediaId }
-                    onOutput(
-                        MediaListComponent.Output.OpenMediaRequested(
-                            index = index,
-                            reversed = sortReversed.value,
-                            folder = folderName
-                        )
-                    )
-                }
+                val index = allMedia.value.indexOfFirst { it.id == mediaId }
+                    .takeIf { it.notNegative() } ?: return@safeLaunch
+                mediaBSHComponent.setup(index)
             }
         }
     }
