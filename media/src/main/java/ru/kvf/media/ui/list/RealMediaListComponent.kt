@@ -108,15 +108,14 @@ class RealMediaListComponent(
                 editSelectedMedia(mediaId)
             } else {
                 val media = allMedia.value.find { it.id == mediaId } ?: return@safeLaunch
-                context.apply {
-                    val request = ImageRequest.Builder(this)
+                context.imageLoader.execute(
+                    ImageRequest.Builder(context)
                         .data(media.uri)
                         .size(Size.ORIGINAL)
                         .build()
-                    imageLoader.execute(request)
-                    val index = allMedia.value.indexOf(media)
-                    mediaBSHComponent.setup(index)
-                }
+                )
+                val index = allMedia.value.indexOf(media)
+                mediaBSHComponent.setup(index)
             }
         }
     }
