@@ -8,6 +8,7 @@ import ru.kvf.core.domain.entities.Media
 interface MediaBSHComponent {
 
     val media: StateFlow<List<Media>>
+    val currentMediaIndex: StateFlow<Int>
     val title: StateFlow<String>
     val optionsVisible: StateFlow<Boolean>
     val sideEffect: Flow<SideEffect>

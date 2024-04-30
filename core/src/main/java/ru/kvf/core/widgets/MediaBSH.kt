@@ -43,10 +43,11 @@ fun MediaBSH(
     isReversed: Boolean = false,
 ) {
     val media by component.media.collectAsState()
+    val currentMediaIndex by component.currentMediaIndex.collectAsState()
     val title by component.title.collectAsState()
     val optionsVisible by component.optionsVisible.collectAsState()
-    val pagerState = rememberPagerState { media.size }
     val visible by component.visible.collectAsState()
+    val pagerState = rememberPagerState(initialPage = currentMediaIndex) { media.size }
 
     val ctx = LocalContext.current
     val deleteMediaLauncher = rememberLauncherForActivityResult(

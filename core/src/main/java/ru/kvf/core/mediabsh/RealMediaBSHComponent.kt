@@ -28,17 +28,17 @@ class RealMediaBSHComponent(
     }
 
     private val componentScope = lifecycle.coroutineScope()
-    private val currentIndex = MutableStateFlow(0)
-    private var titleHidingJob: Job? = null
-    private val titleTimeFormat = SimpleDateFormat(TITLE_TIME_FORMAT, Locale.getDefault())
+    override val currentMediaIndex = MutableStateFlow(0)
 
-    override val title: StateFlow<String> = combine(media, currentIndex) { all, page ->
+    override val title: StateFlow<String> = combine(media, currentMediaIndex) { all, page ->
         all.getOrNull(page)?.timeStamp?.let { titleTimeFormat.format(it) } ?: ""
     }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), "")
 
     override val sideEffect = MutableSharedFlow<MediaBSHComponent.SideEffect>()
     override val optionsVisible = MutableStateFlow(false)
     override val visible = MutableStateFlow(false)
+    private var titleHidingJob: Job? = null
+    private val titleTimeFormat = SimpleDateFormat(TITLE_TIME_FORMAT, Locale.getDefault())
 
     override fun onShareClick() {
         componentScope.safeLaunch {
@@ -62,12 +62,12 @@ class RealMediaBSHComponent(
     }
 
     override fun onPageChanged(page: Int) {
-        currentIndex.value = page
+        currentMediaIndex.update { page }
     }
 
     override fun setup(startIndex: Int) {
         componentScope.launch {
-            currentIndex.update { startIndex }
+            currentMediaIndex.update { startIndex }
             visible.update { true }
             sideEffect.emit(MediaBSHComponent.SideEffect.SetIndex(startIndex))
         }
@@ -86,5 +86,5 @@ class RealMediaBSHComponent(
         }
     }
 
-    private fun getCurrentMedia() = media.value[currentIndex.value]
+    private fun getCurrentMedia() = media.value[currentMediaIndex.value]
 }
