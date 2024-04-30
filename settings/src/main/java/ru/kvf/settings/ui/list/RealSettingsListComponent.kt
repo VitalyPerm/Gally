@@ -20,7 +20,7 @@ class RealSettingsListComponent(
     private val loadMediaUseCase: LoadMediaUseCase
 ) : ComponentContext by componentContext, SettingsListComponent {
 
-    private val componentScope = lifecycle.coroutineScope()
+    private val componentScope = coroutineScope()
 
     override val edgeToEdgeEnable = edgeUseCase.getEnabled()
         .stateIn(componentScope, SharingStarted.Lazily, false)

@@ -15,7 +15,7 @@ class RealFoldersListComponent(
     private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
 ) : ComponentContext by componentContext, FoldersListComponent {
 
-    private val componentScope = lifecycle.coroutineScope()
+    private val componentScope = coroutineScope()
 
     private companion object {
         const val MAX_GRID_COUNT = 4

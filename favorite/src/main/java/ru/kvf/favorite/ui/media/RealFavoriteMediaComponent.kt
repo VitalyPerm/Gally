@@ -24,7 +24,7 @@ class RealFavoriteMediaComponent(
     componentFactory: ComponentFactory
 ) : ComponentContext by componentContext, FavoriteMediaComponent {
 
-    private val componentScope = lifecycle.coroutineScope()
+    private val componentScope = coroutineScope()
 
     override val media: StateFlow<List<Media>> = getLikedMediaUseCase()
         .stateIn(componentScope, SharingStarted.WhileSubscribed(5000), emptyList())

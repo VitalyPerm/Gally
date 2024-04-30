@@ -44,7 +44,7 @@ class RealMediaListComponent(
     private val context: Context
 ) : ComponentContext by componentContext, MediaListComponent {
 
-    private val componentScope = lifecycle.coroutineScope()
+    private val componentScope = coroutineScope()
 
     override val gridCellsCount = gridCellsCountChangeUseCase
         .get(GridCellsCountChangeUseCase.Screen.MediaList)

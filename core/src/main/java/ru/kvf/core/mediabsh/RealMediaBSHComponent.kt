@@ -27,7 +27,7 @@ class RealMediaBSHComponent(
         const val TITLE_TIME_FORMAT = "dd.MM.yyyy HH:mm"
     }
 
-    private val componentScope = lifecycle.coroutineScope()
+    private val componentScope = coroutineScope()
     override val currentMediaIndex = MutableStateFlow(0)
 
     override val title: StateFlow<String> = combine(media, currentMediaIndex) { all, page ->

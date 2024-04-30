@@ -37,7 +37,7 @@ class RealHomeComponent(
     performHapticFeedBackUseCase: PerformHapticFeedBackUseCase,
 ) : ComponentContext by componentContext, HomeComponent {
     private val navigation = StackNavigation<Config>()
-    private val componentScope = lifecycle.coroutineScope()
+    private val componentScope = coroutineScope()
 
     override val childStack: Value<ChildStack<*, HomeComponent.Child>> =
         childStack(

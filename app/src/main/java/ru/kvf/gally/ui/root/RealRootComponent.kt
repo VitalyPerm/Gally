@@ -25,7 +25,7 @@ class RealRootComponent(
 ) : ComponentContext by componentContext, RootComponent {
 
     private val navigation = StackNavigation<Config>()
-    private val componentScope = lifecycle.coroutineScope()
+    private val componentScope = coroutineScope()
 
     override val theme = themeUseCase.getTheme().stateIn(
         componentScope,
