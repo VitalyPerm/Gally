@@ -36,6 +36,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil.size.Size
 import kotlinx.coroutines.delay
 import ru.kvf.core.utils.Constants
 
@@ -50,7 +51,8 @@ fun MediaItem(
     onLongClick: (() -> Unit)? = null,
     onLiked: (() -> Unit)? = null,
     isSelected: Boolean = false,
-    editMode: Boolean = false
+    editMode: Boolean = false,
+    size: Size = Size.ORIGINAL
 ) {
     var showLike by remember { mutableStateOf(false) }
     val hearSize by animateFloatAsState(targetValue = if (showLike) 100f else 0f, label = "")
@@ -73,6 +75,7 @@ fun MediaItem(
         ImageWithLoader(
             model = model,
             contentScale = ContentScale.Crop,
+            size = size,
             modifier = Modifier
                 .fillMaxSize()
                 .scale(scale)

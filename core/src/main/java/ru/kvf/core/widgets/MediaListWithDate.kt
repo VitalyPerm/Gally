@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import coil.size.Size
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
 import ru.kvf.core.utils.LongSet
@@ -82,9 +83,17 @@ fun MediaListWithDate(
                     onLiked = { onLikedClick(item.id) },
                     onLongClick = { onMediaLongClick(item) },
                     isSelected = item.id in selectedMediaIds.data,
-                    editMode = selectedMediaIds.data.isNotEmpty()
+                    editMode = selectedMediaIds.data.isNotEmpty(),
+                    size = calculatePhotoSize(cellsCount)
                 )
             }
         }
     }
+}
+
+private fun calculatePhotoSize(cellsCount: Int): Size = when (cellsCount) {
+    1 -> Size(1000, 1000)
+    2 -> Size(750, 750)
+    3 -> Size(500, 500)
+    else -> Size(250, 250)
 }
