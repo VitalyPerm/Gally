@@ -60,7 +60,7 @@ fun MediaListUi(
     selectMediaModeEnable: MutableState<Boolean>? = null
 ) {
     val selectedMediaIds by component.selectedMediaIds.collectAsState()
-    val media by component.media.collectAsState()
+    val media by component.mediaMap.collectAsState()
     val cellsCount by component.gridCellsCount.collectAsState()
     val sortReversed by component.sortReversed.collectAsState()
     val likedMedia by component.likedMedia.collectAsState()

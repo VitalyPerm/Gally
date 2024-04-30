@@ -6,11 +6,12 @@ import ru.kvf.core.mediabsh.MediaBSHComponent
 
 interface FavoriteMediaComponent {
 
+    val mediaBSHComponent: MediaBSHComponent
+
     val media: StateFlow<List<Media>>
     val selectedMediaIndex: StateFlow<Int>
     val isReversed: StateFlow<Boolean>
     val showDetailsBSH: StateFlow<Boolean>
-    val mediaBSHComponent: MediaBSHComponent
 
     fun onLikeClick(id: Long)
     fun onMediaClick(mediaId: Long)

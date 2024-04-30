@@ -5,13 +5,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
+import ru.kvf.core.mediabsh.MediaBSHComponent
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaMap
 import ru.kvf.core.utils.UriSet
 
 interface MediaListComponent {
-    val media: StateFlow<Pair<MediaMap, MediaMap>>
+
+    val mediaBSHComponent: MediaBSHComponent
+
+    val mediaMap: StateFlow<Pair<MediaMap, MediaMap>>
     val likedMedia: StateFlow<LongSet>
     val sortReversed: StateFlow<Boolean>
     val gridCellsCount: StateFlow<Int>

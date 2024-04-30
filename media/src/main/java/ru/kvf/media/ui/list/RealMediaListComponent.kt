@@ -1,6 +1,7 @@
 package ru.kvf.media.ui.list
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.childContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,12 +11,15 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.kvf.core.ComponentFactory
+import ru.kvf.core.createMediaBSHComponent
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
 import ru.kvf.core.domain.usecase.GetLikedIdsListUseCase
 import ru.kvf.core.domain.usecase.GetMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
+import ru.kvf.core.mediabsh.MediaBSHComponent
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaMap
@@ -35,7 +39,8 @@ class RealMediaListComponent(
     getLikedIdsListUseCase: GetLikedIdsListUseCase,
     private val getMediaUseCase: GetMediaUseCase,
     private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
-    private val handleLikeClickUseCase: HandleLikeClickUseCase
+    private val handleLikeClickUseCase: HandleLikeClickUseCase,
+    componentFactory: ComponentFactory
 ) : ComponentContext by componentContext, MediaListComponent {
 
     private val componentScope = lifecycle.coroutineScope()
@@ -43,7 +48,8 @@ class RealMediaListComponent(
     override val gridCellsCount = gridCellsCountChangeUseCase
         .get(GridCellsCountChangeUseCase.Screen.MediaList)
         .stateIn(componentScope, SharingStarted.Lazily, 1)
-    override val media = MutableStateFlow(MediaMap.EMPTY to MediaMap.EMPTY)
+
+    override val mediaMap = MutableStateFlow(MediaMap.EMPTY to MediaMap.EMPTY)
     override val likedMedia: StateFlow<LongSet> = getLikedIdsListUseCase()
         .stateIn(componentScope, SharingStarted.Lazily, LongSet.EMPTY)
     override val sortReversed = MutableStateFlow(false)
@@ -52,6 +58,13 @@ class RealMediaListComponent(
     override val selectedMediaDates = MutableStateFlow(MediaDateSet.EMPTY)
     override var lastPosition = 0
     override val sideEffect = MutableSharedFlow<MediaListComponent.SideEffect>()
+
+    private val allMedia = MutableStateFlow<List<Media>>(emptyList())
+    override val mediaBSHComponent: MediaBSHComponent = componentFactory.createMediaBSHComponent(
+        componentContext = childContext("mediaListBSH"),
+        media = allMedia,
+        output = ::mediaBSHOutput
+    )
 
     private var allMediaList: List<Media> = emptyList()
     private var mediaDateToIdMap: Map<MediaDate, List<Long>> = emptyMap()
@@ -183,7 +196,8 @@ class RealMediaListComponent(
     }
 
     private fun updateMedia(data: Map<MediaDate, List<Media>>) {
-        media.value = MediaMap.from(data) to MediaMap.from(data.mapValues { it.value.reversed() }.toSortedMap())
+        mediaMap.value = MediaMap.from(data) to MediaMap.from(data.mapValues { it.value.reversed() }.toSortedMap())
+        allMedia.update { data.values.flatten() }
     }
 
     private fun editSelectedMedia(id: Long) {
@@ -207,6 +221,12 @@ class RealMediaListComponent(
                 }
                 MediaDateSet.from(newValue)
             }
+        }
+    }
+
+    private fun mediaBSHOutput(output: MediaBSHComponent.Output) {
+        when (output) {
+            MediaBSHComponent.Output.DismissRequested -> {}
         }
     }
 }
