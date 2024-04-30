@@ -31,11 +31,6 @@ interface HomeComponent {
     }
 
     sealed interface Output {
-        data class OpenMediaRequested(
-            val index: Int,
-            val reversed: Boolean,
-            val isFavoriteOnly: Boolean = false
-        ) : Output
         data class OpenFolderRequested(val name: String) : Output
     }
 }

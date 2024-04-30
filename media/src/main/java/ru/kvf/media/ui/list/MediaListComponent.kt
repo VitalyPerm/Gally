@@ -39,14 +39,6 @@ interface MediaListComponent {
     fun selectModeOnClickTrash()
     fun onSelectDateClick(mediaDate: MediaDate)
 
-    sealed interface Output {
-        data class OpenMediaRequested(
-            val index: Int,
-            val reversed: Boolean,
-            val folder: String? = null
-        ) : Output
-    }
-
     sealed interface SideEffect {
         data object ScrollUp : SideEffect
         data class TrashMedia(val uris: Set<Uri>) : SideEffect

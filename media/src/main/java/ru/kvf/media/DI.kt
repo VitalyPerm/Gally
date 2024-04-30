@@ -8,8 +8,6 @@ import ru.kvf.media.data.GetFolderMediaUseCaseImpl
 import ru.kvf.media.data.GetSortedMediaUseCaseImpl
 import ru.kvf.media.domain.GetFolderMediaUseCase
 import ru.kvf.media.domain.GetSortedMediaUseCase
-import ru.kvf.media.ui.detail.MediaComponent
-import ru.kvf.media.ui.detail.RealMediaComponent
 import ru.kvf.media.ui.list.MediaListComponent
 import ru.kvf.media.ui.list.RealMediaListComponent
 
@@ -20,33 +18,14 @@ val mediaModule = module {
 
 fun ComponentFactory.createMediaListComponent(
     componentContext: ComponentContext,
-    output: (MediaListComponent.Output) -> Unit,
     folderName: String? = null,
 ): MediaListComponent = RealMediaListComponent(
     componentContext = componentContext,
-    onOutput = output,
     folderName = folderName,
     getSortedMediaUseCase = get(),
     getFolderMediaUseCase = get(),
     getLikedIdsListUseCase = get(),
-    getMediaUseCase = get(),
     gridCellsCountChangeUseCase = get(),
     handleLikeClickUseCase = get(),
     componentFactory = get()
-)
-
-fun ComponentFactory.createMediaComponent(
-    componentContext: ComponentContext,
-    startIndex: Int,
-    isReversed: Boolean,
-    isFavoriteOnly: Boolean,
-    folder: String?
-): MediaComponent = RealMediaComponent(
-    componentContext = componentContext,
-    startIndex = startIndex,
-    isReversed = isReversed,
-    isFavoriteOnly = isFavoriteOnly,
-    folder = folder,
-    getMediaUseCase = get(),
-    getLikedMediaUseCase = get()
 )

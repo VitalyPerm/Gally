@@ -15,7 +15,6 @@ import ru.kvf.core.createMediaBSHComponent
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
 import ru.kvf.core.domain.usecase.GetLikedIdsListUseCase
-import ru.kvf.core.domain.usecase.GetMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
 import ru.kvf.core.mediabsh.MediaBSHComponent
@@ -34,9 +33,8 @@ class RealMediaListComponent(
     componentContext: ComponentContext,
     override val folderName: String? = null,
     getSortedMediaUseCase: GetSortedMediaUseCase,
-    private val getFolderMediaUseCase: GetFolderMediaUseCase,
+    getFolderMediaUseCase: GetFolderMediaUseCase,
     getLikedIdsListUseCase: GetLikedIdsListUseCase,
-    private val getMediaUseCase: GetMediaUseCase,
     private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
     private val handleLikeClickUseCase: HandleLikeClickUseCase,
     componentFactory: ComponentFactory

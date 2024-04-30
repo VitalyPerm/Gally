@@ -7,11 +7,9 @@ import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackAnimation
-import ru.kvf.core.dialog.BottomSheet
 import ru.kvf.core.domain.entities.ThemeType
 import ru.kvf.core.theme.GallyTheme
 import ru.kvf.gally.ui.home.HomeUi
-import ru.kvf.media.ui.detail.MediaUi
 import ru.kvf.media.ui.list.MediaListUi
 
 @Composable
@@ -36,26 +34,13 @@ fun RootUi(
                         backFactor = 0.7f
                     )
                     is RootComponent.Child.Home -> scale()
-
-                    is RootComponent.Child.Media -> scale(
-                        frontFactor = 1.5f,
-                        backFactor = 0.7f
-                    )
                 }
             }
         ) {
             when (val child = it.instance) {
                 is RootComponent.Child.Home -> HomeUi(component = child.component)
-                is RootComponent.Child.Media -> MediaUi(component = child.component)
                 is RootComponent.Child.FolderMediaList -> MediaListUi(component = child.component)
             }
-        }
-
-        BottomSheet(
-            component.mediaDetailsDialogControl,
-            skipPartiallyExpanded = true
-        ) {
-            MediaUi(it)
         }
     }
 }

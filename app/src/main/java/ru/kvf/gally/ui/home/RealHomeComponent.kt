@@ -25,7 +25,6 @@ import ru.kvf.favorite.createFavoriteComponent
 import ru.kvf.folders.createFoldersListComponent
 import ru.kvf.folders.ui.folderlist.FoldersListComponent
 import ru.kvf.media.createMediaListComponent
-import ru.kvf.media.ui.list.MediaListComponent
 import ru.kvf.settings.createSettingsListComponent
 import ru.kvf.settings.domain.EdgeToEdgeUseCase
 
@@ -72,7 +71,7 @@ class RealHomeComponent(
     private fun child(config: Config, componentContext: ComponentContext): HomeComponent.Child =
         when (config) {
             Config.Media -> HomeComponent.Child.Media(
-                componentFactory.createMediaListComponent(componentContext, ::mediaListOutput)
+                componentFactory.createMediaListComponent(componentContext)
             )
 
             Config.Folders -> HomeComponent.Child.Folders(
@@ -89,17 +88,6 @@ class RealHomeComponent(
 
             Config.Design -> HomeComponent.Child.Design(RealDesignComponent(componentContext))
         }
-
-    private fun mediaListOutput(output: MediaListComponent.Output) {
-        when (output) {
-            is MediaListComponent.Output.OpenMediaRequested -> onOutput(
-                HomeComponent.Output.OpenMediaRequested(
-                    index = output.index,
-                    reversed = output.reversed
-                )
-            )
-        }
-    }
 
     private fun foldersListOutput(output: FoldersListComponent.Output) {
         when (output) {
