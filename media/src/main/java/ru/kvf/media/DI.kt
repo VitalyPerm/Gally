@@ -27,5 +27,6 @@ fun ComponentFactory.createMediaListComponent(
     getLikedIdsListUseCase = get(),
     gridCellsCountChangeUseCase = get(),
     handleLikeClickUseCase = get(),
-    componentFactory = get()
+    componentFactory = get(),
+    context = get()
 )

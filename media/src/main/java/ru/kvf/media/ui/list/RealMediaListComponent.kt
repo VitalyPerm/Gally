@@ -1,5 +1,9 @@
 package ru.kvf.media.ui.list
 
+import android.content.Context
+import coil.imageLoader
+import coil.request.ImageRequest
+import coil.size.Size
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +28,6 @@ import ru.kvf.core.utils.MediaMap
 import ru.kvf.core.utils.UriSet
 import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.coroutineScope
-import ru.kvf.core.utils.notNegative
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.media.domain.GetFolderMediaUseCase
 import ru.kvf.media.domain.GetSortedMediaUseCase
@@ -37,7 +40,8 @@ class RealMediaListComponent(
     getLikedIdsListUseCase: GetLikedIdsListUseCase,
     private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
     private val handleLikeClickUseCase: HandleLikeClickUseCase,
-    componentFactory: ComponentFactory
+    componentFactory: ComponentFactory,
+    private val context: Context
 ) : ComponentContext by componentContext, MediaListComponent {
 
     private val componentScope = lifecycle.coroutineScope()
@@ -103,9 +107,16 @@ class RealMediaListComponent(
             if (selectedMediaIds.value.data.isNotEmpty()) {
                 editSelectedMedia(mediaId)
             } else {
-                val index = allMedia.value.indexOfFirst { it.id == mediaId }
-                    .takeIf { it.notNegative() } ?: return@safeLaunch
-                mediaBSHComponent.setup(index)
+                val media = allMedia.value.find { it.id == mediaId } ?: return@safeLaunch
+                context.apply {
+                    val request = ImageRequest.Builder(this)
+                        .data(media.uri)
+                        .size(Size.ORIGINAL)
+                        .build()
+                    imageLoader.execute(request)
+                    val index = allMedia.value.indexOf(media)
+                    mediaBSHComponent.setup(index)
+                }
             }
         }
     }

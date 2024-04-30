@@ -4,7 +4,6 @@ import android.app.Application
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.VideoFrameDecoder
-import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.request.CachePolicy
 import org.koin.android.ext.koin.androidContext
@@ -45,7 +44,7 @@ class App : Application(), KoinProvider, ImageLoaderFactory {
         .memoryCachePolicy(CachePolicy.ENABLED)
         .memoryCache {
             MemoryCache.Builder(this)
-                .strongReferencesEnabled(true)
+                .maxSizePercent(0.99)
                 .build()
         }
         .components {
