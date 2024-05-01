@@ -10,10 +10,10 @@ import com.arkivanov.decompose.ComponentContext
 import org.koin.core.component.get
 import org.koin.dsl.module
 import ru.kvf.core.ComponentFactory
-import ru.kvf.gally.ui.home.HomeComponent
-import ru.kvf.gally.ui.home.RealHomeComponent
-import ru.kvf.gally.ui.root.RealRootComponent
-import ru.kvf.gally.ui.root.RootComponent
+import ru.kvf.gally.home.HomeComponent
+import ru.kvf.gally.home.RealHomeComponent
+import ru.kvf.gally.root.RealRootComponent
+import ru.kvf.gally.root.RootComponent
 
 private const val DATA_STORE_NAME = "data_store"
 

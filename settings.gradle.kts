@@ -102,8 +102,7 @@ dependencyResolutionManagement {
 rootProject.name = "Gally"
 include(":app")
 include(":core")
-include(":media")
 include(":favorite")
 include(":settings")
-include(":design")
 include(":folders")
+include(":feature")

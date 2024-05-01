@@ -5,8 +5,10 @@ import kotlinx.coroutines.flow.StateFlow
 import org.koin.dsl.module
 import ru.kvf.core.data.repository.FavoriteRepositoryImpl
 import ru.kvf.core.data.repository.MediaRepositoryImpl
+import ru.kvf.core.data.usecase.GetFolderMediaUseCaseImpl
 import ru.kvf.core.data.usecase.GetFoldersUseCaseImpl
 import ru.kvf.core.data.usecase.GetMediaUseCaseImpl
+import ru.kvf.core.data.usecase.GetSortedMediaUseCaseImpl
 import ru.kvf.core.data.usecase.GridCellsCountChangeUseCaseImpl
 import ru.kvf.core.data.usecase.LoadMediaUseCaseImpl
 import ru.kvf.core.data.usecase.MediaSortByUseCaseImpl
@@ -20,8 +22,10 @@ import ru.kvf.core.data.usecase.favorite.HandleMediaDoubleClickUseCaseImpl
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.repository.FavoriteRepository
 import ru.kvf.core.domain.repository.MediaRepository
+import ru.kvf.core.domain.usecase.GetFolderMediaUseCase
 import ru.kvf.core.domain.usecase.GetFoldersUseCase
 import ru.kvf.core.domain.usecase.GetMediaUseCase
+import ru.kvf.core.domain.usecase.GetSortedMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.LoadMediaUseCase
 import ru.kvf.core.domain.usecase.MediaSortByUseCase
@@ -50,6 +54,8 @@ val coreModule = module {
     single<MediaSortByUseCase> { MediaSortByUseCaseImpl(get()) }
     single<LoadMediaUseCase> { LoadMediaUseCaseImpl(get()) }
     single<GridCellsCountChangeUseCase> { GridCellsCountChangeUseCaseImpl(get()) }
+    single<GetSortedMediaUseCase> { GetSortedMediaUseCaseImpl(get(), get()) }
+    single<GetFolderMediaUseCase> { GetFolderMediaUseCaseImpl(get(), get()) }
 }
 
 fun ComponentFactory.createMediaBSHComponent(
