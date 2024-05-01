@@ -65,7 +65,7 @@ fun HomeUi(
     val ld = LocalDensity.current
     val navBarPadding = remember(navigationBarHeight.intValue) {
         with(ld) {
-            navigationBarHeight.intValue.toDp().plus(22.dp)
+            navigationBarHeight.intValue.toDp().plus(16.dp)
         }
     }
 
