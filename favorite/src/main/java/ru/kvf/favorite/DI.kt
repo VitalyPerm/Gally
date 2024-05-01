@@ -22,7 +22,7 @@ fun ComponentFactory.createFavoriteMediaComponent(
     componentContext: ComponentContext,
 ): FavoriteMediaComponent = RealFavoriteMediaComponent(
     componentContext = componentContext,
-    getLikedMediaUseCase = get(),
-    handleLikeClickUseCase = get(),
+    getFavoriteMediaUseCase = get(),
+    handleMediaDoubleClickUseCase = get(),
     componentFactory = get()
 )

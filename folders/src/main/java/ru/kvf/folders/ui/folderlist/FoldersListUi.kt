@@ -1,8 +1,11 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package ru.kvf.folders.ui.folderlist
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,6 +50,7 @@ fun FoldersListUi(
         FoldersList(
             folders = folders,
             onFolderClick = component::onFolderClick,
+            onFolderDoubleClick = component::onFolderDoubleClick,
             gridState = foldersListGridState,
             cellsCount = gridCellsCount,
         )
@@ -57,6 +61,7 @@ fun FoldersListUi(
 private fun FoldersList(
     folders: List<Folder>,
     onFolderClick: (String) -> Unit,
+    onFolderDoubleClick: (String) -> Unit,
     gridState: LazyGridState,
     cellsCount: Int
 ) {
@@ -70,7 +75,8 @@ private fun FoldersList(
             FolderItem(
                 uri = folder.media.firstOrNull()?.uri,
                 name = folder.name,
-                onClick = { onFolderClick(folder.name) }
+                onClick = { onFolderClick(folder.name) },
+                onDoubleClick = { onFolderDoubleClick(folder.name) }
             )
         }
     }
@@ -80,13 +86,17 @@ private fun FoldersList(
 private fun FolderItem(
     uri: Any?,
     name: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDoubleClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(3.dp)
-            .clickable(onClick = onClick)
+            .combinedClickable(
+                onClick = onClick,
+                onDoubleClick = onDoubleClick
+            )
             .border(
                 BorderStroke(3.dp, MaterialTheme.colorScheme.onPrimary),
                 MaterialTheme.shapes.large

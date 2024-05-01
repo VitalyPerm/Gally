@@ -18,9 +18,9 @@ import ru.kvf.core.ComponentFactory
 import ru.kvf.core.createMediaBSHComponent
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
-import ru.kvf.core.domain.usecase.GetLikedIdsListUseCase
+import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
-import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
+import ru.kvf.core.domain.usecase.favorite.HandleMediaDoubleClickUseCase
 import ru.kvf.core.mediabsh.MediaBSHComponent
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
@@ -37,9 +37,9 @@ class RealMediaListComponent(
     override val folderName: String? = null,
     getSortedMediaUseCase: GetSortedMediaUseCase,
     getFolderMediaUseCase: GetFolderMediaUseCase,
-    getLikedIdsListUseCase: GetLikedIdsListUseCase,
+    getFavoriteMediaIdsUseCase: GetFavoriteMediaIdsUseCase,
     private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
-    private val handleLikeClickUseCase: HandleLikeClickUseCase,
+    private val handleMediaDoubleClickUseCase: HandleMediaDoubleClickUseCase,
     componentFactory: ComponentFactory,
     private val context: Context
 ) : ComponentContext by componentContext, MediaListComponent {
@@ -51,7 +51,7 @@ class RealMediaListComponent(
         .stateIn(componentScope, SharingStarted.Lazily, 1)
 
     override val mediaMap = MutableStateFlow(MediaMap.EMPTY to MediaMap.EMPTY)
-    override val likedMedia: StateFlow<LongSet> = getLikedIdsListUseCase()
+    override val likedMedia: StateFlow<LongSet> = getFavoriteMediaIdsUseCase()
         .stateIn(componentScope, SharingStarted.Lazily, LongSet.EMPTY)
     override val sortReversed = MutableStateFlow(false)
     override val selectedMediaIds = MutableStateFlow(LongSet.EMPTY)
@@ -94,7 +94,7 @@ class RealMediaListComponent(
     }
 
     override fun onLikeClick(id: Long) {
-        componentScope.safeLaunch { handleLikeClickUseCase(id) }
+        componentScope.safeLaunch { handleMediaDoubleClickUseCase(id) }
     }
 
     override fun onReverseClick() {

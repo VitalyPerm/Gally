@@ -1,11 +1,11 @@
-package ru.kvf.folders.data
+package ru.kvf.core.data.usecase
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.kvf.core.domain.entities.Folder
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.repository.MediaRepository
-import ru.kvf.folders.domain.GetFoldersUseCase
+import ru.kvf.core.domain.usecase.GetFoldersUseCase
 
 class GetFoldersUseCaseImpl(
     private val mediaRepository: MediaRepository

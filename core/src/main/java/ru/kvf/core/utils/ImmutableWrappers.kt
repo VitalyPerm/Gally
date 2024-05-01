@@ -23,6 +23,7 @@ data class UriSet(val data: Set<Uri>) {
 
 @Immutable
 data class LongSet(val data: Set<Long>) {
+    fun toMutableSet() = data.toMutableSet()
     companion object {
         val EMPTY = LongSet(emptySet())
         fun from(data: Set<Long>) = LongSet(data)

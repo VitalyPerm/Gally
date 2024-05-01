@@ -11,6 +11,7 @@ interface FoldersListComponent {
     fun onGridCountClick()
 
     fun onFolderClick(name: String)
+    fun onFolderDoubleClick(name: String)
 
     sealed interface Output {
         data class OpenFolderRequested(val name: String) : Output

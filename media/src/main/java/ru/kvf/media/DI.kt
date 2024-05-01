@@ -24,9 +24,9 @@ fun ComponentFactory.createMediaListComponent(
     folderName = folderName,
     getSortedMediaUseCase = get(),
     getFolderMediaUseCase = get(),
-    getLikedIdsListUseCase = get(),
+    getFavoriteMediaIdsUseCase = get(),
     gridCellsCountChangeUseCase = get(),
-    handleLikeClickUseCase = get(),
+    handleMediaDoubleClickUseCase = get(),
     componentFactory = get(),
     context = get()
 )

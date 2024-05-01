@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.stateIn
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
-import ru.kvf.folders.domain.GetFoldersUseCase
+import ru.kvf.core.domain.usecase.GetFoldersUseCase
 
 class RealFoldersListComponent(
     componentContext: ComponentContext,
@@ -40,5 +40,9 @@ class RealFoldersListComponent(
 
     override fun onFolderClick(name: String) {
         onOutput(FoldersListComponent.Output.OpenFolderRequested(name))
+    }
+
+    override fun onFolderDoubleClick(name: String) {
+        TODO("Not yet implemented")
     }
 }

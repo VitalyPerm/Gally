@@ -12,7 +12,6 @@ import org.koin.core.context.startKoin
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.KoinProvider
 import ru.kvf.core.coreModule
-import ru.kvf.folders.foldersModule
 import ru.kvf.gally.appModule
 import ru.kvf.media.mediaModule
 import ru.kvf.settings.settingsModule
@@ -30,7 +29,6 @@ class App : Application(), KoinProvider, ImageLoaderFactory {
                 listOf(
                     appModule,
                     mediaModule,
-                    foldersModule,
                     coreModule,
                     settingsModule
                 )

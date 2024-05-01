@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.update
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.createMediaBSHComponent
 import ru.kvf.core.domain.entities.Media
-import ru.kvf.core.domain.usecase.GetLikedMediaUseCase
-import ru.kvf.core.domain.usecase.HandleLikeClickUseCase
+import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaUseCase
+import ru.kvf.core.domain.usecase.favorite.HandleMediaDoubleClickUseCase
 import ru.kvf.core.mediabsh.MediaBSHComponent
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.notNegative
@@ -19,14 +19,14 @@ import ru.kvf.core.utils.safeLaunch
 
 class RealFavoriteMediaComponent(
     componentContext: ComponentContext,
-    getLikedMediaUseCase: GetLikedMediaUseCase,
-    private val handleLikeClickUseCase: HandleLikeClickUseCase,
+    getFavoriteMediaUseCase: GetFavoriteMediaUseCase,
+    private val handleMediaDoubleClickUseCase: HandleMediaDoubleClickUseCase,
     componentFactory: ComponentFactory
 ) : ComponentContext by componentContext, FavoriteMediaComponent {
 
     private val componentScope = coroutineScope()
 
-    override val media: StateFlow<List<Media>> = getLikedMediaUseCase()
+    override val media: StateFlow<List<Media>> = getFavoriteMediaUseCase()
         .stateIn(componentScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     override val mediaBSHComponent: MediaBSHComponent = componentFactory.createMediaBSHComponent(
@@ -43,7 +43,7 @@ class RealFavoriteMediaComponent(
     }
 
     override fun onLikeClick(id: Long) {
-        componentScope.safeLaunch { handleLikeClickUseCase(id) }
+        componentScope.safeLaunch { handleMediaDoubleClickUseCase(id) }
     }
 
     override fun onMediaClick(mediaId: Long) {

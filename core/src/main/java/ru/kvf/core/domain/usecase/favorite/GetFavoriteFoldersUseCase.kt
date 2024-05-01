@@ -1,8 +1,8 @@
-package ru.kvf.folders.domain
+package ru.kvf.core.domain.usecase.favorite
 
 import kotlinx.coroutines.flow.Flow
 import ru.kvf.core.domain.entities.Folder
 
-interface GetFoldersUseCase {
+interface GetFavoriteFoldersUseCase {
     operator fun invoke(): Flow<List<Folder>>
 }
