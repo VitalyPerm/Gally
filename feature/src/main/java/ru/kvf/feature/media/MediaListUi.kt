@@ -63,7 +63,7 @@ fun MediaListUi(
     val media by component.mediaMap.collectAsState()
     val cellsCount by component.gridCellsCount.collectAsState()
     val sortReversed by component.sortReversed.collectAsState()
-    val likedMedia by component.likedMedia.collectAsState()
+    val favoriteMediaIds by component.favoriteMediaIds.collectAsState()
     val selectedMediaDates by component.selectedMediaDates.collectAsState()
     val mediaToTrashUris by component.mediaToTrashUris.collectAsState()
 
@@ -120,10 +120,10 @@ fun MediaListUi(
         onGridCountClick = component::onGridCountClick,
         sortReversed = sortReversed,
         onReverseClick = component::onReverseClick,
-        likedMedia = likedMedia,
+        favoriteMediaIds = favoriteMediaIds,
         onMediaClick = component::onMediaClick,
         onMediaLongClick = component::onMediaLongClick,
-        onLikedClick = component::onLikeClick,
+        onLikedClick = component::onMediaDoubleClickClick,
         selectedMediaIds = selectedMediaIds,
         selectModeOnClickShare = component::selectModeOnClickShare,
         selectModeOnClickTrash = component::selectModeOnClickTrash,
@@ -155,7 +155,7 @@ private fun Content(
     onGridCountClick: () -> Unit,
     sortReversed: Boolean,
     onReverseClick: () -> Unit,
-    likedMedia: LongSet,
+    favoriteMediaIds: LongSet,
     onMediaClick: (Long) -> Unit,
     onMediaLongClick: (Media) -> Unit,
     onLikedClick: (Long) -> Unit,
@@ -180,7 +180,7 @@ private fun Content(
             val mediaMap = remember(sortReversed) { if (sortReversed) reversedMedia else media }
             MediaListWithDate(
                 media = mediaMap,
-                likedMedia = likedMedia,
+                favoriteMediaIds = favoriteMediaIds,
                 gridState = gridState,
                 cellsCount = cellsCount,
                 onMediaClick = onMediaClick,

@@ -59,7 +59,9 @@ fun ComponentFactory.createFoldersListComponent(
     componentContext = componentContext,
     onOutput = output,
     getFoldersUseCase = get(),
-    gridCellsCountChangeUseCase = get()
+    gridCellsCountChangeUseCase = get(),
+    handleFolderDoubleClickUseCase = get(),
+    getFavoriteFoldersIdsUseCase = get()
 )
 
 fun ComponentFactory.createSettingsListComponent(

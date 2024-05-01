@@ -59,11 +59,11 @@ private fun MediaList(
         items(media, key = { item: Media -> item.id }) { media ->
             MediaItem(
                 model = media.uri,
-                liked = true,
+                favorite = true,
                 shouldShowLikeIcon = false,
                 onClick = { onMediaClick(media.id) },
                 onLongClick = { onMediaLongClick(media.id) },
-                onLiked = { onLikedClick(media.id) },
+                onDoubleClick = { onLikedClick(media.id) },
             )
         }
     }

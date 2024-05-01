@@ -32,7 +32,7 @@ import ru.kvf.core.utils.MediaMap
 @Composable
 fun MediaListWithDate(
     media: MediaMap,
-    likedMedia: LongSet,
+    favoriteMediaIds: LongSet,
     gridState: LazyGridState,
     cellsCount: Int = 3,
     onMediaClick: (Long) -> Unit,
@@ -77,10 +77,10 @@ fun MediaListWithDate(
             items(media, key = { item: Media -> item.id }) { item ->
                 MediaItem(
                     model = item.uri,
-                    liked = item.id in likedMedia.data,
+                    favorite = item.id in favoriteMediaIds.data,
                     duration = item.duration,
                     onClick = { onMediaClick(item.id) },
-                    onLiked = { onLikedClick(item.id) },
+                    onDoubleClick = { onLikedClick(item.id) },
                     onLongClick = { onMediaLongClick(item) },
                     isSelected = item.id in selectedMediaIds.data,
                     editMode = selectedMediaIds.data.isNotEmpty(),

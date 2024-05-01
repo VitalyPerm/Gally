@@ -51,8 +51,8 @@ class RealMediaListComponent(
         .stateIn(componentScope, SharingStarted.Lazily, 1)
 
     override val mediaMap = MutableStateFlow(MediaMap.EMPTY to MediaMap.EMPTY)
-    override val likedMedia: StateFlow<LongSet> = getFavoriteMediaIdsUseCase()
-        .stateIn(componentScope, SharingStarted.Lazily, LongSet.EMPTY)
+    override val favoriteMediaIds: StateFlow<LongSet> = getFavoriteMediaIdsUseCase()
+        .stateIn(componentScope, SharingStarted.WhileSubscribed(5000), LongSet.EMPTY)
     override val sortReversed = MutableStateFlow(false)
     override val selectedMediaIds = MutableStateFlow(LongSet.EMPTY)
     override val mediaToTrashUris = MutableStateFlow(UriSet.EMPTY)
@@ -93,7 +93,7 @@ class RealMediaListComponent(
         }
     }
 
-    override fun onLikeClick(id: Long) {
+    override fun onMediaDoubleClickClick(id: Long) {
         componentScope.safeLaunch { handleMediaDoubleClickUseCase(id) }
     }
 

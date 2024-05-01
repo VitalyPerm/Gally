@@ -2,17 +2,23 @@ package ru.kvf.feature.folders
 
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import ru.kvf.core.domain.usecase.GetFoldersUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
+import ru.kvf.core.domain.usecase.favorite.GetFavoriteFoldersIdsUseCase
+import ru.kvf.core.domain.usecase.favorite.HandleFolderDoubleClickUseCase
+import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
-import ru.kvf.core.domain.usecase.GetFoldersUseCase
 
 class RealFoldersListComponent(
     componentContext: ComponentContext,
     private val onOutput: (FoldersListComponent.Output) -> Unit,
     getFoldersUseCase: GetFoldersUseCase,
     private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
+    private val handleFolderDoubleClickUseCase: HandleFolderDoubleClickUseCase,
+    private val getFavoriteFoldersIdsUseCase: GetFavoriteFoldersIdsUseCase
 ) : ComponentContext by componentContext, FoldersListComponent {
 
     private val componentScope = coroutineScope()
@@ -26,6 +32,8 @@ class RealFoldersListComponent(
     override val gridCellsCount = gridCellsCountChangeUseCase
         .get(GridCellsCountChangeUseCase.Screen.FoldersList)
         .stateIn(componentScope, SharingStarted.Lazily, 1)
+    override val favoriteFolderIds: StateFlow<LongSet> = getFavoriteFoldersIdsUseCase()
+        .stateIn(componentScope, SharingStarted.WhileSubscribed(5000), LongSet.EMPTY)
 
     override fun onGridCountClick() {
         val currentCount = gridCellsCount.value
@@ -42,6 +50,7 @@ class RealFoldersListComponent(
         onOutput(FoldersListComponent.Output.OpenFolderRequested(name))
     }
 
-    override fun onFolderDoubleClick(name: String) {
+    override fun onFolderDoubleClick(id: Long) {
+        componentScope.safeLaunch { handleFolderDoubleClickUseCase(id) }
     }
 }

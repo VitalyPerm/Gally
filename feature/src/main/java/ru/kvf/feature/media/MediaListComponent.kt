@@ -16,7 +16,7 @@ interface MediaListComponent {
     val mediaBSHComponent: MediaBSHComponent
 
     val mediaMap: StateFlow<Pair<MediaMap, MediaMap>>
-    val likedMedia: StateFlow<LongSet>
+    val favoriteMediaIds: StateFlow<LongSet>
     val sortReversed: StateFlow<Boolean>
     val gridCellsCount: StateFlow<Int>
     val selectedMediaIds: StateFlow<LongSet>
@@ -27,7 +27,7 @@ interface MediaListComponent {
     val folderName: String?
 
     fun onGridCountClick()
-    fun onLikeClick(id: Long)
+    fun onMediaDoubleClickClick(id: Long)
     fun onReverseClick()
     fun onMediaClick(mediaId: Long)
     fun onMediaLongClick(media: Media)

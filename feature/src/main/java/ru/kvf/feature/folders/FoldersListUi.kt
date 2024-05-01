@@ -2,12 +2,7 @@
 
 package ru.kvf.feature.folders
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.border
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -15,20 +10,15 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import ru.kvf.core.domain.entities.Folder
+import ru.kvf.core.utils.LongSet
 import ru.kvf.core.widgets.DefaultContainer
-import ru.kvf.core.widgets.ImageWithLoader
+import ru.kvf.core.widgets.MediaItem
 import ru.kvf.feature.R
 
 @Composable
@@ -37,6 +27,7 @@ fun FoldersListUi(
     navBarPadding: Dp
 ) {
     val folders by component.folders.collectAsState()
+    val favoriteFolderIds by component.favoriteFolderIds.collectAsState()
     val gridCellsCount by component.gridCellsCount.collectAsState()
     val foldersListGridState = rememberLazyGridState()
 
@@ -53,6 +44,7 @@ fun FoldersListUi(
             onFolderDoubleClick = component::onFolderDoubleClick,
             gridState = foldersListGridState,
             cellsCount = gridCellsCount,
+            favoriteFolderIds = favoriteFolderIds
         )
     }
 }
@@ -61,9 +53,10 @@ fun FoldersListUi(
 private fun FoldersList(
     folders: List<Folder>,
     onFolderClick: (String) -> Unit,
-    onFolderDoubleClick: (String) -> Unit,
+    onFolderDoubleClick: (Long) -> Unit,
     gridState: LazyGridState,
-    cellsCount: Int
+    cellsCount: Int,
+    favoriteFolderIds: LongSet
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(cellsCount),
@@ -72,53 +65,13 @@ private fun FoldersList(
             .fillMaxWidth()
     ) {
         items(folders) { folder ->
-            FolderItem(
-                uri = folder.media.firstOrNull()?.uri,
-                name = folder.name,
+            MediaItem(
+                model = folder.media.firstOrNull()?.uri,
+                title = folder.name,
+                favorite = folder.id in favoriteFolderIds.data,
                 onClick = { onFolderClick(folder.name) },
-                onDoubleClick = { onFolderDoubleClick(folder.name) }
+                onDoubleClick = { onFolderDoubleClick(folder.id) }
             )
         }
-    }
-}
-
-@Composable
-private fun FolderItem(
-    uri: Any?,
-    name: String,
-    onClick: () -> Unit,
-    onDoubleClick: () -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(3.dp)
-            .combinedClickable(
-                onClick = onClick,
-                onDoubleClick = onDoubleClick
-            )
-            .border(
-                BorderStroke(3.dp, MaterialTheme.colorScheme.onPrimary),
-                MaterialTheme.shapes.large
-            )
-            .padding(3.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        ImageWithLoader(
-            model = uri,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
-                .padding(6.dp)
-                .clip(MaterialTheme.shapes.medium)
-        )
-
-        Text(
-            text = name,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier
-                .padding(vertical = 4.dp, horizontal = 6.dp)
-        )
     }
 }

@@ -8,9 +8,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -35,6 +37,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.size.Size
 import kotlinx.coroutines.delay
@@ -43,13 +47,14 @@ import ru.kvf.core.utils.Constants
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MediaItem(
-    model: Any,
-    liked: Boolean = false,
+    model: Any?,
+    title: String? = null,
+    favorite: Boolean = false,
     shouldShowLikeIcon: Boolean = true,
     duration: String? = null,
     onClick: (() -> Unit)? = null,
     onLongClick: (() -> Unit)? = null,
-    onLiked: (() -> Unit)? = null,
+    onDoubleClick: (() -> Unit)? = null,
     isSelected: Boolean = false,
     editMode: Boolean = false,
     size: Size = Size.ORIGINAL
@@ -72,34 +77,51 @@ fun MediaItem(
     ) {
         val scale by animateFloatAsState(targetValue = if (isSelected) 0.7f else 1f, label = "")
 
-        ImageWithLoader(
-            model = model,
-            contentScale = ContentScale.Crop,
-            size = size,
-            modifier = Modifier
-                .fillMaxSize()
-                .scale(scale)
-                .clip(MaterialTheme.shapes.medium)
-                .combinedClickable(
-                    onClick = { onClick?.invoke() },
-                    onDoubleClick = {
-                        showLike = true
-                        onLiked?.invoke()
-                    },
-                    onLongClick = { onLongClick?.invoke() }
-                )
-        )
+        Column {
+            ImageWithLoader(
+                model = model,
+                contentScale = ContentScale.Crop,
+                size = size,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .scale(scale)
+                    .clip(MaterialTheme.shapes.medium)
+                    .combinedClickable(
+                        onClick = { onClick?.invoke() },
+                        onDoubleClick = {
+                            showLike = true
+                            onDoubleClick?.invoke()
+                        },
+                        onLongClick = { onLongClick?.invoke() }
+                    )
+            )
+        }
 
+        title?.let {
+            Text(
+                text = it,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxWidth(0.7f)
+                    .padding(3.dp)
+                    .background(MaterialTheme.colorScheme.onPrimary, MaterialTheme.shapes.extraLarge)
+                    .padding(6.dp)
+            )
+        }
         Icon(
             tint = Color.Red,
-            imageVector = if (liked) Icons.Rounded.HeartBroken else Icons.Filled.Favorite,
+            imageVector = if (favorite) Icons.Rounded.HeartBroken else Icons.Filled.Favorite,
             contentDescription = null,
             modifier = Modifier
                 .size(hearSize.dp)
                 .align(Alignment.Center)
         )
 
-        if (liked && shouldShowLikeIcon) {
+        if (favorite && shouldShowLikeIcon) {
             Icon(
                 tint = Color.Red.copy(alpha = 0.5f),
                 imageVector = Icons.Filled.Favorite,
@@ -133,6 +155,8 @@ fun MediaItem(
                 )
             }
         }
+
+
         AnimatedVisibility(editMode) {
             Icon(
                 imageVector = if (isSelected) Icons.Filled.CheckCircle else Icons.Outlined.Circle,
