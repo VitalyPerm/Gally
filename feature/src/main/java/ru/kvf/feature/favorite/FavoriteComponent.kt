@@ -8,4 +8,8 @@ interface FavoriteComponent {
     val favoriteFoldersComponent: FavoriteFoldersComponent
 
     val favoriteMediaComponent: FavoriteMediaComponent
+
+    sealed interface Output {
+        data class OpenFolderRequested(val name: String) : Output
+    }
 }

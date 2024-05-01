@@ -25,6 +25,7 @@ import ru.kvf.createFavoriteComponent
 import ru.kvf.createFoldersListComponent
 import ru.kvf.createMediaListComponent
 import ru.kvf.createSettingsListComponent
+import ru.kvf.feature.favorite.FavoriteComponent
 import ru.kvf.feature.folders.FoldersListComponent
 
 class RealHomeComponent(
@@ -78,7 +79,10 @@ class RealHomeComponent(
             )
 
             Config.Favorite -> HomeComponent.Child.Favorite(
-                componentFactory.createFavoriteComponent(componentContext)
+                componentFactory.createFavoriteComponent(
+                    componentContext = componentContext,
+                    output = ::favoriteOutput
+                )
             )
 
             Config.Settings -> HomeComponent.Child.Settings(
@@ -87,14 +91,6 @@ class RealHomeComponent(
 
             Config.Design -> HomeComponent.Child.Design
         }
-
-    private fun foldersListOutput(output: FoldersListComponent.Output) {
-        when (output) {
-            is FoldersListComponent.Output.OpenFolderRequested -> onOutput(
-                HomeComponent.Output.OpenFolderRequested(output.name)
-            )
-        }
-    }
 
     override fun onPageSelected(page: HomeComponent.Page) {
         val newConfig = when (page) {
@@ -105,6 +101,22 @@ class RealHomeComponent(
             HomeComponent.Page.Design -> Config.Design
         }
         navigation.bringToFront(newConfig)
+    }
+
+    private fun foldersListOutput(output: FoldersListComponent.Output) {
+        when (output) {
+            is FoldersListComponent.Output.OpenFolderRequested -> onOutput(
+                HomeComponent.Output.OpenFolderRequested(output.name)
+            )
+        }
+    }
+
+    private fun favoriteOutput(output: FavoriteComponent.Output) {
+        when (output) {
+            is FavoriteComponent.Output.OpenFolderRequested -> onOutput(
+                HomeComponent.Output.OpenFolderRequested(output.name)
+            )
+        }
     }
 
     private sealed interface Config : Parcelable {

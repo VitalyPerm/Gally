@@ -9,12 +9,23 @@ import ru.kvf.feature.favorite.media.FavoriteMediaComponent
 
 class RealFavoriteComponent(
     componentContext: ComponentContext,
-    componentFactory: ComponentFactory
+    componentFactory: ComponentFactory,
+    private val onOutput: (FavoriteComponent.Output) -> Unit
 ) : ComponentContext by componentContext, FavoriteComponent {
 
     override val favoriteFoldersComponent: FavoriteFoldersComponent =
-        componentFactory.createFavoriteFoldersComponent(componentContext)
+        componentFactory.createFavoriteFoldersComponent(
+            componentContext = componentContext,
+            output = ::favoriteFoldersOutput
+        )
 
     override val favoriteMediaComponent: FavoriteMediaComponent =
         componentFactory.createFavoriteMediaComponent(componentContext)
+
+    private fun favoriteFoldersOutput(output: FavoriteFoldersComponent.Output) {
+        when (output) {
+            is FavoriteFoldersComponent.Output.OpenFolderRequested ->
+                onOutput(FavoriteComponent.Output.OpenFolderRequested(output.name))
+        }
+    }
 }

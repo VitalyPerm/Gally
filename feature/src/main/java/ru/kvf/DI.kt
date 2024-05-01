@@ -37,11 +37,22 @@ fun ComponentFactory.createMediaListComponent(
 
 fun ComponentFactory.createFavoriteComponent(
     componentContext: ComponentContext,
-): FavoriteComponent = RealFavoriteComponent(componentContext, get())
+    output: (FavoriteComponent.Output) -> Unit
+): FavoriteComponent = RealFavoriteComponent(
+    componentContext,
+    componentFactory = get(),
+    onOutput = output
+)
 
 fun ComponentFactory.createFavoriteFoldersComponent(
     componentContext: ComponentContext,
-): FavoriteFoldersComponent = RealFavoriteFoldersComponent(componentContext)
+    output: (FavoriteFoldersComponent.Output) -> Unit
+): FavoriteFoldersComponent = RealFavoriteFoldersComponent(
+    componentContext = componentContext,
+    onOutput = output,
+    handleFolderDoubleClickUseCase = get(),
+    getFavoriteFoldersUseCase = get()
+)
 
 fun ComponentFactory.createFavoriteMediaComponent(
     componentContext: ComponentContext,
