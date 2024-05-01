@@ -2,8 +2,8 @@ package ru.kvf.feature.favorite
 
 import com.arkivanov.decompose.ComponentContext
 import ru.kvf.core.ComponentFactory
-import ru.kvf.favorite.createFavoriteFoldersComponent
-import ru.kvf.favorite.createFavoriteMediaComponent
+import ru.kvf.createFavoriteFoldersComponent
+import ru.kvf.createFavoriteMediaComponent
 import ru.kvf.feature.favorite.folders.FavoriteFoldersComponent
 import ru.kvf.feature.favorite.media.FavoriteMediaComponent
 

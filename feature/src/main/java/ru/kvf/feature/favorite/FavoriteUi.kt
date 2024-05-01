@@ -33,7 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.kvf.core.widgets.DefaultContainer
-import ru.kvf.favorite.R
+import ru.kvf.feature.R
 import ru.kvf.feature.favorite.folders.FavoriteFoldersUi
 import ru.kvf.feature.favorite.media.FavoriteMediaUi
 

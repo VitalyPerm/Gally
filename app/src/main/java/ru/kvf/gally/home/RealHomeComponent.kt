@@ -20,8 +20,8 @@ import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
 import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
+import ru.kvf.createFavoriteComponent
 import ru.kvf.createMediaListComponent
-import ru.kvf.favorite.createFavoriteComponent
 import ru.kvf.folders.createFoldersListComponent
 import ru.kvf.folders.ui.folderlist.FoldersListComponent
 import ru.kvf.settings.createSettingsListComponent
