@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 import ru.kvf.core.utils.UriSet
-import ru.kvf.media.R
+import ru.kvf.feature.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

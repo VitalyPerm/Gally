@@ -13,9 +13,9 @@ import kotlinx.parcelize.Parcelize
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.entities.ThemeType
 import ru.kvf.core.utils.coroutineScope
+import ru.kvf.createMediaListComponent
 import ru.kvf.gally.createHomeComponent
 import ru.kvf.gally.home.HomeComponent
-import ru.kvf.media.createMediaListComponent
 import ru.kvf.settings.domain.ThemeUseCase
 
 class RealRootComponent(

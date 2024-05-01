@@ -51,7 +51,7 @@ import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.MediaBSH
 import ru.kvf.core.widgets.MediaListWithDate
 import ru.kvf.core.widgets.SelectModeMenuItems
-import ru.kvf.media.R
+import ru.kvf.feature.R
 
 @Composable
 fun MediaListUi(

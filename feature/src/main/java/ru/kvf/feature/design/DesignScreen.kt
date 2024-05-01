@@ -30,8 +30,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.kvf.feature.R
 
-// private val pages = listOf(R.string.colors, R.string.typo, R.string.shape)
-private val pages = listOf(R.string., R.string.typo, R.string.shape)
+private val pages = listOf(R.string.colors, R.string.typo, R.string.shape)
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
