@@ -16,7 +16,7 @@ import ru.kvf.core.utils.coroutineScope
 import ru.kvf.createMediaListComponent
 import ru.kvf.gally.createHomeComponent
 import ru.kvf.gally.home.HomeComponent
-import ru.kvf.settings.domain.ThemeUseCase
+import ru.kvf.core.domain.usecase.ThemeUseCase
 
 class RealRootComponent(
     componentContext: ComponentContext,

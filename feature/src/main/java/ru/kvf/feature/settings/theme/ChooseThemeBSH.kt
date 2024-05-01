@@ -1,4 +1,4 @@
-package ru.kvf.settings.ui.list.theme
+package ru.kvf.feature.settings.theme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

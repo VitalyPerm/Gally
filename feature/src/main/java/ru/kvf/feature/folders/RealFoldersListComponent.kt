@@ -1,4 +1,4 @@
-package ru.kvf.folders.ui.folderlist
+package ru.kvf.feature.folders
 
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.flow.SharingStarted

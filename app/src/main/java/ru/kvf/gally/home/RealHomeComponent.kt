@@ -15,17 +15,17 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import ru.kvf.core.ComponentFactory
+import ru.kvf.core.domain.usecase.EdgeToEdgeUseCase
 import ru.kvf.core.domain.usecase.LoadMediaUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
 import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.createFavoriteComponent
+import ru.kvf.createFoldersListComponent
 import ru.kvf.createMediaListComponent
-import ru.kvf.folders.createFoldersListComponent
-import ru.kvf.folders.ui.folderlist.FoldersListComponent
-import ru.kvf.settings.createSettingsListComponent
-import ru.kvf.settings.domain.EdgeToEdgeUseCase
+import ru.kvf.createSettingsListComponent
+import ru.kvf.feature.folders.FoldersListComponent
 
 class RealHomeComponent(
     componentContext: ComponentContext,

@@ -1,4 +1,4 @@
-package ru.kvf.settings.ui.list
+package ru.kvf.feature.settings
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
@@ -33,8 +33,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ru.kvf.core.domain.entities.ThemeType
 import ru.kvf.core.widgets.DefaultContainer
-import ru.kvf.settings.R
-import ru.kvf.settings.ui.list.theme.ChooseThemeBSH
+import ru.kvf.feature.R
+import ru.kvf.feature.settings.theme.ChooseThemeBSH
 import java.util.Calendar
 
 @Composable

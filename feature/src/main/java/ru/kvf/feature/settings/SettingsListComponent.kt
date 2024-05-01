@@ -1,4 +1,4 @@
-package ru.kvf.settings.ui.list
+package ru.kvf.feature.settings
 
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.core.domain.entities.ThemeType

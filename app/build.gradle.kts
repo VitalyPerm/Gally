@@ -45,7 +45,8 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             resValue("string", "app_name", "GalDebug")
-        }    }
+        }
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -83,7 +84,5 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":feature"))
-    implementation(project(":folders"))
-    implementation(project(":settings"))
     implementation(libs.splash)
 }

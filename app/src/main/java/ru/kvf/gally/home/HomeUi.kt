@@ -45,9 +45,9 @@ import ru.kvf.core.utils.Constants
 import ru.kvf.core.widgets.LoadableContent
 import ru.kvf.feature.favorite.FavoriteUi
 import ru.kvf.feature.design.DesignUi
-import ru.kvf.folders.ui.folderlist.FoldersListUi
+import ru.kvf.feature.folders.FoldersListUi
 import ru.kvf.gally.BuildConfig
-import ru.kvf.settings.ui.list.SettingsListUi
+import ru.kvf.feature.settings.SettingsListUi
 
 @Composable
 fun HomeUi(

@@ -1,4 +1,4 @@
-package ru.kvf.settings.ui.list
+package ru.kvf.feature.settings
 
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.flow.SharingStarted
@@ -8,8 +8,8 @@ import ru.kvf.core.domain.usecase.LoadMediaUseCase
 import ru.kvf.core.domain.usecase.MediaSortByUseCase
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
-import ru.kvf.settings.domain.EdgeToEdgeUseCase
-import ru.kvf.settings.domain.ThemeUseCase
+import ru.kvf.core.domain.usecase.EdgeToEdgeUseCase
+import ru.kvf.core.domain.usecase.ThemeUseCase
 import java.util.Calendar
 
 class RealSettingsListComponent(

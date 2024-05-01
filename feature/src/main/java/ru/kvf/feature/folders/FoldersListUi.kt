@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package ru.kvf.folders.ui.folderlist
+package ru.kvf.feature.folders
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import ru.kvf.core.domain.entities.Folder
 import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.ImageWithLoader
-import ru.kvf.folders.R
+import ru.kvf.feature.R
 
 @Composable
 fun FoldersListUi(
