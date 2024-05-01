@@ -43,7 +43,7 @@ import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import kotlinx.coroutines.delay
 import ru.kvf.core.utils.Constants
 import ru.kvf.core.widgets.LoadableContent
-import ru.kvf.favorite.ui.FavoriteUi
+import ru.kvf.feature.favorite.FavoriteUi
 import ru.kvf.feature.design.DesignUi
 import ru.kvf.folders.ui.folderlist.FoldersListUi
 import ru.kvf.gally.BuildConfig

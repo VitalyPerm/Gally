@@ -1,4 +1,4 @@
-package ru.kvf.favorite.ui.folders
+package ru.kvf.feature.favorite.folders
 
 import com.arkivanov.decompose.ComponentContext
 

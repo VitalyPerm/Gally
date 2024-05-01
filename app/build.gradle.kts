@@ -84,7 +84,6 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":feature"))
     implementation(project(":folders"))
-    implementation(project(":favorite"))
     implementation(project(":settings"))
     implementation(libs.splash)
 }

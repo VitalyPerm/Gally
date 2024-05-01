@@ -4,7 +4,7 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import ru.kvf.favorite.ui.FavoriteComponent
+import ru.kvf.feature.favorite.FavoriteComponent
 import ru.kvf.feature.media.MediaListComponent
 import ru.kvf.folders.ui.folderlist.FoldersListComponent
 import ru.kvf.settings.ui.list.SettingsListComponent

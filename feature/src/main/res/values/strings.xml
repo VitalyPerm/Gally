@@ -7,4 +7,6 @@
     <string name="typo">Шрифты</string>
     <string name="shape">Формы</string>
     <string name="media">Медиа</string>
+    <string name="favorite">Избранное</string>
+    <string name="folders">Папки</string>
 </resources>

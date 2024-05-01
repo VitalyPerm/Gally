@@ -1,4 +1,4 @@
-package ru.kvf.favorite.ui.media
+package ru.kvf.feature.favorite.media
 
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.core.domain.entities.Media

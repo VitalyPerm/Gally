@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package ru.kvf.favorite.ui
+package ru.kvf.feature.favorite
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -35,8 +34,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.favorite.R
-import ru.kvf.favorite.ui.folders.FavoriteFoldersUi
-import ru.kvf.favorite.ui.media.FavoriteMediaUi
+import ru.kvf.feature.favorite.folders.FavoriteFoldersUi
+import ru.kvf.feature.favorite.media.FavoriteMediaUi
 
 @Composable
 fun FavoriteUi(

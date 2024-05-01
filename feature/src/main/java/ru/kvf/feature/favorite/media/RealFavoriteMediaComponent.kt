@@ -1,4 +1,4 @@
-package ru.kvf.favorite.ui.media
+package ru.kvf.feature.favorite.media
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
