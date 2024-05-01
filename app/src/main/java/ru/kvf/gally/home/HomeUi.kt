@@ -24,7 +24,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -35,6 +34,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.slide
@@ -43,11 +43,11 @@ import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import kotlinx.coroutines.delay
 import ru.kvf.core.utils.Constants
 import ru.kvf.core.widgets.LoadableContent
-import ru.kvf.feature.favorite.FavoriteUi
 import ru.kvf.feature.design.DesignUi
+import ru.kvf.feature.favorite.FavoriteUi
 import ru.kvf.feature.folders.FoldersListUi
-import ru.kvf.gally.BuildConfig
 import ru.kvf.feature.settings.SettingsListUi
+import ru.kvf.gally.BuildConfig
 
 @Composable
 fun HomeUi(
@@ -57,17 +57,11 @@ fun HomeUi(
     val haptic = LocalHapticFeedback.current
     val stackState by component.childStack.subscribeAsState()
     val currentChild = remember(stackState) { stackState.active.instance }
-    val navigationBarHeight = remember { mutableIntStateOf(0) }
+    val navigationBarHeight = remember { mutableStateOf(0.dp) }
     val isScrollInProgress = remember { mutableStateOf(false) }
     val editModeEnable = remember { mutableStateOf(false) }
     var bottomBarVisible by remember { mutableStateOf(true) }
     val debug = remember { BuildConfig.DEBUG }
-    val ld = LocalDensity.current
-    val navBarPadding = remember(navigationBarHeight.intValue) {
-        with(ld) {
-            navigationBarHeight.intValue.toDp().plus(16.dp)
-        }
-    }
 
     LaunchedEffect(Unit) {
         component.sideEffect.collect {
@@ -104,13 +98,13 @@ fun HomeUi(
                         selectMediaModeEnable = editModeEnable
                     )
 
-                    is HomeComponent.Child.Folders -> FoldersListUi(child.component, navBarPadding)
+                    is HomeComponent.Child.Folders -> FoldersListUi(child.component, navigationBarHeight.value)
                     is HomeComponent.Child.Favorite -> FavoriteUi(
                         component = child.component,
-                        navBarPadding = navBarPadding
+                        navBarPadding = navigationBarHeight.value
                     )
                     is HomeComponent.Child.Settings -> SettingsListUi(child.component)
-                    is HomeComponent.Child.Design -> DesignUi(navBarPadding)
+                    is HomeComponent.Child.Design -> DesignUi(navigationBarHeight.value)
                 }
             }
             Box(
@@ -142,14 +136,15 @@ fun HomeUi(
 private fun BottomBar(
     current: HomeComponent.Child,
     onPageSelected: (HomeComponent.Page) -> Unit,
-    navigationBarHeight: MutableState<Int>,
+    navigationBarHeight: MutableState<Dp>,
     debug: Boolean
 ) {
+    val ld = LocalDensity.current
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.inversePrimary,
         modifier = Modifier
             .onSizeChanged {
-                if (navigationBarHeight.value == 0) navigationBarHeight.value = it.height
+                with(ld) { navigationBarHeight.value = it.height.toDp() }
             }
     ) {
         NavBarItem(
