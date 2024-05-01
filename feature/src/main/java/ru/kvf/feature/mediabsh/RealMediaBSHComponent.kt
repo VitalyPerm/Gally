@@ -1,4 +1,4 @@
-package ru.kvf.core.mediabsh
+package ru.kvf.feature.mediabsh
 
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.Job

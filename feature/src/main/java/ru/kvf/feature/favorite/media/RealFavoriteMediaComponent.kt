@@ -8,14 +8,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import ru.kvf.core.ComponentFactory
-import ru.kvf.core.createMediaBSHComponent
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleMediaDoubleClickUseCase
-import ru.kvf.core.mediabsh.MediaBSHComponent
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.notNegative
 import ru.kvf.core.utils.safeLaunch
+import ru.kvf.createMediaBSHComponent
+import ru.kvf.feature.mediabsh.MediaBSHComponent
 
 class RealFavoriteMediaComponent(
     componentContext: ComponentContext,

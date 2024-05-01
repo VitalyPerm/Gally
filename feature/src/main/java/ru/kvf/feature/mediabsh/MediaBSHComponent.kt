@@ -1,4 +1,4 @@
-package ru.kvf.core.mediabsh
+package ru.kvf.feature.mediabsh
 
 import android.net.Uri
 import kotlinx.coroutines.flow.Flow
@@ -21,10 +21,6 @@ interface MediaBSHComponent {
     fun setup(startIndex: Int)
     fun onPageChanged(page: Int)
     fun trashedSuccess()
-
-    sealed interface Output {
-        data object DismissRequested : Output
-    }
 
     sealed interface SideEffect {
         data class TrashMedia(val uri: Uri) : SideEffect

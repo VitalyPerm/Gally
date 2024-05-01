@@ -1,4 +1,4 @@
-package ru.kvf.core.widgets
+package ru.kvf.feature.mediabsh
 
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -31,14 +31,15 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityOptionsCompat
-import ru.kvf.core.mediabsh.MediaBSHComponent
 import ru.kvf.core.utils.collectSideEffect
 import ru.kvf.core.utils.createTrashMediaRequest
 import ru.kvf.core.utils.shareMedia
+import ru.kvf.core.widgets.MediaPager
+import ru.kvf.core.widgets.SelectModeMenuItems
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun MediaBSH(
+fun MediaBSHUi(
     component: MediaBSHComponent,
     isReversed: Boolean = false,
 ) {
@@ -56,13 +57,13 @@ fun MediaBSH(
 
     component.sideEffect.collectSideEffect {
         when (it) {
-            is MediaBSHComponent.SideEffect.ShareMedia -> ctx.shareMedia(listOf(it.media))
-            is MediaBSHComponent.SideEffect.TrashMedia -> {
+            is ru.kvf.feature.mediabsh.MediaBSHComponent.SideEffect.ShareMedia -> ctx.shareMedia(listOf(it.media))
+            is ru.kvf.feature.mediabsh.MediaBSHComponent.SideEffect.TrashMedia -> {
                 val request = ctx.createTrashMediaRequest(setOf(it.uri))
                 deleteMediaLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
             }
 
-            is MediaBSHComponent.SideEffect.SetIndex -> { pagerState.scrollToPage(it.index) }
+            is ru.kvf.feature.mediabsh.MediaBSHComponent.SideEffect.SetIndex -> { pagerState.scrollToPage(it.index) }
         }
     }
 

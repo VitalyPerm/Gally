@@ -1,7 +1,5 @@
 package ru.kvf.core
 
-import com.arkivanov.decompose.ComponentContext
-import kotlinx.coroutines.flow.StateFlow
 import org.koin.dsl.module
 import ru.kvf.core.data.repository.FavoriteRepositoryImpl
 import ru.kvf.core.data.repository.MediaRepositoryImpl
@@ -21,7 +19,6 @@ import ru.kvf.core.data.usecase.favorite.GetFavoriteMediaIdsUseCaseImpl
 import ru.kvf.core.data.usecase.favorite.GetFavoriteMediaUseCaseImpl
 import ru.kvf.core.data.usecase.favorite.HandleFolderDoubleClickUseCaseImpl
 import ru.kvf.core.data.usecase.favorite.HandleMediaDoubleClickUseCaseImpl
-import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.repository.FavoriteRepository
 import ru.kvf.core.domain.repository.MediaRepository
 import ru.kvf.core.domain.usecase.EdgeToEdgeUseCase
@@ -40,8 +37,6 @@ import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFolderDoubleClickUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleMediaDoubleClickUseCase
-import ru.kvf.core.mediabsh.MediaBSHComponent
-import ru.kvf.core.mediabsh.RealMediaBSHComponent
 
 val coreModule = module {
     single<MediaRepository> { MediaRepositoryImpl(get()) }
@@ -63,11 +58,3 @@ val coreModule = module {
     single<EdgeToEdgeUseCase> { EdgeToEdgeUseCaseImpl(get()) }
     single<ThemeUseCase> { ThemeUseCaseImpl(get()) }
 }
-
-fun ComponentFactory.createMediaBSHComponent(
-    componentContext: ComponentContext,
-    media: StateFlow<List<Media>>,
-): MediaBSHComponent = RealMediaBSHComponent(
-    componentContext = componentContext,
-    media = media
-)

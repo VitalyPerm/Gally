@@ -43,6 +43,5 @@ class RealFoldersListComponent(
     }
 
     override fun onFolderDoubleClick(name: String) {
-        TODO("Not yet implemented")
     }
 }
