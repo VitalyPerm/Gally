@@ -1,9 +1,12 @@
 package ru.kvf.feature.folders
 
 import com.arkivanov.decompose.ComponentContext
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import ru.kvf.core.domain.usecase.GetFoldersUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteFoldersIdsUseCase
@@ -18,7 +21,7 @@ class RealFoldersListComponent(
     getFoldersUseCase: GetFoldersUseCase,
     private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
     private val handleFolderFavoriteClickUseCase: HandleFolderFavoriteClickUseCase,
-    private val getFavoriteFoldersIdsUseCase: GetFavoriteFoldersIdsUseCase
+    getFavoriteFoldersIdsUseCase: GetFavoriteFoldersIdsUseCase
 ) : ComponentContext by componentContext, FoldersListComponent {
 
     private val componentScope = coroutineScope()
@@ -27,8 +30,10 @@ class RealFoldersListComponent(
         const val MAX_GRID_COUNT = 4
         const val MIN_GRID_COUNT = 1
     }
-
-    override val folders = getFoldersUseCase().stateIn(componentScope, SharingStarted.Lazily, emptyList())
+    private val reversed = MutableStateFlow(false)
+    override val folders = combine(getFoldersUseCase(), reversed) { all, reversed ->
+        if (reversed) all.asReversed() else all
+    }.stateIn(componentScope, SharingStarted.Lazily, emptyList())
     override val gridCellsCount = gridCellsCountChangeUseCase
         .get(GridCellsCountChangeUseCase.Screen.FoldersList)
         .stateIn(componentScope, SharingStarted.Lazily, 1)
@@ -44,6 +49,10 @@ class RealFoldersListComponent(
                 screen = GridCellsCountChangeUseCase.Screen.FoldersList
             )
         }
+    }
+
+    override fun onReverseClick() {
+        reversed.update { !it }
     }
 
     override fun onFolderClick(name: String) {

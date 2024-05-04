@@ -105,7 +105,7 @@ fun MediaBSHUi(
                         optionsVisible = optionsVisible
                     )
 
-                    if (isFavorite && isVisible) {
+                    if (isFavorite && optionsVisible) {
                         Icon(
                             imageVector = Icons.Default.Favorite,
                             contentDescription = null,

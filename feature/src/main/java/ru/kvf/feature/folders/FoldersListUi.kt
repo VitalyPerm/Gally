@@ -1,8 +1,5 @@
-@file:OptIn(ExperimentalFoundationApi::class)
-
 package ru.kvf.feature.folders
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -36,6 +33,8 @@ fun FoldersListUi(
         gridCountActionEnable = true,
         gridCount = gridCellsCount,
         onGridCountClick = component::onGridCountClick,
+        reverseActionEnable = true,
+        onReverseClick = component::onReverseClick,
         modifier = Modifier.padding(bottom = navBarPadding)
     ) {
         FoldersList(

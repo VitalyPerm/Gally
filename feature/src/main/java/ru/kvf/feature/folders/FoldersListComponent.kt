@@ -11,7 +11,7 @@ interface FoldersListComponent {
     val gridCellsCount: StateFlow<Int>
 
     fun onGridCountClick()
-
+    fun onReverseClick()
     fun onFolderClick(name: String)
 
     sealed interface Output {
