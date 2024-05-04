@@ -45,7 +45,7 @@ fun SelectModeMenuItems(
 }
 
 @Composable
-private fun MediaSelectModeMenuItem(
+fun MediaSelectModeMenuItem(
     imageVector: ImageVector,
     onClick: () -> Unit,
 ) {

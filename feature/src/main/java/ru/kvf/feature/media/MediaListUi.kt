@@ -18,6 +18,10 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.HeartBroken
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -49,7 +53,7 @@ import ru.kvf.core.utils.createTrashMediaRequest
 import ru.kvf.core.utils.shareMedia
 import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.MediaListWithDate
-import ru.kvf.core.widgets.SelectModeMenuItems
+import ru.kvf.core.widgets.MediaSelectModeMenuItem
 import ru.kvf.feature.R
 import ru.kvf.feature.mediabsh.MediaBSHUi
 
@@ -128,6 +132,7 @@ fun MediaListUi(
         selectModeOnTrashClick = component::selectModeOnTrashClick,
         selectModeOnCloseClick = component::onSelectMediaDismiss,
         selectModeOnFavoriteClick = component::selectModeOnFavoriteClick,
+        selectModeOnDisFavoriteClick = component::selectModeOnDisFavoriteClick,
         editMode = selectMediaModeEnable?.value ?: false,
         selectedMediaDates = selectedMediaDates,
         onSelectDateClick = component::onSelectDateClick
@@ -163,6 +168,7 @@ private fun Content(
     selectModeOnCloseClick: () -> Unit,
     selectModeOnTrashClick: () -> Unit,
     selectModeOnFavoriteClick: () -> Unit,
+    selectModeOnDisFavoriteClick: () -> Unit,
     onSelectDateClick: (MediaDate) -> Unit,
     selectedMediaDates: MediaDateSet,
     editMode: Boolean
@@ -196,6 +202,7 @@ private fun Content(
             onShareClick = selectModeOnShareClick,
             onTrashClick = selectModeOnTrashClick,
             onFavoriteClick = selectModeOnFavoriteClick,
+            onDisFavoriteClick = selectModeOnDisFavoriteClick,
             selectedMediaCount = selectedMediaIds.data.size,
             onCloseClick = selectModeOnCloseClick
         )
@@ -208,6 +215,7 @@ fun BoxScope.MediaSelectModeMenu(
     onShareClick: () -> Unit,
     onTrashClick: () -> Unit,
     onFavoriteClick: () -> Unit,
+    onDisFavoriteClick: () -> Unit,
     selectedMediaCount: Int,
     onCloseClick: () -> Unit
 ) {
@@ -258,9 +266,43 @@ fun BoxScope.MediaSelectModeMenu(
                 SelectModeMenuItems(
                     onShareClick = onShareClick,
                     onTrashClick = onTrashClick,
-                    onFavoriteClick = onFavoriteClick
+                    onFavoriteClick = onFavoriteClick,
+                    onDisFavoriteClick = onDisFavoriteClick
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun SelectModeMenuItems(
+    onShareClick: () -> Unit,
+    onTrashClick: () -> Unit,
+    onFavoriteClick: () -> Unit,
+    onDisFavoriteClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+    ) {
+        MediaSelectModeMenuItem(
+            onClick = onShareClick,
+            imageVector = Icons.Default.Share
+        )
+
+        MediaSelectModeMenuItem(
+            onClick = onTrashClick,
+            imageVector = Icons.Default.Delete
+        )
+
+        MediaSelectModeMenuItem(
+            onClick = onFavoriteClick,
+            imageVector = Icons.Default.Favorite
+        )
+
+        MediaSelectModeMenuItem(
+            onClick = onDisFavoriteClick,
+            imageVector = Icons.Default.HeartBroken
+        )
     }
 }

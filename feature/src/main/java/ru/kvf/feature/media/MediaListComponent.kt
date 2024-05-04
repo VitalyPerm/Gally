@@ -37,6 +37,7 @@ interface MediaListComponent {
     fun selectModeOnShareClick()
     fun selectModeOnTrashClick()
     fun selectModeOnFavoriteClick()
+    fun selectModeOnDisFavoriteClick()
     fun onSelectDateClick(mediaDate: MediaDate)
 
     sealed interface SideEffect {

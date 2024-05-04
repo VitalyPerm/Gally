@@ -11,4 +11,5 @@ interface FavoriteRepository {
     suspend fun editFavoriteFolder(id: Long)
 
     suspend fun addMediaToFavorite(ids: LongSet)
+    suspend fun removeMediaFromFavorite(ids: LongSet)
 }
