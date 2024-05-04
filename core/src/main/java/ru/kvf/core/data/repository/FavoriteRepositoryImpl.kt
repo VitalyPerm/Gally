@@ -30,6 +30,14 @@ class FavoriteRepositoryImpl(
 
     override suspend fun editFavoriteFolder(id: Long) = edit(id, FAVORITE_FOLDER_IDS_KEY)
 
+    override suspend fun addMediaToFavorite(ids: LongSet) {
+        dataStore.edit { prefs ->
+            val set = prefs[stringPreferencesKey(FAVORITE_MEDIA_IDS_KEY)]
+                .toLongSet().toMutableSet().apply { addAll(ids.data) }
+            prefs[stringPreferencesKey(FAVORITE_MEDIA_IDS_KEY)] = set.asString()
+        }
+    }
+
     private suspend fun edit(id: Long, key: String) {
         dataStore.edit { prefs ->
             val set = prefs[stringPreferencesKey(key)].toLongSet().toMutableSet()

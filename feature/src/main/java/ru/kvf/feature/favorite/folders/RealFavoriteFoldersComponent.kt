@@ -7,14 +7,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.kvf.core.domain.entities.Folder
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteFoldersUseCase
-import ru.kvf.core.domain.usecase.favorite.HandleFolderDoubleClickUseCase
+import ru.kvf.core.domain.usecase.favorite.HandleFolderFavoriteClickUseCase
 import ru.kvf.core.utils.coroutineScope
 
 class RealFavoriteFoldersComponent(
     componentContext: ComponentContext,
     private val onOutput: (FavoriteFoldersComponent.Output) -> Unit,
     getFavoriteFoldersUseCase: GetFavoriteFoldersUseCase,
-    private val handleFolderDoubleClickUseCase: HandleFolderDoubleClickUseCase
+    private val handleFolderFavoriteClickUseCase: HandleFolderFavoriteClickUseCase
 ) : ComponentContext by componentContext, FavoriteFoldersComponent {
 
     private val componentScope = coroutineScope()
@@ -27,6 +27,6 @@ class RealFavoriteFoldersComponent(
     }
 
     override fun onFolderDoubleClick(id: Long) {
-        componentScope.launch { handleFolderDoubleClickUseCase(id) }
+        componentScope.launch { handleFolderFavoriteClickUseCase(id) }
     }
 }

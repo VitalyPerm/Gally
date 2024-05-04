@@ -20,8 +20,8 @@ import ru.kvf.core.domain.entities.MediaDate
 import ru.kvf.core.domain.usecase.GetFolderMediaUseCase
 import ru.kvf.core.domain.usecase.GetSortedMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
+import ru.kvf.core.domain.usecase.favorite.AddToFavoriteUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
-import ru.kvf.core.domain.usecase.favorite.HandleFavoriteClickUseCase
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaMap
@@ -39,7 +39,7 @@ class RealMediaListComponent(
     getFolderMediaUseCase: GetFolderMediaUseCase,
     getFavoriteMediaIdsUseCase: GetFavoriteMediaIdsUseCase,
     private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
-    private val handleFavoriteClickUseCase: HandleFavoriteClickUseCase,
+    private val addToFavoriteUseCase: AddToFavoriteUseCase,
     componentFactory: ComponentFactory,
     private val context: Context
 ) : ComponentContext by componentContext, MediaListComponent {
@@ -94,7 +94,7 @@ class RealMediaListComponent(
     }
 
     override fun onMediaDoubleClickClick(id: Long) {
-        componentScope.safeLaunch { handleFavoriteClickUseCase(id) }
+        //  componentScope.safeLaunch { handleFavoriteClickUseCase(id) }
     }
 
     override fun onReverseClick() {
@@ -157,7 +157,7 @@ class RealMediaListComponent(
 
     override fun selectModeOnFavoriteClick() {
         componentScope.safeLaunch {
-            selectedMediaIds.value.data.forEach { handleFavoriteClickUseCase(it) }
+            addToFavoriteUseCase(selectedMediaIds.value)
             selectedMediaIds.update { LongSet.EMPTY }
         }
     }

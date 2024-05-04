@@ -9,4 +9,6 @@ interface FavoriteRepository {
 
     fun getFavoriteFolderIdsFlow(): Flow<LongSet>
     suspend fun editFavoriteFolder(id: Long)
+
+    suspend fun addMediaToFavorite(ids: LongSet)
 }

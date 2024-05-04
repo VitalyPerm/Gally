@@ -24,15 +24,15 @@ fun ComponentFactory.createMediaListComponent(
     componentContext: ComponentContext,
     folderName: String? = null,
 ): MediaListComponent = RealMediaListComponent(
-    componentContext = componentContext,
-    folderName = folderName,
-    getSortedMediaUseCase = get(),
-    getFolderMediaUseCase = get(),
-    getFavoriteMediaIdsUseCase = get(),
-    gridCellsCountChangeUseCase = get(),
-    handleFavoriteClickUseCase = get(),
-    componentFactory = get(),
-    context = get()
+    componentContext,
+    folderName,
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get()
 )
 
 fun ComponentFactory.createFavoriteComponent(
@@ -40,55 +40,55 @@ fun ComponentFactory.createFavoriteComponent(
     output: (FavoriteComponent.Output) -> Unit
 ): FavoriteComponent = RealFavoriteComponent(
     componentContext,
-    componentFactory = get(),
-    onOutput = output
+    get(),
+    output
 )
 
 fun ComponentFactory.createFavoriteFoldersComponent(
     componentContext: ComponentContext,
     output: (FavoriteFoldersComponent.Output) -> Unit
 ): FavoriteFoldersComponent = RealFavoriteFoldersComponent(
-    componentContext = componentContext,
-    onOutput = output,
-    handleFolderDoubleClickUseCase = get(),
-    getFavoriteFoldersUseCase = get()
+    componentContext,
+    output,
+    get(),
+    get()
 )
 
 fun ComponentFactory.createFavoriteMediaComponent(
     componentContext: ComponentContext,
 ): FavoriteMediaComponent = RealFavoriteMediaComponent(
-    componentContext = componentContext,
-    getFavoriteMediaUseCase = get(),
-    handleMediaFavoriteClickUseCase = get(),
-    componentFactory = get()
+    componentContext,
+    get(),
+    get(),
+    get()
 )
 
 fun ComponentFactory.createFoldersListComponent(
     componentContext: ComponentContext,
     output: (FoldersListComponent.Output) -> Unit
 ): FoldersListComponent = RealFoldersListComponent(
-    componentContext = componentContext,
-    onOutput = output,
-    getFoldersUseCase = get(),
-    gridCellsCountChangeUseCase = get(),
-    handleFolderDoubleClickUseCase = get(),
-    getFavoriteFoldersIdsUseCase = get()
+    componentContext,
+    output,
+    get(),
+    get(),
+    get(),
+    get()
 )
 
 fun ComponentFactory.createSettingsListComponent(
     componentContext: ComponentContext
 ): SettingsListComponent = RealSettingsListComponent(
-    componentContext = componentContext,
-    themeUseCase = get(),
-    edgeUseCase = get(),
-    sortByUseCase = get(),
-    loadMediaUseCase = get()
+    componentContext,
+    get(),
+    get(),
+    get(),
+    get()
 )
 
 fun ComponentFactory.createMediaBSHComponent(
     componentContext: ComponentContext,
     media: StateFlow<List<Media>>,
 ): MediaBSHComponent = RealMediaBSHComponent(
-    componentContext = componentContext,
-    media = media
+    componentContext,
+    media
 )

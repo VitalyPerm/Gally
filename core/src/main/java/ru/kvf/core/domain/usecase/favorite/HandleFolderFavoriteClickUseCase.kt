@@ -1,5 +1,5 @@
 package ru.kvf.core.domain.usecase.favorite
 
-interface HandleFolderDoubleClickUseCase {
+interface HandleFolderFavoriteClickUseCase {
     suspend operator fun invoke(id: Long)
 }

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.stateIn
 import ru.kvf.core.domain.usecase.GetFoldersUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteFoldersIdsUseCase
-import ru.kvf.core.domain.usecase.favorite.HandleFolderDoubleClickUseCase
+import ru.kvf.core.domain.usecase.favorite.HandleFolderFavoriteClickUseCase
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
@@ -17,7 +17,7 @@ class RealFoldersListComponent(
     private val onOutput: (FoldersListComponent.Output) -> Unit,
     getFoldersUseCase: GetFoldersUseCase,
     private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
-    private val handleFolderDoubleClickUseCase: HandleFolderDoubleClickUseCase,
+    private val handleFolderFavoriteClickUseCase: HandleFolderFavoriteClickUseCase,
     private val getFavoriteFoldersIdsUseCase: GetFavoriteFoldersIdsUseCase
 ) : ComponentContext by componentContext, FoldersListComponent {
 
@@ -51,6 +51,6 @@ class RealFoldersListComponent(
     }
 
     override fun onFolderDoubleClick(id: Long) {
-        componentScope.safeLaunch { handleFolderDoubleClickUseCase(id) }
+        componentScope.safeLaunch { handleFolderFavoriteClickUseCase(id) }
     }
 }
