@@ -9,7 +9,6 @@ interface FoldersListComponent {
 
     val folders: StateFlow<List<Folder>>
     val favoriteFolderIds: StateFlow<LongSet>
-    val selectedFolderIds: StateFlow<LongSet>
     val gridCellsCount: StateFlow<Int>
     val sideEffect: Flow<SideEffect>
 

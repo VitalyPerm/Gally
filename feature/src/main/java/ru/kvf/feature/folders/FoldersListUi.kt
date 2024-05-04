@@ -80,7 +80,8 @@ private fun FoldersList(
                 title = folder.name,
                 favorite = folder.id in favoriteFolderIds.data,
                 onClick = { onFolderClick(folder.name) },
-                onLongClick = { onFolderLongClick(folder.id) }
+                onLongClick = { onFolderLongClick(folder.id) },
+                cellsCount = cellsCount
             )
         }
     }

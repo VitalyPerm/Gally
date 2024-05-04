@@ -48,12 +48,14 @@ private fun FoldersList(
                 title = folder.name,
                 shouldShowFavoriteIcon = false,
                 onClick = { onFolderClick(folder.name) },
+                cellsCount = 1
             )
             MediaItem(
                 model = folders,
                 favorite = true,
                 shouldShowFavoriteIcon = false,
                 onClick = { onFolderClick(folder.name) },
+                cellsCount = 1
             )
         }
     }

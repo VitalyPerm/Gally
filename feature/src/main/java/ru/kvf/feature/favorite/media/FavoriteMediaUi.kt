@@ -56,6 +56,7 @@ private fun MediaList(
                 shouldShowFavoriteIcon = false,
                 onClick = { onMediaClick(media.id) },
                 onLongClick = { onMediaLongClick(media.id) },
+                cellsCount = 1
             )
         }
     }

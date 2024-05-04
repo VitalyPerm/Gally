@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.size.Size
 
@@ -49,7 +51,7 @@ fun MediaItem(
     onLongClick: (() -> Unit)? = null,
     isSelected: Boolean = false,
     editMode: Boolean = false,
-    size: Size = Size.ORIGINAL
+    cellsCount: Int
 ) {
     Box(
         modifier = Modifier
@@ -61,12 +63,14 @@ fun MediaItem(
             )
     ) {
         val scale by animateFloatAsState(targetValue = if (isSelected) 0.7f else 1f, label = "")
+        val imageSize = remember(cellsCount) { calculatePhotoSize(cellsCount) }
+        val favoriteIconSize = remember(cellsCount) { calculateFavoriteIconSize(cellsCount) }
 
         Column {
             ImageWithLoader(
                 model = model,
                 contentScale = ContentScale.Crop,
-                size = size,
+                size = imageSize,
                 modifier = Modifier
                     .fillMaxSize()
                     .scale(scale)
@@ -101,7 +105,7 @@ fun MediaItem(
                 contentDescription = null,
                 modifier = Modifier
                     .padding(10.dp)
-                    .size(15.dp)
+                    .size(favoriteIconSize)
                     .align(Alignment.TopEnd)
             )
         }
@@ -140,4 +144,18 @@ fun MediaItem(
             )
         }
     }
+}
+
+private fun calculateFavoriteIconSize(cellsCount: Int): Dp = when (cellsCount) {
+    1 -> 48.dp
+    2 -> 36.dp
+    3 -> 24.dp
+    else -> 16.dp
+}
+
+private fun calculatePhotoSize(cellsCount: Int): Size = when (cellsCount) {
+    1 -> Size(1000, 1000)
+    2 -> Size(750, 750)
+    3 -> Size(500, 500)
+    else -> Size(250, 250)
 }

@@ -43,8 +43,6 @@ class RealFoldersListComponent(
     override val favoriteFolderIds: StateFlow<LongSet> = getFavoriteFoldersIdsUseCase()
         .stateIn(componentScope, SharingStarted.WhileSubscribed(5000), LongSet.EMPTY)
 
-    override val selectedFolderIds = MutableStateFlow(LongSet.EMPTY)
-
     override val sideEffect = MutableSharedFlow<FoldersListComponent.SideEffect>()
 
     override fun onGridCountClick() {
@@ -67,20 +65,9 @@ class RealFoldersListComponent(
     }
 
     override fun onFolderLongClick(id: Long) {
-        if (selectedFolderIds.value.data.isNotEmpty()) return
         componentScope.safeLaunch {
-            selectedFolderIds.update { LongSet.from(setOf(id)) }
+            handleFolderFavoriteClickUseCase(id)
             sideEffect.emit(FoldersListComponent.SideEffect.Vibrate)
         }
     }
-
-    /*
-        override fun onMediaLongClick(media: Media) {
-        if (selectedMediaIds.value.data.isNotEmpty()) return
-        componentScope.launch {
-            selectedMediaIds.value = LongSet.from(setOf(media.id))
-            sideEffect.emit(MediaListComponent.SideEffect.Vibrate)
-        }
-    }
-     */
 }
