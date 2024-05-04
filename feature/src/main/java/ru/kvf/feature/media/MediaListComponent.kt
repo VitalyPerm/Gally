@@ -34,9 +34,10 @@ interface MediaListComponent {
     fun onDeleteMediaClick()
     fun onDismissTrashMedia()
     fun savePosition(position: Int)
-    fun onDismissSelectMedia()
-    fun selectModeOnClickShare()
-    fun selectModeOnClickTrash()
+    fun onSelectMediaDismiss()
+    fun selectModeOnShareClick()
+    fun selectModeOnTrashClick()
+    fun selectModeOnFavoriteClick()
     fun onSelectDateClick(mediaDate: MediaDate)
 
     sealed interface SideEffect {

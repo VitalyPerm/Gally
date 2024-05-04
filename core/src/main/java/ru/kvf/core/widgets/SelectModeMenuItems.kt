@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,7 +20,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SelectModeMenuItems(
     onShareClick: () -> Unit,
-    onTrashClick: () -> Unit
+    onTrashClick: () -> Unit,
+    onFavoriteClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -33,6 +35,11 @@ fun SelectModeMenuItems(
         MediaSelectModeMenuItem(
             onClick = onTrashClick,
             imageVector = Icons.Default.Delete
+        )
+
+        MediaSelectModeMenuItem(
+            onClick = onFavoriteClick,
+            imageVector = Icons.Default.Favorite
         )
     }
 }

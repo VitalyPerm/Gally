@@ -30,7 +30,7 @@ fun ComponentFactory.createMediaListComponent(
     getFolderMediaUseCase = get(),
     getFavoriteMediaIdsUseCase = get(),
     gridCellsCountChangeUseCase = get(),
-    handleMediaDoubleClickUseCase = get(),
+    handleFavoriteClickUseCase = get(),
     componentFactory = get(),
     context = get()
 )
@@ -59,7 +59,7 @@ fun ComponentFactory.createFavoriteMediaComponent(
 ): FavoriteMediaComponent = RealFavoriteMediaComponent(
     componentContext = componentContext,
     getFavoriteMediaUseCase = get(),
-    handleMediaDoubleClickUseCase = get(),
+    handleMediaFavoriteClickUseCase = get(),
     componentFactory = get()
 )
 

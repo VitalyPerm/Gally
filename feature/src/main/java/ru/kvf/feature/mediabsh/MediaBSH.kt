@@ -100,6 +100,7 @@ fun MediaBSHUi(
                     Actions(
                         onShareClick = component::onShareClick,
                         onTrashClick = component::onTrashClick,
+                        onFavoriteClick = {},
                         optionsVisible = optionsVisible
                     )
                 }
@@ -145,6 +146,7 @@ private fun BoxScope.Title(
 fun BoxScope.Actions(
     onTrashClick: () -> Unit,
     onShareClick: () -> Unit,
+    onFavoriteClick: () -> Unit,
     optionsVisible: Boolean
 ) {
     Box(
@@ -153,7 +155,11 @@ fun BoxScope.Actions(
             .padding(bottom = 48.dp)
     ) {
         AnimatedVisibility(optionsVisible) {
-            SelectModeMenuItems(onShareClick = onShareClick, onTrashClick = onTrashClick)
+            SelectModeMenuItems(
+                onShareClick = onShareClick,
+                onTrashClick = onTrashClick,
+                onFavoriteClick = onFavoriteClick
+            )
         }
     }
 }

@@ -18,7 +18,7 @@ import ru.kvf.core.data.usecase.favorite.GetFavoriteFoldersUseCaseImpl
 import ru.kvf.core.data.usecase.favorite.GetFavoriteMediaIdsUseCaseImpl
 import ru.kvf.core.data.usecase.favorite.GetFavoriteMediaUseCaseImpl
 import ru.kvf.core.data.usecase.favorite.HandleFolderDoubleClickUseCaseImpl
-import ru.kvf.core.data.usecase.favorite.HandleMediaDoubleClickUseCaseImpl
+import ru.kvf.core.data.usecase.favorite.HandleFavoriteClickUseCaseImpl
 import ru.kvf.core.domain.repository.FavoriteRepository
 import ru.kvf.core.domain.repository.MediaRepository
 import ru.kvf.core.domain.usecase.EdgeToEdgeUseCase
@@ -36,7 +36,7 @@ import ru.kvf.core.domain.usecase.favorite.GetFavoriteFoldersUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFolderDoubleClickUseCase
-import ru.kvf.core.domain.usecase.favorite.HandleMediaDoubleClickUseCase
+import ru.kvf.core.domain.usecase.favorite.HandleFavoriteClickUseCase
 
 val coreModule = module {
     single<MediaRepository> { MediaRepositoryImpl(get()) }
@@ -45,7 +45,7 @@ val coreModule = module {
     single<GetFavoriteFoldersUseCase> { GetFavoriteFoldersUseCaseImpl(get(), get()) }
     single<GetFavoriteMediaIdsUseCase> { GetFavoriteMediaIdsUseCaseImpl(get()) }
     single<GetFavoriteMediaUseCase> { GetFavoriteMediaUseCaseImpl(get(), get()) }
-    single<HandleMediaDoubleClickUseCase> { HandleMediaDoubleClickUseCaseImpl(get(), get()) }
+    single<HandleFavoriteClickUseCase> { HandleFavoriteClickUseCaseImpl(get(), get()) }
     single<HandleFolderDoubleClickUseCase> { HandleFolderDoubleClickUseCaseImpl(get(), get()) }
     single<GetMediaUseCase> { GetMediaUseCaseImpl(get()) }
     single<GetFoldersUseCase> { GetFoldersUseCaseImpl(get()) }

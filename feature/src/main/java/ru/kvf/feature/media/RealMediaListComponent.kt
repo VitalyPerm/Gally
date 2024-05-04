@@ -17,10 +17,11 @@ import kotlinx.coroutines.launch
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
-import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
+import ru.kvf.core.domain.usecase.GetFolderMediaUseCase
+import ru.kvf.core.domain.usecase.GetSortedMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
-import ru.kvf.core.domain.usecase.favorite.HandleMediaDoubleClickUseCase
-import ru.kvf.feature.mediabsh.MediaBSHComponent
+import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
+import ru.kvf.core.domain.usecase.favorite.HandleFavoriteClickUseCase
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaMap
@@ -28,9 +29,8 @@ import ru.kvf.core.utils.UriSet
 import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
-import ru.kvf.core.domain.usecase.GetFolderMediaUseCase
-import ru.kvf.core.domain.usecase.GetSortedMediaUseCase
 import ru.kvf.createMediaBSHComponent
+import ru.kvf.feature.mediabsh.MediaBSHComponent
 
 class RealMediaListComponent(
     componentContext: ComponentContext,
@@ -39,7 +39,7 @@ class RealMediaListComponent(
     getFolderMediaUseCase: GetFolderMediaUseCase,
     getFavoriteMediaIdsUseCase: GetFavoriteMediaIdsUseCase,
     private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
-    private val handleMediaDoubleClickUseCase: HandleMediaDoubleClickUseCase,
+    private val handleFavoriteClickUseCase: HandleFavoriteClickUseCase,
     componentFactory: ComponentFactory,
     private val context: Context
 ) : ComponentContext by componentContext, MediaListComponent {
@@ -94,7 +94,7 @@ class RealMediaListComponent(
     }
 
     override fun onMediaDoubleClickClick(id: Long) {
-        componentScope.safeLaunch { handleMediaDoubleClickUseCase(id) }
+        componentScope.safeLaunch { handleFavoriteClickUseCase(id) }
     }
 
     override fun onReverseClick() {
@@ -130,12 +130,12 @@ class RealMediaListComponent(
         }
     }
 
-    override fun onDismissSelectMedia() {
+    override fun onSelectMediaDismiss() {
         selectedMediaIds.value = LongSet.EMPTY
         selectedMediaDates.value = MediaDateSet.EMPTY
     }
 
-    override fun selectModeOnClickShare() {
+    override fun selectModeOnShareClick() {
         componentScope.launch {
             val mediaList = selectedMediaIds.value.data.mapNotNull {
                 allMediaList.find { media -> media.id == it }
@@ -145,13 +145,20 @@ class RealMediaListComponent(
         }
     }
 
-    override fun selectModeOnClickTrash() {
-        componentScope.launch {
+    override fun selectModeOnTrashClick() {
+        componentScope.safeLaunch {
             val mediaList = selectedMediaIds.value.data.mapNotNull {
                 allMediaList.find { media -> media.id == it }?.uri
             }
             mediaToTrashUris.value = UriSet.from(mediaList.toSet())
-            selectedMediaIds.value = LongSet.EMPTY
+            selectedMediaIds.update { LongSet.EMPTY }
+        }
+    }
+
+    override fun selectModeOnFavoriteClick() {
+        componentScope.safeLaunch {
+            selectedMediaIds.value.data.forEach { handleFavoriteClickUseCase(it) }
+            selectedMediaIds.update { LongSet.EMPTY }
         }
     }
 

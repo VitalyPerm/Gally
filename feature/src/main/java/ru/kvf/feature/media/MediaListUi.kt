@@ -48,10 +48,10 @@ import ru.kvf.core.utils.collectSideEffect
 import ru.kvf.core.utils.createTrashMediaRequest
 import ru.kvf.core.utils.shareMedia
 import ru.kvf.core.widgets.DefaultContainer
-import ru.kvf.feature.mediabsh.MediaBSHUi
 import ru.kvf.core.widgets.MediaListWithDate
 import ru.kvf.core.widgets.SelectModeMenuItems
 import ru.kvf.feature.R
+import ru.kvf.feature.mediabsh.MediaBSHUi
 
 @Composable
 fun MediaListUi(
@@ -77,7 +77,7 @@ fun MediaListUi(
     val haptic = LocalHapticFeedback.current
 
     BackHandler(enabled = selectedMediaIds.data.isNotEmpty()) {
-        component.onDismissSelectMedia()
+        component.onSelectMediaDismiss()
     }
 
     LaunchedEffect(mediaListGridState.isScrollInProgress) {
@@ -125,12 +125,13 @@ fun MediaListUi(
         onMediaLongClick = component::onMediaLongClick,
         onLikedClick = component::onMediaDoubleClickClick,
         selectedMediaIds = selectedMediaIds,
-        selectModeOnClickShare = component::selectModeOnClickShare,
-        selectModeOnClickTrash = component::selectModeOnClickTrash,
-        selectModeOnClickClose = component::onDismissSelectMedia,
+        selectModeOnShareClick = component::selectModeOnShareClick,
+        selectModeOnTrashClick = component::selectModeOnTrashClick,
+        selectModeOnCloseClick = component::onSelectMediaDismiss,
+        selectModeOnFavoriteClick = component::selectModeOnFavoriteClick,
         editMode = selectMediaModeEnable?.value ?: false,
-        onSelectDateClick = component::onSelectDateClick,
-        selectedMediaDates = selectedMediaDates
+        selectedMediaDates = selectedMediaDates,
+        onSelectDateClick = component::onSelectDateClick
     )
 
     TrashMediaBSH(
@@ -160,9 +161,10 @@ private fun Content(
     onMediaLongClick: (Media) -> Unit,
     onLikedClick: (Long) -> Unit,
     selectedMediaIds: LongSet,
-    selectModeOnClickShare: () -> Unit,
-    selectModeOnClickClose: () -> Unit,
-    selectModeOnClickTrash: () -> Unit,
+    selectModeOnShareClick: () -> Unit,
+    selectModeOnCloseClick: () -> Unit,
+    selectModeOnTrashClick: () -> Unit,
+    selectModeOnFavoriteClick: () -> Unit,
     onSelectDateClick: (MediaDate) -> Unit,
     selectedMediaDates: MediaDateSet,
     editMode: Boolean
@@ -194,10 +196,11 @@ private fun Content(
 
         MediaSelectModeMenu(
             visible = editMode,
-            onClickShare = selectModeOnClickShare,
-            onClickTrash = selectModeOnClickTrash,
+            onShareClick = selectModeOnShareClick,
+            onTrashClick = selectModeOnTrashClick,
+            onFavoriteClick = selectModeOnFavoriteClick,
             selectedMediaCount = selectedMediaIds.data.size,
-            onCloseClick = selectModeOnClickClose
+            onCloseClick = selectModeOnCloseClick
         )
     }
 }
@@ -205,8 +208,9 @@ private fun Content(
 @Composable
 fun BoxScope.MediaSelectModeMenu(
     visible: Boolean,
-    onClickShare: () -> Unit,
-    onClickTrash: () -> Unit,
+    onShareClick: () -> Unit,
+    onTrashClick: () -> Unit,
+    onFavoriteClick: () -> Unit,
     selectedMediaCount: Int,
     onCloseClick: () -> Unit
 ) {
@@ -255,8 +259,9 @@ fun BoxScope.MediaSelectModeMenu(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 SelectModeMenuItems(
-                    onShareClick = onClickShare,
-                    onTrashClick = onClickTrash
+                    onShareClick = onShareClick,
+                    onTrashClick = onTrashClick,
+                    onFavoriteClick = onFavoriteClick
                 )
             }
         }
