@@ -11,12 +11,14 @@ interface MediaBSHComponent {
     val currentMediaIndex: StateFlow<Int>
     val title: StateFlow<String>
     val optionsVisible: StateFlow<Boolean>
+    val isFavorite: StateFlow<Boolean>
     val sideEffect: Flow<SideEffect>
     val visible: StateFlow<Boolean>
 
     fun onTap()
     fun onShareClick()
     fun onTrashClick()
+    fun onFavoriteClick()
     fun onDismissRequest()
     fun setup(startIndex: Int)
     fun onPageChanged(page: Int)

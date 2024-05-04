@@ -90,5 +90,7 @@ fun ComponentFactory.createMediaBSHComponent(
     media: StateFlow<List<Media>>,
 ): MediaBSHComponent = RealMediaBSHComponent(
     componentContext,
-    media
+    media,
+    get(),
+    get(),
 )

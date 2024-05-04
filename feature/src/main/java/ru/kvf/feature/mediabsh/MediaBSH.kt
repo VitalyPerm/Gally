@@ -14,7 +14,14 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.HeartBroken
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -35,7 +42,7 @@ import ru.kvf.core.utils.collectSideEffect
 import ru.kvf.core.utils.createTrashMediaRequest
 import ru.kvf.core.utils.shareMedia
 import ru.kvf.core.widgets.MediaPager
-import ru.kvf.core.widgets.SelectModeMenuItems
+import ru.kvf.core.widgets.MediaSelectModeMenuItem
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -47,7 +54,8 @@ fun MediaBSHUi(
     val currentMediaIndex by component.currentMediaIndex.collectAsState()
     val title by component.title.collectAsState()
     val optionsVisible by component.optionsVisible.collectAsState()
-    val visible by component.visible.collectAsState()
+    val isVisible by component.visible.collectAsState()
+    val isFavorite by component.isFavorite.collectAsState()
     val pagerState = rememberPagerState(initialPage = currentMediaIndex) { media.size }
 
     val ctx = LocalContext.current
@@ -57,13 +65,13 @@ fun MediaBSHUi(
 
     component.sideEffect.collectSideEffect {
         when (it) {
-            is ru.kvf.feature.mediabsh.MediaBSHComponent.SideEffect.ShareMedia -> ctx.shareMedia(listOf(it.media))
-            is ru.kvf.feature.mediabsh.MediaBSHComponent.SideEffect.TrashMedia -> {
+            is MediaBSHComponent.SideEffect.ShareMedia -> ctx.shareMedia(listOf(it.media))
+            is MediaBSHComponent.SideEffect.TrashMedia -> {
                 val request = ctx.createTrashMediaRequest(setOf(it.uri))
                 deleteMediaLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
             }
 
-            is ru.kvf.feature.mediabsh.MediaBSHComponent.SideEffect.SetIndex -> { pagerState.scrollToPage(it.index) }
+            is MediaBSHComponent.SideEffect.SetIndex -> { pagerState.scrollToPage(it.index) }
         }
     }
 
@@ -71,7 +79,7 @@ fun MediaBSHUi(
         snapshotFlow { pagerState.currentPage }.collect(component::onPageChanged)
     }
 
-    if (visible) {
+    if (isVisible) {
         ModalBottomSheet(
             onDismissRequest = component::onDismissRequest,
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
@@ -97,10 +105,22 @@ fun MediaBSHUi(
                         optionsVisible = optionsVisible
                     )
 
+                    if (isFavorite && isVisible) {
+                        Icon(
+                            imageVector = Icons.Default.Favorite,
+                            contentDescription = null,
+                            tint = Color.Red,
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(24.dp)
+                        )
+                    }
+
                     Actions(
                         onShareClick = component::onShareClick,
                         onTrashClick = component::onTrashClick,
-                        onFavoriteClick = {},
+                        onFavoriteClick = component::onFavoriteClick,
+                        isFavorite = isFavorite,
                         optionsVisible = optionsVisible
                     )
                 }
@@ -147,6 +167,7 @@ fun BoxScope.Actions(
     onTrashClick: () -> Unit,
     onShareClick: () -> Unit,
     onFavoriteClick: () -> Unit,
+    isFavorite: Boolean,
     optionsVisible: Boolean
 ) {
     Box(
@@ -155,11 +176,25 @@ fun BoxScope.Actions(
             .padding(bottom = 48.dp)
     ) {
         AnimatedVisibility(optionsVisible) {
-            SelectModeMenuItems(
-                onShareClick = onShareClick,
-                onTrashClick = onTrashClick,
-                onFavoriteClick = onFavoriteClick
-            )
+            Row(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+            ) {
+                MediaSelectModeMenuItem(
+                    onClick = onShareClick,
+                    imageVector = Icons.Default.Share
+                )
+
+                MediaSelectModeMenuItem(
+                    onClick = onTrashClick,
+                    imageVector = Icons.Default.Delete
+                )
+
+                MediaSelectModeMenuItem(
+                    onClick = onFavoriteClick,
+                    imageVector = if (!isFavorite) Icons.Default.Favorite else Icons.Default.HeartBroken
+                )
+            }
         }
     }
 }

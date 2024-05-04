@@ -1,10 +1,8 @@
 package ru.kvf.core.data.usecase.favorite
 
-import kotlinx.coroutines.delay
 import ru.kvf.core.domain.repository.FavoriteRepository
-import ru.kvf.core.domain.usecase.favorite.HandleFavoriteClickUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
-import ru.kvf.core.utils.Constants
+import ru.kvf.core.domain.usecase.favorite.HandleFavoriteClickUseCase
 
 class HandleFavoriteClickUseCaseImpl(
     private val favoriteRepository: FavoriteRepository,
@@ -12,7 +10,6 @@ class HandleFavoriteClickUseCaseImpl(
 ) : HandleFavoriteClickUseCase {
     override suspend fun invoke(id: Long) {
         performHapticFeedBackUseCase()
-        delay(Constants.MEDIA_ITEM_LIKE_DURATION)
         favoriteRepository.editFavoriteMedia(id)
     }
 }
