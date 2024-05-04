@@ -11,9 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.Dp
 import ru.kvf.core.domain.entities.Folder
 import ru.kvf.core.utils.LongSet
+import ru.kvf.core.utils.collectSideEffect
 import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.MediaItem
 import ru.kvf.feature.R
@@ -27,6 +30,14 @@ fun FoldersListUi(
     val favoriteFolderIds by component.favoriteFolderIds.collectAsState()
     val gridCellsCount by component.gridCellsCount.collectAsState()
     val foldersListGridState = rememberLazyGridState()
+    val haptic = LocalHapticFeedback.current
+
+    component.sideEffect.collectSideEffect {
+        when (it) {
+            FoldersListComponent.SideEffect.Vibrate ->
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+        }
+    }
 
     DefaultContainer(
         titleRes = R.string.folders,
@@ -40,6 +51,7 @@ fun FoldersListUi(
         FoldersList(
             folders = folders,
             onFolderClick = component::onFolderClick,
+            onFolderLongClick = component::onFolderLongClick,
             gridState = foldersListGridState,
             cellsCount = gridCellsCount,
             favoriteFolderIds = favoriteFolderIds
@@ -51,6 +63,7 @@ fun FoldersListUi(
 private fun FoldersList(
     folders: List<Folder>,
     onFolderClick: (String) -> Unit,
+    onFolderLongClick: (Long) -> Unit,
     gridState: LazyGridState,
     cellsCount: Int,
     favoriteFolderIds: LongSet
@@ -67,6 +80,7 @@ private fun FoldersList(
                 title = folder.name,
                 favorite = folder.id in favoriteFolderIds.data,
                 onClick = { onFolderClick(folder.name) },
+                onLongClick = { onFolderLongClick(folder.id) }
             )
         }
     }

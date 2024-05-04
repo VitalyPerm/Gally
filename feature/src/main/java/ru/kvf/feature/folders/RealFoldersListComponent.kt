@@ -1,6 +1,7 @@
 package ru.kvf.feature.folders
 
 import com.arkivanov.decompose.ComponentContext
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -34,11 +35,17 @@ class RealFoldersListComponent(
     override val folders = combine(getFoldersUseCase(), reversed) { all, reversed ->
         if (reversed) all.asReversed() else all
     }.stateIn(componentScope, SharingStarted.Lazily, emptyList())
+
     override val gridCellsCount = gridCellsCountChangeUseCase
         .get(GridCellsCountChangeUseCase.Screen.FoldersList)
         .stateIn(componentScope, SharingStarted.Lazily, 1)
+
     override val favoriteFolderIds: StateFlow<LongSet> = getFavoriteFoldersIdsUseCase()
         .stateIn(componentScope, SharingStarted.WhileSubscribed(5000), LongSet.EMPTY)
+
+    override val selectedFolderIds = MutableStateFlow(LongSet.EMPTY)
+
+    override val sideEffect = MutableSharedFlow<FoldersListComponent.SideEffect>()
 
     override fun onGridCountClick() {
         val currentCount = gridCellsCount.value
@@ -58,4 +65,22 @@ class RealFoldersListComponent(
     override fun onFolderClick(name: String) {
         onOutput(FoldersListComponent.Output.OpenFolderRequested(name))
     }
+
+    override fun onFolderLongClick(id: Long) {
+        if (selectedFolderIds.value.data.isNotEmpty()) return
+        componentScope.safeLaunch {
+            selectedFolderIds.update { LongSet.from(setOf(id)) }
+            sideEffect.emit(FoldersListComponent.SideEffect.Vibrate)
+        }
+    }
+
+    /*
+        override fun onMediaLongClick(media: Media) {
+        if (selectedMediaIds.value.data.isNotEmpty()) return
+        componentScope.launch {
+            selectedMediaIds.value = LongSet.from(setOf(media.id))
+            sideEffect.emit(MediaListComponent.SideEffect.Vibrate)
+        }
+    }
+     */
 }
