@@ -41,7 +41,6 @@ fun FoldersListUi(
         FoldersList(
             folders = folders,
             onFolderClick = component::onFolderClick,
-            onFolderDoubleClick = component::onFolderDoubleClick,
             gridState = foldersListGridState,
             cellsCount = gridCellsCount,
             favoriteFolderIds = favoriteFolderIds
@@ -53,7 +52,6 @@ fun FoldersListUi(
 private fun FoldersList(
     folders: List<Folder>,
     onFolderClick: (String) -> Unit,
-    onFolderDoubleClick: (Long) -> Unit,
     gridState: LazyGridState,
     cellsCount: Int,
     favoriteFolderIds: LongSet
@@ -70,7 +68,6 @@ private fun FoldersList(
                 title = folder.name,
                 favorite = folder.id in favoriteFolderIds.data,
                 onClick = { onFolderClick(folder.name) },
-                onDoubleClick = { onFolderDoubleClick(folder.id) }
             )
         }
     }

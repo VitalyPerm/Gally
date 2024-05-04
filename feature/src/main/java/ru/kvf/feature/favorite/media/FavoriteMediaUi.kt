@@ -30,7 +30,6 @@ fun FavoriteMediaUi(
         MediaList(
             media = mediaList,
             onMediaClick = component::onMediaClick,
-            onLikedClick = component::onLikeClick,
             onMediaLongClick = {}
         )
     }
@@ -43,7 +42,6 @@ private fun MediaList(
     media: List<Media>,
     onMediaClick: (Long) -> Unit,
     onMediaLongClick: (Long) -> Unit,
-    onLikedClick: (Long) -> Unit
 ) {
     LazyVerticalGrid(
         state = rememberLazyGridState(),
@@ -55,10 +53,9 @@ private fun MediaList(
             MediaItem(
                 model = media.uri,
                 favorite = true,
-                shouldShowLikeIcon = false,
+                shouldShowFavoriteIcon = false,
                 onClick = { onMediaClick(media.id) },
                 onLongClick = { onMediaLongClick(media.id) },
-                onDoubleClick = { onLikedClick(media.id) },
             )
         }
     }

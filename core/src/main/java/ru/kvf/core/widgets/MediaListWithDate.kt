@@ -37,7 +37,6 @@ fun MediaListWithDate(
     cellsCount: Int = 3,
     onMediaClick: (Long) -> Unit,
     onMediaLongClick: (Media) -> Unit,
-    onLikedClick: (Long) -> Unit,
     selectedMediaIds: LongSet,
     selectedMediaDates: MediaDateSet,
     onSelectDateClick: (MediaDate) -> Unit
@@ -80,7 +79,6 @@ fun MediaListWithDate(
                     favorite = item.id in favoriteMediaIds.data,
                     duration = item.duration,
                     onClick = { onMediaClick(item.id) },
-                    onDoubleClick = { onLikedClick(item.id) },
                     onLongClick = { onMediaLongClick(item) },
                     isSelected = item.id in selectedMediaIds.data,
                     editMode = selectedMediaIds.data.isNotEmpty(),

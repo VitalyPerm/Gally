@@ -49,8 +49,4 @@ class RealFoldersListComponent(
     override fun onFolderClick(name: String) {
         onOutput(FoldersListComponent.Output.OpenFolderRequested(name))
     }
-
-    override fun onFolderDoubleClick(id: Long) {
-        componentScope.safeLaunch { handleFolderFavoriteClickUseCase(id) }
-    }
 }

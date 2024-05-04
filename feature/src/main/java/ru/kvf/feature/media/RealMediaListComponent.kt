@@ -93,10 +93,6 @@ class RealMediaListComponent(
         }
     }
 
-    override fun onMediaDoubleClickClick(id: Long) {
-        //  componentScope.safeLaunch { handleFavoriteClickUseCase(id) }
-    }
-
     override fun onReverseClick() {
         sortReversed.update { it.not() }
         componentScope.launch { sideEffect.emit(MediaListComponent.SideEffect.ScrollUp) }

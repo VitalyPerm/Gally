@@ -21,16 +21,11 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Circle
-import androidx.compose.material.icons.rounded.HeartBroken
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,8 +36,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.size.Size
-import kotlinx.coroutines.delay
-import ru.kvf.core.utils.Constants
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -50,22 +43,14 @@ fun MediaItem(
     model: Any?,
     title: String? = null,
     favorite: Boolean = false,
-    shouldShowLikeIcon: Boolean = true,
+    shouldShowFavoriteIcon: Boolean = true,
     duration: String? = null,
     onClick: (() -> Unit)? = null,
     onLongClick: (() -> Unit)? = null,
-    onDoubleClick: (() -> Unit)? = null,
     isSelected: Boolean = false,
     editMode: Boolean = false,
     size: Size = Size.ORIGINAL
 ) {
-    var showLike by remember { mutableStateOf(false) }
-    val hearSize by animateFloatAsState(targetValue = if (showLike) 100f else 0f, label = "")
-    LaunchedEffect(showLike) {
-        delay(Constants.MEDIA_ITEM_LIKE_DURATION)
-        showLike = false
-    }
-
     Box(
         modifier = Modifier
             .aspectRatio(1f)
@@ -88,10 +73,6 @@ fun MediaItem(
                     .clip(MaterialTheme.shapes.medium)
                     .combinedClickable(
                         onClick = { onClick?.invoke() },
-                        onDoubleClick = {
-                            showLike = true
-                            onDoubleClick?.invoke()
-                        },
                         onLongClick = { onLongClick?.invoke() }
                     )
             )
@@ -112,16 +93,8 @@ fun MediaItem(
                     .padding(6.dp)
             )
         }
-        Icon(
-            tint = Color.Red,
-            imageVector = if (favorite) Icons.Rounded.HeartBroken else Icons.Filled.Favorite,
-            contentDescription = null,
-            modifier = Modifier
-                .size(hearSize.dp)
-                .align(Alignment.Center)
-        )
 
-        if (favorite && shouldShowLikeIcon) {
+        if (favorite && shouldShowFavoriteIcon) {
             Icon(
                 tint = Color.Red.copy(alpha = 0.5f),
                 imageVector = Icons.Filled.Favorite,
@@ -155,7 +128,6 @@ fun MediaItem(
                 )
             }
         }
-
 
         AnimatedVisibility(editMode) {
             Icon(
