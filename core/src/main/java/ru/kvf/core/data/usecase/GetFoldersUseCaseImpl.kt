@@ -6,18 +6,21 @@ import ru.kvf.core.domain.entities.Folder
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.repository.MediaRepository
 import ru.kvf.core.domain.usecase.GetFoldersUseCase
+import ru.kvf.core.utils.FolderList
 
 class GetFoldersUseCaseImpl(
     private val mediaRepository: MediaRepository
 ) : GetFoldersUseCase {
 
-    override fun invoke(): Flow<List<Folder>> = mediaRepository.mediaFlow.map { media ->
-        media.groupBy(Media::folder).map { (folder, foldermedia) ->
-            Folder(
-                id = foldermedia.firstOrNull()?.id ?: 0,
-                name = folder,
-                media = foldermedia
-            )
-        }.sortedBy { it.name }
+    override fun invoke(): Flow<FolderList> = mediaRepository.mediaFlow.map { media ->
+        FolderList(
+            media.groupBy(Media::folder).map { (folder, foldermedia) ->
+                Folder(
+                    id = foldermedia.firstOrNull()?.id ?: 0,
+                    name = folder,
+                    media = foldermedia
+                )
+            }.sortedBy { it.name }
+        )
     }
 }

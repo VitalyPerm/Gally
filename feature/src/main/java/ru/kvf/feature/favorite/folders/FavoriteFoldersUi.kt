@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import ru.kvf.core.domain.entities.Folder
+import ru.kvf.core.utils.FolderList
 import ru.kvf.core.widgets.MediaItem
 
 @Composable
@@ -41,7 +42,7 @@ fun FavoriteFoldersUi(
 
 @Composable
 private fun FoldersList(
-    folders: List<Folder>,
+    folders: FolderList,
     onFolderClick: (String) -> Unit,
     onFolderLongClick: (Long) -> Unit,
     cellsCount: Int
@@ -52,12 +53,12 @@ private fun FoldersList(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        items(folders, key = { item: Folder -> item.id }) { folder ->
+        items(folders.data, key = { item: Folder -> item.id }) { folder ->
             MediaItem(
                 model = folder.media.randomOrNull()?.uri,
                 title = folder.name,
                 onClick = { onFolderClick(folder.name) },
-                cellsCount = 1,
+                cellsCount = cellsCount,
                 shouldShowFavoriteIcon = false,
                 onLongClick = { onFolderLongClick(folder.id) }
             )

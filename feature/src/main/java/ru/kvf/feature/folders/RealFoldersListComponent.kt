@@ -12,6 +12,7 @@ import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteFoldersIdsUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFolderFavoriteClickUseCase
 import ru.kvf.core.utils.Constants
+import ru.kvf.core.utils.FolderList
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
@@ -29,8 +30,8 @@ class RealFoldersListComponent(
 
     private val reversed = MutableStateFlow(false)
     override val folders = combine(getFoldersUseCase(), reversed) { all, reversed ->
-        if (reversed) all.asReversed() else all
-    }.stateIn(componentScope, SharingStarted.Lazily, emptyList())
+        if (reversed) all.reversed() else all
+    }.stateIn(componentScope, SharingStarted.Lazily, FolderList.EMPTY)
 
     override val gridCellsCount = gridCellsCountChangeUseCase
         .get(GridCellsCountChangeUseCase.Screen.FoldersList)

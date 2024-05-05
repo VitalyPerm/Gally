@@ -1,11 +1,11 @@
 package ru.kvf.feature.favorite.folders
 
 import kotlinx.coroutines.flow.StateFlow
-import ru.kvf.core.domain.entities.Folder
+import ru.kvf.core.utils.FolderList
 
 interface FavoriteFoldersComponent {
 
-    val folders: StateFlow<List<Folder>>
+    val folders: StateFlow<FolderList>
 
     fun onFolderClick(name: String)
     fun onFolderLongClick(id: Long)

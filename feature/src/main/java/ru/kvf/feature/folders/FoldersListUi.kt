@@ -12,7 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
-import ru.kvf.core.domain.entities.Folder
+import ru.kvf.core.utils.FolderList
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.MediaItem
@@ -48,7 +48,7 @@ fun FoldersListUi(
 
 @Composable
 private fun FoldersList(
-    folders: List<Folder>,
+    folders: FolderList,
     onFolderClick: (String) -> Unit,
     onFolderLongClick: (Long) -> Unit,
     gridState: LazyGridState,
@@ -61,7 +61,7 @@ private fun FoldersList(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        items(folders) { folder ->
+        items(folders.data, key = { it.id }) { folder ->
             MediaItem(
                 model = folder.media.randomOrNull()?.uri,
                 title = folder.name,
