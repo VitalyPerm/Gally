@@ -54,8 +54,9 @@ private fun FoldersList(
             .fillMaxWidth()
     ) {
         items(folders.data, key = { item: Folder -> item.id }) { folder ->
+            val model = remember { folder.media.randomOrNull()?.uri }
             MediaItem(
-                model = folder.media.randomOrNull()?.uri,
+                model = model,
                 title = folder.name,
                 onClick = { onFolderClick(folder.name) },
                 cellsCount = cellsCount,

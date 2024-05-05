@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -41,7 +42,7 @@ import coil.size.Size
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MediaItem(
+fun LazyGridItemScope.MediaItem(
     model: Any?,
     title: String? = null,
     favorite: Boolean = false,
@@ -61,6 +62,7 @@ fun MediaItem(
                 BorderStroke(4.dp, MaterialTheme.colorScheme.onPrimary),
                 MaterialTheme.shapes.medium
             )
+            .animateItemPlacement()
     ) {
         val scale by animateFloatAsState(targetValue = if (isSelected) 0.7f else 1f, label = "")
         val imageSize = remember(cellsCount) { calculatePhotoSize(cellsCount) }
@@ -93,7 +95,10 @@ fun MediaItem(
                     .align(Alignment.Center)
                     .fillMaxWidth(0.7f)
                     .padding(3.dp)
-                    .background(MaterialTheme.colorScheme.onPrimary, MaterialTheme.shapes.extraLarge)
+                    .background(
+                        MaterialTheme.colorScheme.onPrimary,
+                        MaterialTheme.shapes.extraLarge
+                    )
                     .padding(6.dp)
             )
         }

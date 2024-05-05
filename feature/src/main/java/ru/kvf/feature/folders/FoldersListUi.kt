@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import ru.kvf.core.utils.FolderList
@@ -62,8 +63,9 @@ private fun FoldersList(
             .fillMaxWidth()
     ) {
         items(folders.data, key = { it.id }) { folder ->
+            val model = remember { folder.media.randomOrNull()?.uri }
             MediaItem(
-                model = folder.media.randomOrNull()?.uri,
+                model = model,
                 title = folder.name,
                 favorite = folder.id in favoriteFolderIds.data,
                 onClick = { onFolderClick(folder.name) },
