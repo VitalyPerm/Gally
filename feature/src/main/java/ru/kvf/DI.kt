@@ -32,6 +32,7 @@ fun ComponentFactory.createMediaListComponent(
     get(),
     get(),
     get(),
+    get(),
     get()
 )
 

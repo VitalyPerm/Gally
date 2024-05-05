@@ -44,6 +44,5 @@ interface MediaListComponent {
         data object ScrollUp : SideEffect
         data class TrashMedia(val uris: Set<Uri>) : SideEffect
         data class ShareMedia(val media: List<Media>) : SideEffect
-        data object Vibrate : SideEffect
     }
 }

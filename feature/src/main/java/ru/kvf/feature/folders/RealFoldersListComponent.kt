@@ -1,7 +1,6 @@
 package ru.kvf.feature.folders
 
 import com.arkivanov.decompose.ComponentContext
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -40,8 +39,6 @@ class RealFoldersListComponent(
     override val favoriteFolderIds: StateFlow<LongSet> = getFavoriteFoldersIdsUseCase()
         .stateIn(componentScope, SharingStarted.WhileSubscribed(5000), LongSet.EMPTY)
 
-    override val sideEffect = MutableSharedFlow<FoldersListComponent.SideEffect>()
-
     override fun onGridCountClick() {
         val currentCount = gridCellsCount.value
         val value = if (currentCount == Constants.MAX_GRID_COUNT) Constants.MIN_GRID_COUNT else currentCount + 1
@@ -53,9 +50,7 @@ class RealFoldersListComponent(
         }
     }
 
-    override fun onReverseClick() {
-        reversed.update { !it }
-    }
+    override fun onReverseClick() { reversed.update { !it } }
 
     override fun onFolderClick(name: String) {
         onOutput(FoldersListComponent.Output.OpenFolderRequested(name))
@@ -64,7 +59,6 @@ class RealFoldersListComponent(
     override fun onFolderLongClick(id: Long) {
         componentScope.safeLaunch {
             handleFolderFavoriteClickUseCase(id)
-            sideEffect.emit(FoldersListComponent.SideEffect.Vibrate)
         }
     }
 }

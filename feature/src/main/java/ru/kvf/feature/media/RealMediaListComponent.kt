@@ -20,6 +20,7 @@ import ru.kvf.core.domain.entities.MediaDate
 import ru.kvf.core.domain.usecase.GetFolderMediaUseCase
 import ru.kvf.core.domain.usecase.GetSortedMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
+import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFavoriteSetUseCase
 import ru.kvf.core.utils.LongSet
@@ -41,7 +42,8 @@ class RealMediaListComponent(
     private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
     private val handleFavoriteSetUseCase: HandleFavoriteSetUseCase,
     componentFactory: ComponentFactory,
-    private val context: Context
+    private val context: Context,
+    private val hapticFeedBackUseCase: PerformHapticFeedBackUseCase
 ) : ComponentContext by componentContext, MediaListComponent {
 
     private val componentScope = coroutineScope()
@@ -122,7 +124,7 @@ class RealMediaListComponent(
         if (selectedMediaIds.value.data.isNotEmpty()) return
         componentScope.launch {
             selectedMediaIds.value = LongSet.from(setOf(media.id))
-            sideEffect.emit(MediaListComponent.SideEffect.Vibrate)
+            hapticFeedBackUseCase()
         }
     }
 
@@ -207,7 +209,7 @@ class RealMediaListComponent(
 
     private fun editSelectedMedia(id: Long) {
         componentScope.safeLaunch(Dispatchers.Default) {
-            sideEffect.emit(MediaListComponent.SideEffect.Vibrate)
+            hapticFeedBackUseCase()
             val value = selectedMediaIds.value.data.toMutableList().apply {
                 if (contains(id)) remove(id) else add(id)
             }.toSet()
