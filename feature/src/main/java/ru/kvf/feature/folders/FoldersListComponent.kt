@@ -12,10 +12,12 @@ interface FoldersListComponent {
 
     fun onGridCountClick()
     fun onReverseClick()
+    fun onTrashClick()
     fun onFolderClick(name: String)
     fun onFolderLongClick(id: Long)
 
     sealed interface Output {
         data class OpenFolderRequested(val name: String) : Output
+        data object OpenTrashRequested : Output
     }
 }

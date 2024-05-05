@@ -3,6 +3,7 @@ package ru.kvf.feature.mediabsh
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -54,7 +55,7 @@ fun MediaBSHUi(
     val media by component.media.collectAsState()
     val currentMediaIndex by component.currentMediaIndex.collectAsState()
     val title by component.title.collectAsState()
-    val optionsVisible by component.optionsVisible.collectAsState()
+    val isOptionsVisible by component.optionsVisible.collectAsState()
     val isVisible by component.visible.collectAsState()
     val isFavorite by component.isFavorite.collectAsState()
     val pagerState = rememberPagerState(initialPage = currentMediaIndex) { media.size }
@@ -101,33 +102,22 @@ fun MediaBSHUi(
                         onTap = component::onTap
                     )
 
-                    Title(
-                        name = title,
-                        optionsVisible = optionsVisible
+                    FavoriteIcon(
+                        isFavorite = isFavorite,
+                        isOptionsVisible = isOptionsVisible
                     )
 
-                    if (isFavorite && optionsVisible) {
-                        Box(
-                            modifier = Modifier
-                                .padding(24.dp)
-                                .align(Alignment.TopEnd)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Favorite,
-                                contentDescription = null,
-                                tint = Color.Red,
-                                modifier = Modifier
-                                    .size(48.dp)
-                            )
-                        }
-                    }
+                    Title(
+                        name = title,
+                        isOptionsVisible = isOptionsVisible
+                    )
 
                     Actions(
                         onShareClick = component::onShareClick,
                         onTrashClick = component::onTrashClick,
                         onFavoriteClick = component::onFavoriteClick,
                         isFavorite = isFavorite,
-                        optionsVisible = optionsVisible
+                        isOptionsVisible = isOptionsVisible
                     )
                 }
             }
@@ -138,14 +128,14 @@ fun MediaBSHUi(
 @Composable
 private fun BoxScope.Title(
     name: String,
-    optionsVisible: Boolean,
+    isOptionsVisible: Boolean,
 ) {
     Box(
         modifier = Modifier
             .align(Alignment.TopCenter)
             .padding(top = 48.dp)
     ) {
-        AnimatedVisibility(optionsVisible) {
+        AnimatedVisibility(isOptionsVisible) {
             Row(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -169,19 +159,38 @@ private fun BoxScope.Title(
 }
 
 @Composable
-fun BoxScope.Actions(
+private fun BoxScope.FavoriteIcon(isFavorite: Boolean, isOptionsVisible: Boolean) {
+    AnimatedVisibility(isFavorite && isOptionsVisible) {
+        Box(
+            modifier = Modifier
+                .padding(24.dp)
+                .align(Alignment.TopEnd)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Favorite,
+                contentDescription = null,
+                tint = Color.Red,
+                modifier = Modifier
+                    .size(48.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun BoxScope.Actions(
     onTrashClick: () -> Unit,
     onShareClick: () -> Unit,
     onFavoriteClick: () -> Unit,
     isFavorite: Boolean,
-    optionsVisible: Boolean
+    isOptionsVisible: Boolean
 ) {
     Box(
         modifier = Modifier
             .align(Alignment.BottomCenter)
             .padding(bottom = 48.dp)
     ) {
-        AnimatedVisibility(optionsVisible) {
+        AnimatedVisibility(isOptionsVisible) {
             Row(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
@@ -196,10 +205,19 @@ fun BoxScope.Actions(
                     imageVector = Icons.Default.Delete
                 )
 
-                MediaSelectModeMenuItem(
-                    onClick = onFavoriteClick,
-                    imageVector = if (!isFavorite) Icons.Default.Favorite else Icons.Default.HeartBroken
-                )
+                AnimatedContent(targetState = isFavorite, label = "") {
+                    if (it) {
+                        MediaSelectModeMenuItem(
+                            onClick = onFavoriteClick,
+                            imageVector = Icons.Default.HeartBroken
+                        )
+                    } else {
+                        MediaSelectModeMenuItem(
+                            onClick = onFavoriteClick,
+                            imageVector = Icons.Default.Favorite
+                        )
+                    }
+                }
             }
         }
     }

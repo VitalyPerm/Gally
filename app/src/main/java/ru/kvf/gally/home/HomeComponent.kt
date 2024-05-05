@@ -5,8 +5,8 @@ import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.feature.favorite.FavoriteComponent
-import ru.kvf.feature.media.MediaListComponent
 import ru.kvf.feature.folders.FoldersListComponent
+import ru.kvf.feature.media.MediaListComponent
 import ru.kvf.feature.settings.SettingsListComponent
 
 interface HomeComponent {
@@ -31,5 +31,6 @@ interface HomeComponent {
 
     sealed interface Output {
         data class OpenFolderRequested(val name: String) : Output
+        data object OpenTrashRequested : Output
     }
 }

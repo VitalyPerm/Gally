@@ -108,6 +108,9 @@ class RealHomeComponent(
             is FoldersListComponent.Output.OpenFolderRequested -> onOutput(
                 HomeComponent.Output.OpenFolderRequested(output.name)
             )
+
+            FoldersListComponent.Output.OpenTrashRequested ->
+                onOutput(HomeComponent.Output.OpenTrashRequested)
         }
     }
 

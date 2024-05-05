@@ -57,6 +57,10 @@ class RealFoldersListComponent(
         onOutput(FoldersListComponent.Output.OpenFolderRequested(name))
     }
 
+    override fun onTrashClick() {
+        onOutput(FoldersListComponent.Output.OpenTrashRequested)
+    }
+
     override fun onFolderLongClick(id: Long) {
         componentScope.safeLaunch {
             handleFolderFavoriteClickUseCase(id)

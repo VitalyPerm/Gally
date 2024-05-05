@@ -34,6 +34,7 @@ fun FoldersListUi(
         gridCount = gridCellsCount,
         onGridCountClick = component::onGridCountClick,
         onReverseClick = component::onReverseClick,
+        onTrashClick = component::onTrashClick,
         modifier = Modifier.padding(bottom = navBarPadding)
     ) {
         FoldersList(

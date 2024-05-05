@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.RestoreFromTrash
 import androidx.compose.material.icons.filled.WifiProtectedSetup
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,6 +31,7 @@ fun DefaultContainer(
     modifier: Modifier = Modifier,
     @StringRes titleRes: Int? = null,
     titleString: String? = null,
+    onTrashClick: (() -> Unit)? = null,
     onReverseClick: () -> Unit,
     onGridCountClick: () -> Unit,
     gridCount: Int,
@@ -48,6 +50,7 @@ fun DefaultContainer(
             actions = {
                 GridCountIcon(count = gridCount, onClick = onGridCountClick)
                 ReverseIcon(onReverseClick)
+                onTrashClick?.let { TrashIcon(it) }
             },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.inversePrimary
@@ -65,6 +68,17 @@ private fun ReverseIcon(
     IconButton(onClick = onClick) {
         Icon(
             imageVector = Icons.Filled.WifiProtectedSetup,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onPrimary
+        )
+    }
+}
+
+@Composable
+fun TrashIcon(onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = Icons.Filled.RestoreFromTrash,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onPrimary
         )

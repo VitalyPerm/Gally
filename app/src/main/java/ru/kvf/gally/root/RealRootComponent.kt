@@ -55,6 +55,7 @@ class RealRootComponent(
     private fun homeOutput(output: HomeComponent.Output) {
         when (output) {
             is HomeComponent.Output.OpenFolderRequested -> navigation.push(Config.MediaList(output.name))
+            HomeComponent.Output.OpenTrashRequested -> {}
         }
     }
 
