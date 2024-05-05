@@ -6,6 +6,7 @@ import ru.kvf.core.domain.entities.Media
 interface MediaRepository {
 
     val mediaFlow: Flow<List<Media>>
+    val trashFlow: Flow<List<Media>>
 
     suspend fun loadMedia()
 }

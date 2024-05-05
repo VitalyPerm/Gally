@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 fun <T>CoroutineScope.collectFlow(flow: Flow<T>, value: (T) -> Unit) {
-    flow.catch { e -> Log.e("Collect flow error! - ${e.message}") }
+    flow.catch { e -> L.e("Collect flow error! - ${e.message}") }
         .onEach { value(it) }.launchIn(this)
 }
 
@@ -22,6 +22,6 @@ fun CoroutineScope.safeLaunch(
     try {
         action()
     } catch (e: Exception) {
-        Log.e("SafeLaunch error! - ${e.message}")
+        L.e("SafeLaunch error! - ${e.message}")
     }
 }

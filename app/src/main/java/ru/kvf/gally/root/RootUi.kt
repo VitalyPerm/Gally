@@ -9,6 +9,8 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ru.kvf.core.domain.entities.ThemeType
 import ru.kvf.core.theme.GallyTheme
+import ru.kvf.feature.media.MediaListUi
+import ru.kvf.feature.trash.TrashUi
 import ru.kvf.gally.home.HomeUi
 
 @Composable
@@ -28,18 +30,22 @@ fun RootUi(
             stack = component.childStack,
             animation = stackAnimation { child ->
                 when (child.instance) {
-                    is RootComponent.Child.FolderMediaList -> scale(
-                        frontFactor = 1.5f,
-                        backFactor = 0.7f
-                    )
+                    is RootComponent.Child.FolderMediaList -> localScale()
                     is RootComponent.Child.Home -> scale()
+                    is RootComponent.Child.Trash -> localScale()
                 }
             }
         ) {
             when (val child = it.instance) {
                 is RootComponent.Child.Home -> HomeUi(component = child.component)
-                is RootComponent.Child.FolderMediaList -> ru.kvf.feature.media.MediaListUi(component = child.component)
+                is RootComponent.Child.FolderMediaList -> MediaListUi(component = child.component)
+                is RootComponent.Child.Trash -> TrashUi(component = child.component)
             }
         }
     }
 }
+
+private fun localScale() = scale(
+    frontFactor = 1.5f,
+    backFactor = 0.7f
+)

@@ -19,6 +19,8 @@ import ru.kvf.feature.mediabsh.MediaBSHComponent
 import ru.kvf.feature.mediabsh.RealMediaBSHComponent
 import ru.kvf.feature.settings.RealSettingsListComponent
 import ru.kvf.feature.settings.SettingsListComponent
+import ru.kvf.feature.trash.RealTrashComponent
+import ru.kvf.feature.trash.TrashComponent
 
 fun ComponentFactory.createMediaListComponent(
     componentContext: ComponentContext,
@@ -95,4 +97,11 @@ fun ComponentFactory.createMediaBSHComponent(
     media,
     get(),
     get(),
+)
+
+fun ComponentFactory.createTrashComponent(
+    componentContext: ComponentContext
+): TrashComponent = RealTrashComponent(
+    componentContext,
+    get()
 )

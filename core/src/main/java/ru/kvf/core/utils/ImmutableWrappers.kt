@@ -52,3 +52,13 @@ value class FolderList(val data: List<Folder>) {
         val EMPTY = FolderList(emptyList())
     }
 }
+
+@Immutable
+@JvmInline
+value class MediaList(val data: List<Media>) {
+    fun reversed() = MediaList(data.reversed())
+
+    companion object {
+        val EMPTY = MediaList(emptyList())
+    }
+}

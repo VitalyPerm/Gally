@@ -3,17 +3,24 @@ package ru.kvf.core.data.repository
 import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
+import android.os.Bundle
 import android.provider.MediaStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MimeType
 import ru.kvf.core.domain.repository.MediaRepository
+import ru.kvf.core.utils.L
 
 class MediaRepositoryImpl(
     private val context: Context,
 ) : MediaRepository {
+
+    private companion object {
+        const val TRASHED_VALUE = 1
+    }
 
     private val photoProjection = arrayOf(
         MediaStore.Images.Media.DISPLAY_NAME,
@@ -26,10 +33,11 @@ class MediaRepositoryImpl(
         MediaStore.Images.Media._ID,
         MediaStore.Images.Media.DATE_TAKEN,
         MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
-        MediaStore.Video.Media.DURATION
+        MediaStore.Video.Media.DURATION,
     )
 
     override val mediaFlow: MutableStateFlow<List<Media>> = MutableStateFlow(emptyList())
+    override val trashFlow: MutableStateFlow<List<Media>> = MutableStateFlow(emptyList())
 
     override suspend fun loadMedia(): Unit = withContext(Dispatchers.IO) {
         mediaFlow.value = emptyList()
@@ -48,8 +56,33 @@ class MediaRepositoryImpl(
             null
         )
 
-        val media = getMedia(imageQuery, true) + getMedia(videoQuery, false)
-        mediaFlow.value = media.sortedByDescending { it.timeStamp }
+        val media = getMedia(
+            cursor = imageQuery,
+            isPhotos = true,
+        ) + getMedia(
+            cursor = videoQuery,
+            isPhotos = false
+        )
+        mediaFlow.update { media.sortedByDescending { it.timeStamp } }
+
+        val imageTrashQuery = context.contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            arrayOf(
+                MediaStore.Images.Media.DISPLAY_NAME,
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DATE_TAKEN,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+                MediaStore.MediaColumns.IS_TRASHED
+            ),
+            Bundle().apply {
+                putInt(MediaStore.QUERY_ARG_MATCH_TRASHED, MediaStore.MATCH_ONLY)
+            },
+            null
+        )
+
+        val trashMedia = getTrashMedia(cursor = imageTrashQuery)
+        L.d("trashMediaSize = ${trashMedia.size}")
+        trashFlow.update { trashMedia }
     }
 
     private fun getMedia(cursor: Cursor?, isPhotos: Boolean) = mutableListOf<Media>().apply {
@@ -84,6 +117,42 @@ class MediaRepositoryImpl(
                     folder = folder,
                     mimeType = MimeType.get(isPhotos),
                     duration = getDuration(cursor, isPhotos)
+                )
+                add(media)
+            }
+        }
+    }
+
+    private fun getTrashMedia(cursor: Cursor?) = mutableListOf<Media>().apply {
+        cursor?.use {
+            val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+            val nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
+            val dateColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
+            val bucketColumn =
+                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
+            val trashColumn = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.IS_TRASHED)
+
+            while (cursor.moveToNext()) {
+                val id = cursor.getLong(idColumn)
+                val name = cursor.getString(nameColumn)
+                val date = cursor.getLong(dateColumn)
+                val contentUri = ContentUris.withAppendedId(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    id
+                )
+                val folder = cursor.getString(bucketColumn)
+                val isMediaInTrash = cursor.getInt(trashColumn) == TRASHED_VALUE
+
+                L.d("$id = $isMediaInTrash")
+
+                val media = Media(
+                    id = id,
+                    name = name,
+                    timeStamp = date,
+                    uri = contentUri,
+                    folder = folder,
+                    mimeType = MimeType.get(true),
+                    duration = null
                 )
                 add(media)
             }

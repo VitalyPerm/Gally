@@ -14,6 +14,7 @@ import ru.kvf.core.domain.entities.ThemeType
 import ru.kvf.core.domain.usecase.ThemeUseCase
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.createMediaListComponent
+import ru.kvf.createTrashComponent
 import ru.kvf.gally.createHomeComponent
 import ru.kvf.gally.home.HomeComponent
 
@@ -50,12 +51,16 @@ class RealRootComponent(
             is Config.MediaList -> RootComponent.Child.FolderMediaList(
                 componentFactory.createMediaListComponent(componentContext, config.folderName)
             )
+
+            Config.Trash -> RootComponent.Child.Trash(
+                componentFactory.createTrashComponent(componentContext)
+            )
         }
 
     private fun homeOutput(output: HomeComponent.Output) {
         when (output) {
             is HomeComponent.Output.OpenFolderRequested -> navigation.push(Config.MediaList(output.name))
-            HomeComponent.Output.OpenTrashRequested -> {}
+            HomeComponent.Output.OpenTrashRequested -> navigation.push(Config.Trash)
         }
     }
 
@@ -66,5 +71,8 @@ class RealRootComponent(
 
         @Serializable
         data class MediaList(val folderName: String) : Config
+
+        @Serializable
+        data object Trash : Config
     }
 }

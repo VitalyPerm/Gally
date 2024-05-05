@@ -5,6 +5,7 @@ import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.core.domain.entities.ThemeType
 import ru.kvf.feature.media.MediaListComponent
+import ru.kvf.feature.trash.TrashComponent
 import ru.kvf.gally.home.HomeComponent
 
 interface RootComponent {
@@ -16,5 +17,6 @@ interface RootComponent {
     sealed interface Child {
         class Home(val component: HomeComponent) : Child
         class FolderMediaList(val component: MediaListComponent) : Child
+        class Trash(val component: TrashComponent) : Child
     }
 }
