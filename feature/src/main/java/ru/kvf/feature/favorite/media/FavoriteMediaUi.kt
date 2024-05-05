@@ -17,10 +17,11 @@ import ru.kvf.feature.mediabsh.MediaBSHUi
 
 @Composable
 fun FavoriteMediaUi(
-    component: FavoriteMediaComponent
+    component: FavoriteMediaComponent,
+    isReversed: Boolean,
+    gridCellsCount: Int
 ) {
     val media by component.media.collectAsState()
-    val isReversed by component.isReversed.collectAsState()
     val mediaList = if (isReversed) media.reversed() else media
 
     Box(
@@ -30,7 +31,8 @@ fun FavoriteMediaUi(
         MediaList(
             media = mediaList,
             onMediaClick = component::onMediaClick,
-            onMediaLongClick = {}
+            onMediaLongClick = component::onMediaLongClick,
+            gridCellsCount = gridCellsCount
         )
     }
 
@@ -42,10 +44,11 @@ private fun MediaList(
     media: List<Media>,
     onMediaClick: (Long) -> Unit,
     onMediaLongClick: (Long) -> Unit,
+    gridCellsCount: Int
 ) {
     LazyVerticalGrid(
         state = rememberLazyGridState(),
-        columns = GridCells.Fixed(2),
+        columns = GridCells.Fixed(gridCellsCount),
         modifier = Modifier
             .fillMaxWidth()
     ) {

@@ -41,7 +41,8 @@ fun ComponentFactory.createFavoriteComponent(
 ): FavoriteComponent = RealFavoriteComponent(
     componentContext,
     get(),
-    output
+    output,
+    get()
 )
 
 fun ComponentFactory.createFavoriteFoldersComponent(

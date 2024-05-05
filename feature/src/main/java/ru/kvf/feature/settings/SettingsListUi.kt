@@ -9,14 +9,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,11 +32,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ru.kvf.core.domain.entities.ThemeType
-import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.feature.R
 import ru.kvf.feature.settings.theme.ChooseThemeBSH
 import java.util.Calendar
@@ -54,6 +58,7 @@ fun SettingsListUi(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Content(
     edgeToEdgEnable: Boolean,
@@ -65,7 +70,20 @@ private fun Content(
 ) {
     val chooseThemeBSHVisible = remember { mutableStateOf(false) }
 
-    DefaultContainer(titleRes = R.string.settings) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+    ) {
+        TopAppBar(
+            title = { Text(text = stringResource(R.string.settings), style = MaterialTheme.typography.titleLarge) },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.inversePrimary
+            ),
+            scrollBehavior = scrollBehavior,
+        )
         EdgeToEdge(
             enable = edgeToEdgEnable,
             onCheckedChange = onEdgeToEdgeChanged

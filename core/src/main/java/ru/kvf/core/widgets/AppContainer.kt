@@ -30,11 +30,9 @@ fun DefaultContainer(
     modifier: Modifier = Modifier,
     @StringRes titleRes: Int? = null,
     titleString: String? = null,
-    reverseActionEnable: Boolean = false,
-    onReverseClick: () -> Unit = {},
-    gridCountActionEnable: Boolean = false,
-    onGridCountClick: () -> Unit = {},
-    gridCount: Int = 1,
+    onReverseClick: () -> Unit,
+    onGridCountClick: () -> Unit,
+    gridCount: Int,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -48,8 +46,8 @@ fun DefaultContainer(
         TopAppBar(
             title = { Text(text = title, style = MaterialTheme.typography.titleLarge) },
             actions = {
-                if (gridCountActionEnable) GridCountIcon(count = gridCount, onClick = onGridCountClick)
-                if (reverseActionEnable) ReverseIcon(onReverseClick)
+                GridCountIcon(count = gridCount, onClick = onGridCountClick)
+                ReverseIcon(onReverseClick)
             },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.inversePrimary

@@ -18,6 +18,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -43,18 +44,27 @@ fun FavoriteUi(
     navBarPadding: Dp
 ) {
     val pagerState = rememberPagerState { Pages.entries.size }
+    val gridCellsCount by component.gridCellsCount.collectAsState()
+    val isReversed by component.isReversed.collectAsState()
 
     DefaultContainer(
         titleRes = R.string.favorite,
         modifier = Modifier
-        .padding(bottom = navBarPadding)
+            .padding(bottom = navBarPadding),
+        onReverseClick = component::onReverseClick,
+        gridCount = gridCellsCount,
+        onGridCountClick = component::onGridCountClick
     ) {
         Spacer(modifier = Modifier.height(8.dp))
         TabRow(pagerState)
         Spacer(modifier = Modifier.height(8.dp))
         HorizontalPager(state = pagerState) {
             when (Pages.fromIndex(it)) {
-                Pages.Media -> FavoriteMediaUi(component = component.favoriteMediaComponent)
+                Pages.Media -> FavoriteMediaUi(
+                    component = component.favoriteMediaComponent,
+                    gridCellsCount = gridCellsCount,
+                    isReversed = isReversed
+                )
                 Pages.Folders -> FavoriteFoldersUi(component = component.favoriteFoldersComponent)
             }
         }
@@ -81,7 +91,9 @@ private fun TabRow(pagerState: PagerState) {
                     drawRoundRect(
                         color = ovalColor,
                         size = Size(
-                            width = size.width.div(2).minus(12 * ld.density),
+                            width = size.width
+                                .div(2)
+                                .minus(12 * ld.density),
                             height = size.height.minus(12 * ld.density)
                         ),
                         cornerRadius = CornerRadius(16f * ld.density, 16f * ld.density),

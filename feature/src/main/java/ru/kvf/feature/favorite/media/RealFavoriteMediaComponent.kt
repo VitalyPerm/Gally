@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaUseCase
@@ -35,19 +34,14 @@ class RealFavoriteMediaComponent(
     )
 
     override val selectedMediaIndex = MutableStateFlow(0)
-    override val isReversed = MutableStateFlow(false)
     override val showDetailsBSH = MutableStateFlow(false)
-
-    override fun onReverseClick() {
-        isReversed.update { !it }
-    }
-
-    override fun onLikeClick(id: Long) {
-        componentScope.safeLaunch { handleMediaFavoriteClickUseCase(id) }
-    }
 
     override fun onMediaClick(mediaId: Long) {
         val index = media.value.indexOfFirst { it.id == mediaId }.takeIf { it.notNegative() } ?: return
         mediaBSHComponent.setup(index)
+    }
+
+    override fun onMediaLongClick(mediaId: Long) {
+        componentScope.safeLaunch { handleMediaFavoriteClickUseCase(mediaId) }
     }
 }

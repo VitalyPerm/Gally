@@ -177,10 +177,8 @@ private fun Content(
         DefaultContainer(
             titleRes = R.string.media,
             titleString = folderName,
-            gridCountActionEnable = true,
             gridCount = cellsCount,
             onGridCountClick = onGridCountClick,
-            reverseActionEnable = true,
             onReverseClick = onReverseClick
         ) {
             val mediaMap = remember(sortReversed) { if (sortReversed) reversedMedia else media }
