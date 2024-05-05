@@ -20,13 +20,13 @@ class RealFavoriteFoldersComponent(
     private val componentScope = coroutineScope()
 
     override val folders: StateFlow<List<Folder>> = getFavoriteFoldersUseCase()
-        .stateIn(componentScope, SharingStarted.WhileSubscribed(5000), emptyList())
+        .stateIn(componentScope, SharingStarted.Eagerly, emptyList())
 
     override fun onFolderClick(name: String) {
         onOutput(FavoriteFoldersComponent.Output.OpenFolderRequested(name))
     }
 
-    override fun onFolderDoubleClick(id: Long) {
+    override fun onFolderLongClick(id: Long) {
         componentScope.launch { handleFolderFavoriteClickUseCase(id) }
     }
 }

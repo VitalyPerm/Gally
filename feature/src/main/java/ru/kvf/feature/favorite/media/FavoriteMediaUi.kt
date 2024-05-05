@@ -55,11 +55,10 @@ private fun MediaList(
         items(media, key = { item: Media -> item.id }) { media ->
             MediaItem(
                 model = media.uri,
-                favorite = true,
-                shouldShowFavoriteIcon = false,
                 onClick = { onMediaClick(media.id) },
                 onLongClick = { onMediaLongClick(media.id) },
-                cellsCount = 1
+                cellsCount = gridCellsCount,
+                shouldShowFavoriteIcon = false
             )
         }
     }

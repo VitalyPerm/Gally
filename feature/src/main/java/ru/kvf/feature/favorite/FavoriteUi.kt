@@ -65,7 +65,11 @@ fun FavoriteUi(
                     gridCellsCount = gridCellsCount,
                     isReversed = isReversed
                 )
-                Pages.Folders -> FavoriteFoldersUi(component = component.favoriteFoldersComponent)
+                Pages.Folders -> FavoriteFoldersUi(
+                    component = component.favoriteFoldersComponent,
+                    cellsCount = gridCellsCount,
+                    isReversed = isReversed
+                )
             }
         }
     }

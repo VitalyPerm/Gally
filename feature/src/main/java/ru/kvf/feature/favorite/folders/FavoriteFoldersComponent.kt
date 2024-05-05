@@ -7,9 +7,8 @@ interface FavoriteFoldersComponent {
 
     val folders: StateFlow<List<Folder>>
 
-    fun onFolderDoubleClick(id: Long)
-
     fun onFolderClick(name: String)
+    fun onFolderLongClick(id: Long)
 
     sealed interface Output {
         data class OpenFolderRequested(val name: String) : Output
