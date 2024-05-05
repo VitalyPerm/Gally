@@ -1,6 +1,5 @@
 package ru.kvf.gally.root
 
-import android.os.Parcelable
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
@@ -9,14 +8,14 @@ import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.entities.ThemeType
+import ru.kvf.core.domain.usecase.ThemeUseCase
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.createMediaListComponent
 import ru.kvf.gally.createHomeComponent
 import ru.kvf.gally.home.HomeComponent
-import ru.kvf.core.domain.usecase.ThemeUseCase
 
 class RealRootComponent(
     componentContext: ComponentContext,
@@ -36,6 +35,7 @@ class RealRootComponent(
     override val childStack: Value<ChildStack<*, RootComponent.Child>> =
         childStack(
             source = navigation,
+            serializer = Config.serializer(),
             initialConfiguration = Config.Home,
             handleBackButton = true,
             childFactory = ::child
@@ -58,9 +58,12 @@ class RealRootComponent(
         }
     }
 
-    private sealed interface Config : Parcelable {
-        @Parcelize data object Home : Config
+    @Serializable
+    private sealed interface Config {
+        @Serializable
+        data object Home : Config
 
-        @Parcelize data class MediaList(val folderName: String) : Config
+        @Serializable
+        data class MediaList(val folderName: String) : Config
     }
 }

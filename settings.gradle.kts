@@ -37,7 +37,7 @@ dependencyResolutionManagement {
             val protoVersion = "1.0.0"
             val kotlinSerializationVersion = "1.6.0"
             val zoomableVersion = "1.5.3"
-            val decomposeVersion = "2.2.2"
+            val decomposeVersion = "3.0.0"
             val media3Version = "1.2.0"
 
             library("koin-core", "io.insert-koin:koin-core:$koinVersion")
@@ -76,7 +76,7 @@ dependencyResolutionManagement {
             )
 
             library("decompose-core", "com.arkivanov.decompose:decompose:$decomposeVersion")
-            library("decompose-ext", "com.arkivanov.decompose:extensions-compose-jetpack:$decomposeVersion")
+            library("decompose-ext", "com.arkivanov.decompose:extensions-compose:$decomposeVersion")
             bundle("decompose", listOf("decompose-core", "decompose-ext"))
 
             library("compose-debug-ui-tooling", "androidx.compose.ui:ui-tooling:$composeVersion")

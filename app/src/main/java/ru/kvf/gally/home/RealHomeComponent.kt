@@ -1,6 +1,5 @@
 package ru.kvf.gally.home
 
-import android.os.Parcelable
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
@@ -13,7 +12,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.usecase.EdgeToEdgeUseCase
 import ru.kvf.core.domain.usecase.LoadMediaUseCase
@@ -42,6 +41,7 @@ class RealHomeComponent(
     override val childStack: Value<ChildStack<*, HomeComponent.Child>> =
         childStack(
             source = navigation,
+            serializer = Config.serializer(),
             initialConfiguration = Config.Media,
             handleBackButton = true,
             childFactory = ::child
@@ -119,15 +119,21 @@ class RealHomeComponent(
         }
     }
 
-    private sealed interface Config : Parcelable {
-        @Parcelize data object Media : Config
+    @Serializable
+    private sealed interface Config {
+        @Serializable
+        data object Media : Config
 
-        @Parcelize data object Folders : Config
+        @Serializable
+        data object Folders : Config
 
-        @Parcelize data object Favorite : Config
+        @Serializable
+        data object Favorite : Config
 
-        @Parcelize data object Settings : Config
+        @Serializable
+        data object Settings : Config
 
-        @Parcelize data object Design : Config
+        @Serializable
+        data object Design : Config
     }
 }

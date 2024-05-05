@@ -4,13 +4,12 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
-import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.scale
-import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackAnimation
+import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.scale
+import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ru.kvf.core.domain.entities.ThemeType
 import ru.kvf.core.theme.GallyTheme
 import ru.kvf.gally.home.HomeUi
-import ru.kvf.feature.media.MediaListUi
 
 @Composable
 fun RootUi(

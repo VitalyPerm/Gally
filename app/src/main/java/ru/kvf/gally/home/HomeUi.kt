@@ -36,10 +36,10 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
-import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.slide
-import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackAnimation
-import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
+import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.slide
+import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import kotlinx.coroutines.delay
 import ru.kvf.core.utils.Constants
 import ru.kvf.core.widgets.LoadableContent
