@@ -71,7 +71,16 @@ class RealMediaBSHComponent(
         }
     }
 
+    override fun onDeleteClick() {
+        componentScope.safeLaunch {
+            sideEffect.emit(MediaBSHComponent.SideEffect.DeleteMedia(getCurrentMedia().uri))
+        }
+    }
+
     override fun onUnTrashClick() {
+        componentScope.safeLaunch {
+            sideEffect.emit(MediaBSHComponent.SideEffect.UnTrashMedia(getCurrentMedia().uri))
+        }
     }
 
     override fun onFavoriteClick() {

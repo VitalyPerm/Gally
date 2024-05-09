@@ -101,7 +101,7 @@ fun MediaListUi(
             }
 
             is MediaListComponent.SideEffect.TrashMedia -> {
-                val request = ctx.createTrashMediaRequest(it.uris)
+                val request = ctx.createTrashMediaRequest(it.uris, true)
                 deleteMediaLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
             }
 

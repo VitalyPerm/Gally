@@ -27,9 +27,12 @@ interface MediaBSHComponent {
     fun setup(startIndex: Int)
     fun onPageChanged(page: Int)
     fun trashedSuccess()
+    fun onDeleteClick()
 
     sealed interface SideEffect {
         data class TrashMedia(val uri: Uri) : SideEffect
+        data class UnTrashMedia(val uri: Uri) : SideEffect
+        data class DeleteMedia(val uri: Uri) : SideEffect
         data class ShareMedia(val media: Media) : SideEffect
         data class SetIndex(val index: Int) : SideEffect
     }

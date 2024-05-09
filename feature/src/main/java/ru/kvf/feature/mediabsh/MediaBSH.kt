@@ -22,6 +22,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.HeartBroken
 import androidx.compose.material.icons.filled.RestoreFromTrash
@@ -47,6 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityOptionsCompat
 import ru.kvf.core.utils.collectSideEffect
+import ru.kvf.core.utils.createDeleteMediaRequest
 import ru.kvf.core.utils.createTrashMediaRequest
 import ru.kvf.core.utils.shareMedia
 import ru.kvf.core.widgets.MediaPager
@@ -69,7 +71,7 @@ fun MediaBSHUi(
     val pagerState = rememberPagerState(initialPage = currentMediaIndex) { media.data.size }
 
     val ctx = LocalContext.current
-    val deleteMediaLauncher = rememberLauncherForActivityResult(
+    val intentSenderLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
     ) { result -> if (result.resultCode == Activity.RESULT_OK) component.trashedSuccess() }
 
@@ -77,11 +79,20 @@ fun MediaBSHUi(
         when (it) {
             is MediaBSHComponent.SideEffect.ShareMedia -> ctx.shareMedia(listOf(it.media))
             is MediaBSHComponent.SideEffect.TrashMedia -> {
-                val request = ctx.createTrashMediaRequest(setOf(it.uri))
-                deleteMediaLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
+                val request = ctx.createTrashMediaRequest(setOf(it.uri), true)
+                intentSenderLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
             }
 
             is MediaBSHComponent.SideEffect.SetIndex -> { pagerState.scrollToPage(it.index) }
+            is MediaBSHComponent.SideEffect.DeleteMedia -> {
+                val request = ctx.createDeleteMediaRequest(setOf(it.uri))
+                intentSenderLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
+            }
+
+            is MediaBSHComponent.SideEffect.UnTrashMedia -> {
+                val request = ctx.createTrashMediaRequest(setOf(it.uri), false)
+                intentSenderLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
+            }
         }
     }
 
@@ -125,6 +136,7 @@ fun MediaBSHUi(
                         onTrashClick = component::onTrashClick,
                         onUnTrashClick = component::onUnTrashClick,
                         onFavoriteClick = component::onFavoriteClick,
+                        onDeleteClick = component::onDeleteClick,
                         isFavorite = isFavorite,
                         isOptionsVisible = isOptionsVisible,
                         isTrash = component.isTrash,
@@ -195,6 +207,7 @@ private fun BoxScope.FavoriteIcon(
 private fun BoxScope.Actions(
     onTrashClick: () -> Unit,
     onUnTrashClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     onShareClick: () -> Unit,
     onFavoriteClick: () -> Unit,
     isFavorite: Boolean,
@@ -228,44 +241,82 @@ private fun BoxScope.Actions(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Row(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
-                ) {
-                    MediaSelectModeMenuItem(
-                        onClick = onShareClick,
-                        imageVector = Icons.Default.Share
+                if (isTrash) {
+                    TrashBottomMenu(
+                        onDeleteClick = onDeleteClick,
+                        onShareClick = onShareClick,
+                        onUnTrashClick = onUnTrashClick
                     )
-
-                    if (isTrash) {
-                        MediaSelectModeMenuItem(
-                            onClick = onUnTrashClick,
-                            imageVector = Icons.Default.RestoreFromTrash
-                        )
-                    } else {
-                        MediaSelectModeMenuItem(
-                            onClick = onTrashClick,
-                            imageVector = Icons.Default.Delete
-                        )
-                    }
-
-                    if (!isTrash) {
-                        AnimatedContent(targetState = isFavorite, label = "") {
-                            if (it) {
-                                MediaSelectModeMenuItem(
-                                    onClick = onFavoriteClick,
-                                    imageVector = Icons.Default.HeartBroken
-                                )
-                            } else {
-                                MediaSelectModeMenuItem(
-                                    onClick = onFavoriteClick,
-                                    imageVector = Icons.Default.Favorite
-                                )
-                            }
-                        }
-                    }
+                } else {
+                    StandardBottomMenu(
+                        onTrashClick = onTrashClick,
+                        onShareClick = onShareClick,
+                        onFavoriteClick = onFavoriteClick,
+                        isFavorite = isFavorite
+                    )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun StandardBottomMenu(
+    onTrashClick: () -> Unit,
+    onShareClick: () -> Unit,
+    onFavoriteClick: () -> Unit,
+    isFavorite: Boolean,
+) {
+    Row(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+    ) {
+        MediaSelectModeMenuItem(
+            onClick = onShareClick,
+            imageVector = Icons.Default.Share
+        )
+
+        MediaSelectModeMenuItem(
+            onClick = onTrashClick,
+            imageVector = Icons.Default.Delete
+        )
+        AnimatedContent(targetState = isFavorite, label = "") {
+            if (it) {
+                MediaSelectModeMenuItem(
+                    onClick = onFavoriteClick,
+                    imageVector = Icons.Default.HeartBroken
+                )
+            } else {
+                MediaSelectModeMenuItem(
+                    onClick = onFavoriteClick,
+                    imageVector = Icons.Default.Favorite
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun TrashBottomMenu(
+    onDeleteClick: () -> Unit,
+    onShareClick: () -> Unit,
+    onUnTrashClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+    ) {
+        MediaSelectModeMenuItem(
+            onClick = onShareClick,
+            imageVector = Icons.Default.Share
+        )
+        MediaSelectModeMenuItem(
+            onClick = onUnTrashClick,
+            imageVector = Icons.Default.RestoreFromTrash
+        )
+        MediaSelectModeMenuItem(
+            onClick = onDeleteClick,
+            imageVector = Icons.Default.DeleteForever
+        )
     }
 }
