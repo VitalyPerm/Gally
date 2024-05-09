@@ -29,7 +29,7 @@ import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaList
 import ru.kvf.core.utils.MediaMap
-import ru.kvf.core.utils.collectOnStart
+import ru.kvf.core.utils.collectSafe
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.createMediaBSHComponent
@@ -76,11 +76,11 @@ class RealMediaListComponent(
 
     init {
         if (folderName != null) {
-            componentScope.collectOnStart(getFolderMediaUseCase.sorted(folderName)) { media ->
+            componentScope.collectSafe(getFolderMediaUseCase.sorted(folderName)) { media ->
                 updateMedia(media)
             }
         } else {
-            componentScope.collectOnStart(getSortedMediaUseCase()) { value ->
+            componentScope.collectSafe(getSortedMediaUseCase()) { value ->
                 allMediaList = value.values.flatten()
                 mediaDateToIdMap = value.mapValues { it.value.map(Media::id) }
                 updateMedia(value)

@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.kvf.core.domain.usecase.DeleteMediaUseCase
+import ru.kvf.core.domain.usecase.ShareMediaUseCase
+import ru.kvf.core.domain.usecase.TrashMediaUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFavoriteClickUseCase
 import ru.kvf.core.utils.MediaList
@@ -23,7 +26,10 @@ class RealMediaBSHComponent(
     override val isTrash: Boolean,
     override val media: StateFlow<MediaList>,
     getFavoriteMediaIdsUseCase: GetFavoriteMediaIdsUseCase,
-    private val handleFavoriteClickUseCase: HandleFavoriteClickUseCase
+    private val handleFavoriteClickUseCase: HandleFavoriteClickUseCase,
+    private val shareMediaUseCase: ShareMediaUseCase,
+    private val trashMediaUseCase: TrashMediaUseCase,
+    private val deleteMediaUseCase: DeleteMediaUseCase
 ) : ComponentContext by componentContext, MediaBSHComponent {
 
     private companion object {
@@ -41,9 +47,9 @@ class RealMediaBSHComponent(
         all.data.getOrNull(page)?.expiresTimeStamp?.let { deleteDaySdf.format(it.times(1000)) }
     }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), null)
 
-    override val sideEffect = MutableSharedFlow<MediaBSHComponent.SideEffect>()
     override val optionsVisible = MutableStateFlow(true)
     override val visible = MutableStateFlow(false)
+    override val setIndex = MutableSharedFlow<Int>()
     private val titleTimeFormat = SimpleDateFormat(TITLE_TIME_FORMAT, Locale.getDefault())
     private val deleteDaySdf =
         SimpleDateFormat(TrashComponent.DELETE_DAY_FORMAT, Locale.getDefault())
@@ -57,7 +63,7 @@ class RealMediaBSHComponent(
 
     override fun onShareClick() {
         componentScope.safeLaunch {
-            sideEffect.emit(MediaBSHComponent.SideEffect.ShareMedia(getCurrentMedia()))
+            shareMediaUseCase(listOf(getCurrentMedia()))
         }
     }
 
@@ -66,21 +72,17 @@ class RealMediaBSHComponent(
     }
 
     override fun onTrashClick() {
-        componentScope.safeLaunch {
-            sideEffect.emit(MediaBSHComponent.SideEffect.TrashMedia(getCurrentMedia().uri))
-        }
+        componentScope.safeLaunch { trashMediaUseCase(setOf(getCurrentMedia().uri), trash = true) }
     }
 
     override fun onDeleteClick() {
         componentScope.safeLaunch {
-            sideEffect.emit(MediaBSHComponent.SideEffect.DeleteMedia(getCurrentMedia().uri))
+            deleteMediaUseCase(setOf(getCurrentMedia().uri))
         }
     }
 
     override fun onUnTrashClick() {
-        componentScope.safeLaunch {
-            sideEffect.emit(MediaBSHComponent.SideEffect.UnTrashMedia(getCurrentMedia().uri))
-        }
+        componentScope.safeLaunch { trashMediaUseCase(setOf(getCurrentMedia().uri), trash = false) }
     }
 
     override fun onFavoriteClick() {
@@ -99,7 +101,7 @@ class RealMediaBSHComponent(
         componentScope.launch {
             currentMediaIndex.update { startIndex }
             visible.update { true }
-            sideEffect.emit(MediaBSHComponent.SideEffect.SetIndex(startIndex))
+            setIndex.emit(startIndex)
         }
     }
 

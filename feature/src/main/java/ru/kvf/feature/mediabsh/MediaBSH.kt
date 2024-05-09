@@ -1,8 +1,5 @@
 package ru.kvf.feature.mediabsh
 
-import android.app.Activity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -40,15 +37,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityOptionsCompat
 import ru.kvf.core.utils.collectOnStart
-import ru.kvf.core.utils.createDeleteMediaRequest
-import ru.kvf.core.utils.createTrashMediaRequest
-import ru.kvf.core.utils.shareMedia
 import ru.kvf.core.widgets.MediaPager
 import ru.kvf.core.widgets.MediaSelectModeMenuItem
 import ru.kvf.core.widgets.TrashBottomMenu
@@ -69,30 +61,8 @@ fun MediaBSHUi(
     val isFavorite by component.isFavorite.collectAsState()
     val pagerState = rememberPagerState(initialPage = currentMediaIndex) { media.data.size }
 
-    val ctx = LocalContext.current
-    val intentSenderLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartIntentSenderForResult()
-    ) { result -> if (result.resultCode == Activity.RESULT_OK) component.trashedSuccess() }
-
-    component.sideEffect.collectOnStart {
-        when (it) {
-            is MediaBSHComponent.SideEffect.ShareMedia -> ctx.shareMedia(listOf(it.media))
-            is MediaBSHComponent.SideEffect.TrashMedia -> {
-                val request = ctx.createTrashMediaRequest(setOf(it.uri), true)
-                intentSenderLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
-            }
-
-            is MediaBSHComponent.SideEffect.SetIndex -> { pagerState.scrollToPage(it.index) }
-            is MediaBSHComponent.SideEffect.DeleteMedia -> {
-                val request = ctx.createDeleteMediaRequest(setOf(it.uri))
-                intentSenderLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
-            }
-
-            is MediaBSHComponent.SideEffect.UnTrashMedia -> {
-                val request = ctx.createTrashMediaRequest(setOf(it.uri), false)
-                intentSenderLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
-            }
-        }
+    component.setIndex.collectOnStart {
+        pagerState.scrollToPage(it)
     }
 
     LaunchedEffect(pagerState) {

@@ -20,7 +20,7 @@ import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
 import ru.kvf.core.domain.usecase.ShareMediaUseCase
 import ru.kvf.core.domain.usecase.ThemeUseCase
 import ru.kvf.core.domain.usecase.TrashMediaUseCase
-import ru.kvf.core.utils.collectOnStart
+import ru.kvf.core.utils.collectSafe
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.createMediaListComponent
@@ -60,15 +60,15 @@ class RealRootComponent(
         )
 
     init {
-        componentScope.collectOnStart(performHapticFeedBackUseCase.collect()) {
+        componentScope.collectSafe(performHapticFeedBackUseCase.collect()) {
             componentScope.launch { sideEffect.emit(RootComponent.SideEffect.Vibrate) }
         }
 
-        componentScope.collectOnStart(shareMediaUseCase.collect()) {
+        componentScope.collectSafe(shareMediaUseCase.collect()) {
             componentScope.launch { sideEffect.emit(RootComponent.SideEffect.ShareMedia(it)) }
         }
 
-        componentScope.collectOnStart(trashMediaUseCase.collect()) {
+        componentScope.collectSafe(trashMediaUseCase.collect()) {
             componentScope.launch {
                 sideEffect.emit(
                     RootComponent.SideEffect.TrashMedia(
@@ -79,7 +79,7 @@ class RealRootComponent(
             }
         }
 
-        componentScope.collectOnStart(deleteMediaUseCase.collect()) {
+        componentScope.collectSafe(deleteMediaUseCase.collect()) {
             componentScope.launch { sideEffect.emit(RootComponent.SideEffect.DeleteMedia(it)) }
         }
 

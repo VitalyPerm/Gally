@@ -101,6 +101,9 @@ fun ComponentFactory.createMediaBSHComponent(
     media,
     get(),
     get(),
+    get(),
+    get(),
+    get(),
 )
 
 fun ComponentFactory.createTrashComponent(

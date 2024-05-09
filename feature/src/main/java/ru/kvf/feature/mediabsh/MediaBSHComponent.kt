@@ -1,9 +1,7 @@
 package ru.kvf.feature.mediabsh
 
-import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
-import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.utils.MediaList
 
 interface MediaBSHComponent {
@@ -14,9 +12,9 @@ interface MediaBSHComponent {
     val deleteDay: StateFlow<String?>
     val optionsVisible: StateFlow<Boolean>
     val isFavorite: StateFlow<Boolean>
-    val sideEffect: Flow<SideEffect>
     val visible: StateFlow<Boolean>
     val isTrash: Boolean
+    val setIndex: Flow<Int>
 
     fun onTap()
     fun onShareClick()
@@ -28,12 +26,4 @@ interface MediaBSHComponent {
     fun onPageChanged(page: Int)
     fun trashedSuccess()
     fun onDeleteClick()
-
-    sealed interface SideEffect {
-        data class TrashMedia(val uri: Uri) : SideEffect
-        data class UnTrashMedia(val uri: Uri) : SideEffect
-        data class DeleteMedia(val uri: Uri) : SideEffect
-        data class ShareMedia(val media: Media) : SideEffect
-        data class SetIndex(val index: Int) : SideEffect
-    }
 }
