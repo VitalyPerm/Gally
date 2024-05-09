@@ -63,7 +63,7 @@ class RealMediaListComponent(
     override var lastPosition = 0
     override val sideEffect = MutableSharedFlow<MediaListComponent.SideEffect>()
 
-    private val allMedia = MutableStateFlow<List<Media>>(emptyList())
+    private val allMedia = MutableStateFlow(MediaList.EMPTY)
     override val mediaBSHComponent: MediaBSHComponent = componentFactory.createMediaBSHComponent(
         componentContext = childContext("mediaListBSH"),
         media = allMedia
@@ -106,14 +106,14 @@ class RealMediaListComponent(
             if (selectedMediaIds.value.data.isNotEmpty()) {
                 editSelectedMedia(mediaId)
             } else {
-                val media = allMedia.value.find { it.id == mediaId } ?: return@safeLaunch
+                val media = allMedia.value.data.find { it.id == mediaId } ?: return@safeLaunch
                 context.imageLoader.execute(
                     ImageRequest.Builder(context)
                         .data(media.uri)
                         .size(Size.ORIGINAL)
                         .build()
                 )
-                val index = allMedia.value.indexOf(media)
+                val index = allMedia.value.data.indexOf(media)
                 mediaBSHComponent.setup(index)
             }
         }
@@ -207,7 +207,7 @@ class RealMediaListComponent(
         val normalMap = MediaMap.from(data.mapValues { MediaList.from(it.value) })
         val reversedMap = MediaMap.from(data.mapValues { MediaList.from(it.value) }.toSortedMap())
         mediaMap.update { normalMap to reversedMap }
-        allMedia.update { data.values.flatten() }
+        allMedia.update { MediaList.from(data.values.flatten()) }
     }
 
     private fun editSelectedMedia(id: Long) {

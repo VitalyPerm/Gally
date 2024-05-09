@@ -5,11 +5,12 @@ import com.arkivanov.decompose.childContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.kvf.core.ComponentFactory
-import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFavoriteClickUseCase
+import ru.kvf.core.utils.MediaList
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.notNegative
 import ru.kvf.core.utils.safeLaunch
@@ -25,8 +26,8 @@ class RealFavoriteMediaComponent(
 
     private val componentScope = coroutineScope()
 
-    override val media: StateFlow<List<Media>> = getFavoriteMediaUseCase()
-        .stateIn(componentScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    override val media: StateFlow<MediaList> = getFavoriteMediaUseCase().map(MediaList::from)
+        .stateIn(componentScope, SharingStarted.WhileSubscribed(5000), MediaList.EMPTY)
 
     override val mediaBSHComponent: MediaBSHComponent = componentFactory.createMediaBSHComponent(
         componentContext = childContext("favoriteMediaBSH"),
@@ -37,7 +38,8 @@ class RealFavoriteMediaComponent(
     override val showDetailsBSH = MutableStateFlow(false)
 
     override fun onMediaClick(mediaId: Long) {
-        val index = media.value.indexOfFirst { it.id == mediaId }.takeIf { it.notNegative() } ?: return
+        val index =
+            media.value.data.indexOfFirst { it.id == mediaId }.takeIf { it.notNegative() } ?: return
         mediaBSHComponent.setup(index)
     }
 

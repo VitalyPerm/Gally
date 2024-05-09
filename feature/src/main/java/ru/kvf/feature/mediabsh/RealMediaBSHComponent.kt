@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFavoriteClickUseCase
+import ru.kvf.core.utils.MediaList
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
 import java.text.SimpleDateFormat
@@ -19,7 +19,7 @@ import java.util.Locale
 
 class RealMediaBSHComponent(
     componentContext: ComponentContext,
-    override val media: StateFlow<List<Media>>,
+    override val media: StateFlow<MediaList>,
     getFavoriteMediaIdsUseCase: GetFavoriteMediaIdsUseCase,
     private val handleFavoriteClickUseCase: HandleFavoriteClickUseCase
 ) : ComponentContext by componentContext, MediaBSHComponent {
@@ -32,7 +32,7 @@ class RealMediaBSHComponent(
     override val currentMediaIndex = MutableStateFlow(0)
 
     override val title: StateFlow<String> = combine(media, currentMediaIndex) { all, page ->
-        all.getOrNull(page)?.timeStamp?.let { titleTimeFormat.format(it) } ?: ""
+        all.data.getOrNull(page)?.timeStamp?.let { titleTimeFormat.format(it) } ?: ""
     }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), "")
 
     override val sideEffect = MutableSharedFlow<MediaBSHComponent.SideEffect>()
@@ -44,7 +44,7 @@ class RealMediaBSHComponent(
         currentMediaIndex,
         getFavoriteMediaIdsUseCase()
     ) { all, page, favoriteIds ->
-        all.getOrNull(page)?.id in favoriteIds.data
+        all.data.getOrNull(page)?.id in favoriteIds.data
     }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), false)
 
     override fun onShareClick() {
@@ -87,5 +87,5 @@ class RealMediaBSHComponent(
         // todo подумать что делать после удаления (MessageComponent)
     }
 
-    private fun getCurrentMedia() = media.value[currentMediaIndex.value]
+    private fun getCurrentMedia() = media.value.data[currentMediaIndex.value]
 }

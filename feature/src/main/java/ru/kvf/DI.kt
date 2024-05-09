@@ -4,7 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.core.component.get
 import ru.kvf.core.ComponentFactory
-import ru.kvf.core.domain.entities.Media
+import ru.kvf.core.utils.MediaList
 import ru.kvf.feature.favorite.FavoriteComponent
 import ru.kvf.feature.favorite.RealFavoriteComponent
 import ru.kvf.feature.favorite.folders.FavoriteFoldersComponent
@@ -91,7 +91,7 @@ fun ComponentFactory.createSettingsListComponent(
 
 fun ComponentFactory.createMediaBSHComponent(
     componentContext: ComponentContext,
-    media: StateFlow<List<Media>>,
+    media: StateFlow<MediaList>,
 ): MediaBSHComponent = RealMediaBSHComponent(
     componentContext,
     media,
@@ -103,5 +103,7 @@ fun ComponentFactory.createTrashComponent(
     componentContext: ComponentContext
 ): TrashComponent = RealTrashComponent(
     componentContext,
+    get(),
+    get(),
     get()
 )

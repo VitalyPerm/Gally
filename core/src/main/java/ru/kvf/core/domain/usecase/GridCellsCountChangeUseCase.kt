@@ -10,5 +10,6 @@ interface GridCellsCountChangeUseCase {
         data object MediaList : Screen("grid_cells_media_list")
         data object FoldersList : Screen("grid_cells_folders_list")
         data object Favorite : Screen("grid_cells_favorite_list")
+        data object Trash : Screen("grid_cells_trash_list")
     }
 }

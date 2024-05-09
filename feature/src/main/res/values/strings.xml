@@ -15,4 +15,5 @@
     <string name="sort_by_days">дням</string>
     <string name="sort_by_moth">месяцам</string>
     <string name="settings">Настройки</string>
+    <string name="trash">Корзина</string>
 </resources>

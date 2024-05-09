@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import ru.kvf.core.domain.entities.Media
+import ru.kvf.core.utils.MediaList
 import ru.kvf.core.widgets.MediaItem
 import ru.kvf.feature.mediabsh.MediaBSHUi
 
@@ -41,7 +42,7 @@ fun FavoriteMediaUi(
 
 @Composable
 private fun MediaList(
-    media: List<Media>,
+    media: MediaList,
     onMediaClick: (Long) -> Unit,
     onMediaLongClick: (Long) -> Unit,
     gridCellsCount: Int
@@ -52,7 +53,7 @@ private fun MediaList(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        items(media, key = { item: Media -> item.id }) { media ->
+        items(media.data, key = { item: Media -> item.id }) { media ->
             MediaItem(
                 model = media.uri,
                 onClick = { onMediaClick(media.id) },

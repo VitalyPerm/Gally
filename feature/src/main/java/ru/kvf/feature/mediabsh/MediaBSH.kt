@@ -58,7 +58,7 @@ fun MediaBSHUi(
     val isOptionsVisible by component.optionsVisible.collectAsState()
     val isVisible by component.visible.collectAsState()
     val isFavorite by component.isFavorite.collectAsState()
-    val pagerState = rememberPagerState(initialPage = currentMediaIndex) { media.size }
+    val pagerState = rememberPagerState(initialPage = currentMediaIndex) { media.data.size }
 
     val ctx = LocalContext.current
     val deleteMediaLauncher = rememberLauncherForActivityResult(

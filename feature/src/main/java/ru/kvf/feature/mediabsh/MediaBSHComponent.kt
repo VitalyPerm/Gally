@@ -4,10 +4,11 @@ import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.core.domain.entities.Media
+import ru.kvf.core.utils.MediaList
 
 interface MediaBSHComponent {
 
-    val media: StateFlow<List<Media>>
+    val media: StateFlow<MediaList>
     val currentMediaIndex: StateFlow<Int>
     val title: StateFlow<String>
     val optionsVisible: StateFlow<Boolean>

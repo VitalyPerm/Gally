@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.ScaleFactor
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.util.lerp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -34,12 +33,13 @@ import androidx.media3.ui.PlayerView
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 import ru.kvf.core.domain.entities.Media
+import ru.kvf.core.utils.MediaList
 import kotlin.math.absoluteValue
 
 @Composable
 fun MediaPager(
     modifier: Modifier = Modifier,
-    media: List<Media>,
+    media: MediaList,
     pagerState: PagerState,
     reversePager: Boolean = false,
     onTap: () -> Unit = { },
@@ -56,7 +56,7 @@ fun MediaPager(
 @Composable
 private fun PagerContent(
     modifier: Modifier = Modifier,
-    mediaList: List<Media>,
+    mediaList: MediaList,
     reversePager: Boolean = false,
     pagerState: PagerState,
     onTap: () -> Unit,
@@ -66,9 +66,9 @@ private fun PagerContent(
         reverseLayout = reversePager,
         modifier = modifier
     ) { page ->
-        val media = mediaList[page]
+        val media = mediaList.data[page]
         if (media.duration != null) {
-            VideoItem(video = media,)
+            VideoItem(video = media)
         } else {
             PhotoItem(
                 pagerState = pagerState,
