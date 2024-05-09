@@ -4,21 +4,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
-import ru.kvf.core.domain.repository.MediaRepository
+import ru.kvf.core.domain.usecase.GetMediaUseCase
+import ru.kvf.core.domain.usecase.GetSortedMediaUseCase
 import ru.kvf.core.domain.usecase.MediaSortByUseCase
 import ru.kvf.core.utils.toCalendarSort
-import ru.kvf.core.domain.usecase.GetSortedMediaUseCase
 import java.util.Calendar
-import java.util.Comparator
 import java.util.Date
 
 class GetSortedMediaUseCaseImpl(
-    private val mediaRepository: MediaRepository,
+    private val getMediaUseCase: GetMediaUseCase,
     private val mediaSortByUseCase: MediaSortByUseCase
 ) : GetSortedMediaUseCase {
 
     override fun invoke(): Flow<Map<MediaDate, List<Media>>> =
-        combine(mediaRepository.mediaFlow, mediaSortByUseCase.get()) { media, sortBy ->
+        combine(getMediaUseCase(), mediaSortByUseCase.get()) { media, sortBy ->
             media.map {
                 it.copy(
                     date = MediaDate(
