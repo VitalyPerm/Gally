@@ -34,6 +34,9 @@ fun ComponentFactory.createRootComponent(
     get(),
     get(),
     get(),
+    get(),
+    get(),
+    get(),
 )
 
 fun ComponentFactory.createHomeComponent(

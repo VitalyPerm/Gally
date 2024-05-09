@@ -14,11 +14,14 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.entities.ThemeType
+import ru.kvf.core.domain.usecase.DeleteMediaUseCase
 import ru.kvf.core.domain.usecase.LoadMediaUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
+import ru.kvf.core.domain.usecase.ShareMediaUseCase
 import ru.kvf.core.domain.usecase.ThemeUseCase
-import ru.kvf.core.utils.collectFlow
+import ru.kvf.core.domain.usecase.TrashMediaUseCase
 import ru.kvf.core.utils.coroutineScope
+import ru.kvf.core.utils.observe
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.createMediaListComponent
 import ru.kvf.createTrashComponent
@@ -30,7 +33,10 @@ class RealRootComponent(
     private val componentFactory: ComponentFactory,
     themeUseCase: ThemeUseCase,
     performHapticFeedBackUseCase: PerformHapticFeedBackUseCase,
-    private val loadMediaUseCase: LoadMediaUseCase
+    shareMediaUseCase: ShareMediaUseCase,
+    loadMediaUseCase: LoadMediaUseCase,
+    trashMediaUseCase: TrashMediaUseCase,
+    deleteMediaUseCase: DeleteMediaUseCase
 ) : ComponentContext by componentContext, RootComponent {
 
     private val navigation = StackNavigation<Config>()
@@ -54,9 +60,29 @@ class RealRootComponent(
         )
 
     init {
-        componentScope.collectFlow(performHapticFeedBackUseCase.collect()) {
+        componentScope.observe(performHapticFeedBackUseCase.collect()) {
             componentScope.launch { sideEffect.emit(RootComponent.SideEffect.Vibrate) }
         }
+
+        componentScope.observe(shareMediaUseCase.collect()) {
+            componentScope.launch { sideEffect.emit(RootComponent.SideEffect.ShareMedia(it)) }
+        }
+
+        componentScope.observe(trashMediaUseCase.collect()) {
+            componentScope.launch {
+                sideEffect.emit(
+                    RootComponent.SideEffect.TrashMedia(
+                        it.first,
+                        it.second
+                    )
+                )
+            }
+        }
+
+        componentScope.observe(deleteMediaUseCase.collect()) {
+            componentScope.launch { sideEffect.emit(RootComponent.SideEffect.DeleteMedia(it)) }
+        }
+
         lifecycle.doOnResume { componentScope.safeLaunch { loadMediaUseCase() } }
     }
 

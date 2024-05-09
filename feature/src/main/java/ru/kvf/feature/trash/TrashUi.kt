@@ -24,9 +24,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityOptionsCompat
 import ru.kvf.core.domain.entities.Media
-import ru.kvf.core.utils.collectSideEffect
 import ru.kvf.core.utils.createDeleteMediaRequest
 import ru.kvf.core.utils.createTrashMediaRequest
+import ru.kvf.core.utils.observe
 import ru.kvf.core.utils.shareMedia
 import ru.kvf.core.widgets.BottomMenuCounter
 import ru.kvf.core.widgets.DefaultContainer
@@ -46,7 +46,7 @@ fun TrashUi(component: TrashComponent) {
         ActivityResultContracts.StartIntentSenderForResult()
     ) { _ -> }
 
-    component.sideEffect.collectSideEffect {
+    component.sideEffect.observe {
         when (it) {
             is TrashComponent.SideEffect.DeleteMedia -> {
                 val request = ctx.createDeleteMediaRequest(it.uris)

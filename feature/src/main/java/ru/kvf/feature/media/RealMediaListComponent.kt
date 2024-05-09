@@ -21,14 +21,16 @@ import ru.kvf.core.domain.usecase.GetFolderMediaUseCase
 import ru.kvf.core.domain.usecase.GetSortedMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
+import ru.kvf.core.domain.usecase.ShareMediaUseCase
+import ru.kvf.core.domain.usecase.TrashMediaUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFavoriteSetUseCase
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaList
 import ru.kvf.core.utils.MediaMap
-import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.coroutineScope
+import ru.kvf.core.utils.observe
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.createMediaBSHComponent
 import ru.kvf.feature.mediabsh.MediaBSHComponent
@@ -43,7 +45,9 @@ class RealMediaListComponent(
     private val handleFavoriteSetUseCase: HandleFavoriteSetUseCase,
     componentFactory: ComponentFactory,
     private val context: Context,
-    private val hapticFeedBackUseCase: PerformHapticFeedBackUseCase
+    private val hapticFeedBackUseCase: PerformHapticFeedBackUseCase,
+    private val shareMediaUseCase: ShareMediaUseCase,
+    private val trashMediaUseCase: TrashMediaUseCase
 ) : ComponentContext by componentContext, MediaListComponent {
 
     private val componentScope = coroutineScope()
@@ -58,8 +62,8 @@ class RealMediaListComponent(
     override val sortReversed = MutableStateFlow(false)
     override val selectedMediaIds = MutableStateFlow(LongSet.EMPTY)
     override val selectedMediaDates = MutableStateFlow(MediaDateSet.EMPTY)
+    override val scrollUp = MutableSharedFlow<Unit>()
     override var lastPosition = 0
-    override val sideEffect = MutableSharedFlow<MediaListComponent.SideEffect>()
 
     private val allMedia = MutableStateFlow(MediaList.EMPTY)
     override val mediaBSHComponent: MediaBSHComponent = componentFactory.createMediaBSHComponent(
@@ -72,11 +76,11 @@ class RealMediaListComponent(
 
     init {
         if (folderName != null) {
-            componentScope.collectFlow(getFolderMediaUseCase.sorted(folderName)) { media ->
+            componentScope.observe(getFolderMediaUseCase.sorted(folderName)) { media ->
                 updateMedia(media)
             }
         } else {
-            componentScope.collectFlow(getSortedMediaUseCase()) { value ->
+            componentScope.observe(getSortedMediaUseCase()) { value ->
                 allMediaList = value.values.flatten()
                 mediaDateToIdMap = value.mapValues { it.value.map(Media::id) }
                 updateMedia(value)
@@ -96,7 +100,7 @@ class RealMediaListComponent(
 
     override fun onReverseClick() {
         sortReversed.update { it.not() }
-        componentScope.launch { sideEffect.emit(MediaListComponent.SideEffect.ScrollUp) }
+        componentScope.launch { scrollUp.emit(Unit) }
     }
 
     override fun onMediaClick(mediaId: Long) {
@@ -138,7 +142,7 @@ class RealMediaListComponent(
                 allMediaList.find { media -> media.id == it }
             }
             selectedMediaIds.value = LongSet.EMPTY
-            sideEffect.emit(MediaListComponent.SideEffect.ShareMedia(mediaList))
+            shareMediaUseCase(mediaList)
         }
     }
 
@@ -148,7 +152,7 @@ class RealMediaListComponent(
                 allMediaList.find { media -> media.id == it }?.uri
             }.toSet()
             selectedMediaIds.update { LongSet.EMPTY }
-            sideEffect.emit(MediaListComponent.SideEffect.TrashMedia(mediaList))
+            trashMediaUseCase(mediaList, true)
         }
     }
 

@@ -1,8 +1,6 @@
 package ru.kvf.feature.media
 
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -32,17 +30,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityOptionsCompat
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaMap
-import ru.kvf.core.utils.collectSideEffect
-import ru.kvf.core.utils.createTrashMediaRequest
-import ru.kvf.core.utils.shareMedia
+import ru.kvf.core.utils.observe
 import ru.kvf.core.widgets.BottomMenuCounter
 import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.MediaListWithDate
@@ -66,10 +60,6 @@ fun MediaListUi(
     val mediaListGridState = rememberLazyGridState(
         initialFirstVisibleItemIndex = component.lastPosition
     )
-    val ctx = LocalContext.current
-    val intentSenderLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartIntentSenderForResult()
-    ) { _ -> }
 
     BackHandler(enabled = selectedMediaIds.data.isNotEmpty()) {
         component.onSelectMediaDismiss()
@@ -87,21 +77,8 @@ fun MediaListUi(
         selectMediaModeEnable?.value = selectedMediaIds.data.isNotEmpty()
     }
 
-    component.sideEffect.collectSideEffect {
-        when (it) {
-            MediaListComponent.SideEffect.ScrollUp -> {
-                mediaListGridState.animateScrollToItem(0)
-            }
-
-            is MediaListComponent.SideEffect.TrashMedia -> {
-                val request = ctx.createTrashMediaRequest(it.uris, true)
-                intentSenderLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
-            }
-
-            is MediaListComponent.SideEffect.ShareMedia -> {
-                ctx.shareMedia(it.media)
-            }
-        }
+    component.scrollUp.observe {
+        mediaListGridState.animateScrollToItem(0)
     }
 
     Content(

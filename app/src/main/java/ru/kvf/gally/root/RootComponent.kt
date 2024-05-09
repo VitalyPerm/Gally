@@ -1,9 +1,11 @@
 package ru.kvf.gally.root
 
+import android.net.Uri
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.ThemeType
 import ru.kvf.feature.media.MediaListComponent
 import ru.kvf.feature.trash.TrashComponent
@@ -23,5 +25,8 @@ interface RootComponent {
 
     sealed interface SideEffect {
         data object Vibrate : SideEffect
+        data class ShareMedia(val mediaList: List<Media>) : SideEffect
+        data class TrashMedia(val uris: Set<Uri>, val toTrash: Boolean) : SideEffect
+        data class DeleteMedia(val uris: Set<Uri>) : SideEffect
     }
 }

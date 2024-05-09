@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-fun <T>CoroutineScope.collectFlow(flow: Flow<T>, value: (T) -> Unit) {
+fun <T> CoroutineScope.observe(flow: Flow<T>, value: (T) -> Unit) {
     flow.catch { e -> L.e("Collect flow error! - ${e.message}") }
         .onEach { value(it) }.launchIn(this)
 }

@@ -18,15 +18,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 @Composable
-fun <T> Flow<T>.collectSideEffect(
-    sideEffect: (suspend (sideEffect: T) -> Unit)
+fun <T> Flow<T>.observe(
+    action: (suspend (action: T) -> Unit)
 ) {
     val lifeCycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(this, lifeCycleOwner) {
         lifeCycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             withContext(Dispatchers.Main.immediate) {
-                collect { sideEffect(it) }
+                collect { action(it) }
             }
         }
     }

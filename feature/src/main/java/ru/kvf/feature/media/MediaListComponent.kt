@@ -1,6 +1,5 @@
 package ru.kvf.feature.media
 
-import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.core.domain.entities.Media
@@ -20,7 +19,7 @@ interface MediaListComponent {
     val gridCellsCount: StateFlow<Int>
     val selectedMediaIds: StateFlow<LongSet>
     val selectedMediaDates: StateFlow<MediaDateSet>
-    val sideEffect: Flow<SideEffect>
+    val scrollUp: Flow<Unit>
     val lastPosition: Int
     val folderName: String?
 
@@ -35,10 +34,4 @@ interface MediaListComponent {
     fun selectModeOnFavoriteClick()
     fun selectModeOnDisFavoriteClick()
     fun onSelectDateClick(mediaDate: MediaDate)
-
-    sealed interface SideEffect {
-        data object ScrollUp : SideEffect
-        data class TrashMedia(val uris: Set<Uri>) : SideEffect
-        data class ShareMedia(val media: List<Media>) : SideEffect
-    }
 }

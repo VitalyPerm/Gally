@@ -14,7 +14,9 @@ import ru.kvf.core.data.usecase.InitialLoadedUseCaseImpl
 import ru.kvf.core.data.usecase.LoadMediaUseCaseImpl
 import ru.kvf.core.data.usecase.MediaSortByUseCaseImpl
 import ru.kvf.core.data.usecase.PerformHapticFeedBackUseCaseImpl
+import ru.kvf.core.data.usecase.ShareMediaUseCaseImpl
 import ru.kvf.core.data.usecase.ThemeUseCaseImpl
+import ru.kvf.core.data.usecase.TrashMediaUseCaseImpl
 import ru.kvf.core.data.usecase.favorite.GetFavoriteFoldersIdsUseCaseImpl
 import ru.kvf.core.data.usecase.favorite.GetFavoriteFoldersUseCaseImpl
 import ru.kvf.core.data.usecase.favorite.GetFavoriteMediaIdsUseCaseImpl
@@ -24,6 +26,8 @@ import ru.kvf.core.data.usecase.favorite.HandleFavoriteSetUseCaseImpl
 import ru.kvf.core.data.usecase.favorite.HandleFolderFavoriteClickUseCaseImpl
 import ru.kvf.core.domain.repository.FavoriteRepository
 import ru.kvf.core.domain.repository.MediaRepository
+import ru.kvf.core.domain.usecase.DeleteMediaUseCase
+import ru.kvf.core.domain.usecase.DeleteMediaUseCaseImpl
 import ru.kvf.core.domain.usecase.EdgeToEdgeUseCase
 import ru.kvf.core.domain.usecase.GetFolderMediaUseCase
 import ru.kvf.core.domain.usecase.GetFoldersUseCase
@@ -35,7 +39,9 @@ import ru.kvf.core.domain.usecase.InitialLoadedUseCase
 import ru.kvf.core.domain.usecase.LoadMediaUseCase
 import ru.kvf.core.domain.usecase.MediaSortByUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
+import ru.kvf.core.domain.usecase.ShareMediaUseCase
 import ru.kvf.core.domain.usecase.ThemeUseCase
+import ru.kvf.core.domain.usecase.TrashMediaUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteFoldersIdsUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteFoldersUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
@@ -69,4 +75,7 @@ val coreModule = module {
     single<GetTrashMediaUseCase> { GetTrashMediaUseCaseImpl(get()) }
     single<MessageComponent> { RealMessageComponent(get()) }
     single<InitialLoadedUseCase> { InitialLoadedUseCaseImpl() }
+    single<ShareMediaUseCase> { ShareMediaUseCaseImpl() }
+    single<TrashMediaUseCase> { TrashMediaUseCaseImpl() }
+    single<DeleteMediaUseCase> { DeleteMediaUseCaseImpl() }
 }
