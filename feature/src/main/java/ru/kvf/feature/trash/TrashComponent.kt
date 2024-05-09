@@ -16,4 +16,8 @@ interface TrashComponent {
     fun onMediaLongClick(id: Long)
     fun onGridCountClick()
     fun onReverseClick()
+
+    companion object {
+        const val DELETE_DAY_FORMAT = "dd MMMM yyyy"
+    }
 }

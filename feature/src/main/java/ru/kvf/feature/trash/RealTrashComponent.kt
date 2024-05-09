@@ -34,7 +34,8 @@ class RealTrashComponent(
 ) : ComponentContext by componentContext, TrashComponent {
 
     private val componentScope = coroutineScope()
-    private val daysTillDeleteFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+    private val deleteDaySdf =
+        SimpleDateFormat(TrashComponent.DELETE_DAY_FORMAT, Locale.getDefault())
 
     override val isReversed = MutableStateFlow(false)
 
@@ -47,7 +48,8 @@ class RealTrashComponent(
 
     override val mediaBSHComponent: MediaBSHComponent = componentFactory.createMediaBSHComponent(
         componentContext = childContext("trashMediaBSH"),
-        media = media
+        media = media,
+        isTrash = true
     )
 
     override val gridCount = gridCellsCountChangeUseCase
@@ -63,7 +65,7 @@ class RealTrashComponent(
     override fun onMediaLongClick(id: Long) {
         val expiresTimeStamp = media.value.data.find { it.id == id }?.expiresTimeStamp ?: return
         val date = Date(expiresTimeStamp.times(1000))
-        val dateString = daysTillDeleteFormat.format(date)
+        val dateString = deleteDaySdf.format(date)
         messageComponent.showMessage(R.string.trash_days_till_delete, dateString)
     }
 

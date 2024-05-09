@@ -10,9 +10,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.rememberPagerState
@@ -21,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.HeartBroken
+import androidx.compose.material.icons.filled.RestoreFromTrash
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -38,6 +42,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityOptionsCompat
 import ru.kvf.core.utils.collectSideEffect
@@ -45,6 +51,7 @@ import ru.kvf.core.utils.createTrashMediaRequest
 import ru.kvf.core.utils.shareMedia
 import ru.kvf.core.widgets.MediaPager
 import ru.kvf.core.widgets.MediaSelectModeMenuItem
+import ru.kvf.feature.R
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -55,6 +62,7 @@ fun MediaBSHUi(
     val media by component.media.collectAsState()
     val currentMediaIndex by component.currentMediaIndex.collectAsState()
     val title by component.title.collectAsState()
+    val deleteDate by component.deleteDay.collectAsState()
     val isOptionsVisible by component.optionsVisible.collectAsState()
     val isVisible by component.visible.collectAsState()
     val isFavorite by component.isFavorite.collectAsState()
@@ -115,9 +123,12 @@ fun MediaBSHUi(
                     Actions(
                         onShareClick = component::onShareClick,
                         onTrashClick = component::onTrashClick,
+                        onUnTrashClick = component::onUnTrashClick,
                         onFavoriteClick = component::onFavoriteClick,
                         isFavorite = isFavorite,
-                        isOptionsVisible = isOptionsVisible
+                        isOptionsVisible = isOptionsVisible,
+                        isTrash = component.isTrash,
+                        deleteDate = deleteDate
                     )
                 }
             }
@@ -159,7 +170,10 @@ private fun BoxScope.Title(
 }
 
 @Composable
-private fun BoxScope.FavoriteIcon(isFavorite: Boolean, isOptionsVisible: Boolean) {
+private fun BoxScope.FavoriteIcon(
+    isFavorite: Boolean,
+    isOptionsVisible: Boolean
+) {
     AnimatedVisibility(isFavorite && isOptionsVisible) {
         Box(
             modifier = Modifier
@@ -180,10 +194,13 @@ private fun BoxScope.FavoriteIcon(isFavorite: Boolean, isOptionsVisible: Boolean
 @Composable
 private fun BoxScope.Actions(
     onTrashClick: () -> Unit,
+    onUnTrashClick: () -> Unit,
     onShareClick: () -> Unit,
     onFavoriteClick: () -> Unit,
     isFavorite: Boolean,
-    isOptionsVisible: Boolean
+    isOptionsVisible: Boolean,
+    isTrash: Boolean,
+    deleteDate: String?
 ) {
     Box(
         modifier = Modifier
@@ -191,31 +208,61 @@ private fun BoxScope.Actions(
             .padding(bottom = 48.dp)
     ) {
         AnimatedVisibility(isOptionsVisible) {
-            Row(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                MediaSelectModeMenuItem(
-                    onClick = onShareClick,
-                    imageVector = Icons.Default.Share
-                )
+                deleteDate?.let {
+                    Text(
+                        text = stringResource(R.string.trash_days_till_delete, it),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .background(
+                                MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                                MaterialTheme.shapes.medium
+                            )
+                            .padding(horizontal = 16.dp)
+                    )
+                }
 
-                MediaSelectModeMenuItem(
-                    onClick = onTrashClick,
-                    imageVector = Icons.Default.Delete
-                )
+                Spacer(modifier = Modifier.height(24.dp))
 
-                AnimatedContent(targetState = isFavorite, label = "") {
-                    if (it) {
+                Row(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+                ) {
+                    MediaSelectModeMenuItem(
+                        onClick = onShareClick,
+                        imageVector = Icons.Default.Share
+                    )
+
+                    if (isTrash) {
                         MediaSelectModeMenuItem(
-                            onClick = onFavoriteClick,
-                            imageVector = Icons.Default.HeartBroken
+                            onClick = onUnTrashClick,
+                            imageVector = Icons.Default.RestoreFromTrash
                         )
                     } else {
                         MediaSelectModeMenuItem(
-                            onClick = onFavoriteClick,
-                            imageVector = Icons.Default.Favorite
+                            onClick = onTrashClick,
+                            imageVector = Icons.Default.Delete
                         )
+                    }
+
+                    if (!isTrash) {
+                        AnimatedContent(targetState = isFavorite, label = "") {
+                            if (it) {
+                                MediaSelectModeMenuItem(
+                                    onClick = onFavoriteClick,
+                                    imageVector = Icons.Default.HeartBroken
+                                )
+                            } else {
+                                MediaSelectModeMenuItem(
+                                    onClick = onFavoriteClick,
+                                    imageVector = Icons.Default.Favorite
+                                )
+                            }
+                        }
                     }
                 }
             }

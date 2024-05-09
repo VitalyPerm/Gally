@@ -92,8 +92,10 @@ fun ComponentFactory.createSettingsListComponent(
 fun ComponentFactory.createMediaBSHComponent(
     componentContext: ComponentContext,
     media: StateFlow<MediaList>,
+    isTrash: Boolean = false
 ): MediaBSHComponent = RealMediaBSHComponent(
     componentContext,
+    isTrash = isTrash,
     media,
     get(),
     get(),

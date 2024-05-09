@@ -16,5 +16,5 @@
     <string name="sort_by_moth">месяцам</string>
     <string name="settings">Настройки</string>
     <string name="trash">Корзина</string>
-    <string name="trash_days_till_delete">Медиа будет удалено %s</string>
+    <string name="trash_days_till_delete">Медиа будет удалено\n%s</string>
 </resources>

@@ -14,11 +14,13 @@ import ru.kvf.core.domain.usecase.favorite.HandleFavoriteClickUseCase
 import ru.kvf.core.utils.MediaList
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
+import ru.kvf.feature.trash.TrashComponent
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class RealMediaBSHComponent(
     componentContext: ComponentContext,
+    override val isTrash: Boolean,
     override val media: StateFlow<MediaList>,
     getFavoriteMediaIdsUseCase: GetFavoriteMediaIdsUseCase,
     private val handleFavoriteClickUseCase: HandleFavoriteClickUseCase
@@ -35,10 +37,16 @@ class RealMediaBSHComponent(
         all.data.getOrNull(page)?.timeStamp?.let { titleTimeFormat.format(it) } ?: ""
     }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), "")
 
+    override val deleteDay: StateFlow<String?> = combine(media, currentMediaIndex) { all, page ->
+        all.data.getOrNull(page)?.expiresTimeStamp?.let { deleteDaySdf.format(it.times(1000)) }
+    }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), null)
+
     override val sideEffect = MutableSharedFlow<MediaBSHComponent.SideEffect>()
     override val optionsVisible = MutableStateFlow(true)
     override val visible = MutableStateFlow(false)
     private val titleTimeFormat = SimpleDateFormat(TITLE_TIME_FORMAT, Locale.getDefault())
+    private val deleteDaySdf =
+        SimpleDateFormat(TrashComponent.DELETE_DAY_FORMAT, Locale.getDefault())
     override val isFavorite: StateFlow<Boolean> = combine(
         media,
         currentMediaIndex,
@@ -61,6 +69,9 @@ class RealMediaBSHComponent(
         componentScope.safeLaunch {
             sideEffect.emit(MediaBSHComponent.SideEffect.TrashMedia(getCurrentMedia().uri))
         }
+    }
+
+    override fun onUnTrashClick() {
     }
 
     override fun onFavoriteClick() {
