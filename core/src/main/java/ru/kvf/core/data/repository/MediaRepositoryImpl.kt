@@ -35,12 +35,13 @@ class MediaRepositoryImpl(
         MediaStore.MediaColumns.DATE_EXPIRES
     )
 
+    private val bundle = Bundle().apply {
+        putInt(MediaStore.QUERY_ARG_MATCH_TRASHED, MediaStore.MATCH_INCLUDE)
+    }
+
     override val mediaFlow: MutableStateFlow<List<Media>> = MutableStateFlow(emptyList())
 
     override suspend fun loadMedia(): Unit = withContext(Dispatchers.IO) {
-        val bundle = Bundle().apply {
-            putInt(MediaStore.QUERY_ARG_MATCH_TRASHED, MediaStore.MATCH_INCLUDE)
-        }
         val media = MergeCursor(
             arrayOf(
                 context.contentResolver.query(
@@ -58,11 +59,8 @@ class MediaRepositoryImpl(
             )
         ).let(::getMedia)
 
-        mediaFlow.update { media.sortedByDescending { it.timeStamp } }
-
-        if (initialLoadedUseCase.isLoading) {
-            initialLoadedUseCase.isLoading = false
-        }
+        mediaFlow.update { media }
+        initialLoadedUseCase.isLoading = false
     }
 
     private fun getMedia(cursor: Cursor?) = mutableListOf<Media>().apply {
@@ -111,6 +109,7 @@ class MediaRepositoryImpl(
                 add(media)
             }
         }
+        sortedByDescending { it.timeStamp }
     }
 }
 
