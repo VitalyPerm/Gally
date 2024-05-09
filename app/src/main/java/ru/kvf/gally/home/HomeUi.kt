@@ -40,7 +40,6 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import kotlinx.coroutines.delay
 import ru.kvf.core.utils.Constants
-import ru.kvf.core.widgets.LoadableContent
 import ru.kvf.feature.design.DesignUi
 import ru.kvf.feature.favorite.FavoriteUi
 import ru.kvf.feature.folders.FoldersListUi
@@ -51,7 +50,7 @@ import ru.kvf.gally.BuildConfig
 fun HomeUi(
     component: HomeComponent
 ) {
-    val state by component.state.collectAsState()
+    val edgeToEdgeEnable by component.edgeToEdgeEnable.collectAsState()
     val stackState by component.childStack.subscribeAsState()
     val currentChild = remember(stackState) { stackState.active.instance }
     val navigationBarHeight = remember { mutableStateOf(0.dp) }
@@ -60,8 +59,8 @@ fun HomeUi(
     var bottomBarVisible by remember { mutableStateOf(true) }
     val debug = remember { BuildConfig.DEBUG }
 
-    LaunchedEffect(isScrollInProgress.value, state.edgeToEdgeEnable) {
-        if (state.edgeToEdgeEnable.not()) return@LaunchedEffect
+    LaunchedEffect(isScrollInProgress.value, edgeToEdgeEnable) {
+        if (edgeToEdgeEnable.not()) return@LaunchedEffect
         val needDelay = bottomBarVisible.not()
         if (needDelay) delay(Constants.NAV_BAR_VISIBILITY_DELAY)
         bottomBarVisible = isScrollInProgress.value.not() && editModeEnable.value.not()
@@ -71,51 +70,54 @@ fun HomeUi(
         bottomBarVisible = editModeEnable.value.not()
     }
 
-    LoadableContent(loading = state.loading) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Children(
+            stack = component.childStack,
+            animation = stackAnimation(slide(orientation = Orientation.Vertical))
+        ) {
+            when (val child = it.instance) {
+                is HomeComponent.Child.Media -> ru.kvf.feature.media.MediaListUi(
+                    component = child.component,
+                    isScrollInProgress = isScrollInProgress,
+                    selectMediaModeEnable = editModeEnable
+                )
+
+                is HomeComponent.Child.Folders -> FoldersListUi(
+                    child.component,
+                    navigationBarHeight.value
+                )
+
+                is HomeComponent.Child.Favorite -> FavoriteUi(
+                    component = child.component,
+                    navBarPadding = navigationBarHeight.value
+                )
+
+                is HomeComponent.Child.Settings -> SettingsListUi(child.component)
+                is HomeComponent.Child.Design -> DesignUi(navigationBarHeight.value)
+            }
+        }
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .align(Alignment.BottomCenter)
         ) {
-            Children(
-                stack = component.childStack,
-                animation = stackAnimation(slide(orientation = Orientation.Vertical))
+            AnimatedVisibility(
+                visible = bottomBarVisible,
+                enter = slideInVertically(
+                    initialOffsetY = { it }
+                ),
+                exit = slideOutVertically(
+                    targetOffsetY = { it }
+                )
             ) {
-                when (val child = it.instance) {
-                    is HomeComponent.Child.Media -> ru.kvf.feature.media.MediaListUi(
-                        component = child.component,
-                        isScrollInProgress = isScrollInProgress,
-                        selectMediaModeEnable = editModeEnable
-                    )
-
-                    is HomeComponent.Child.Folders -> FoldersListUi(child.component, navigationBarHeight.value)
-                    is HomeComponent.Child.Favorite -> FavoriteUi(
-                        component = child.component,
-                        navBarPadding = navigationBarHeight.value
-                    )
-                    is HomeComponent.Child.Settings -> SettingsListUi(child.component)
-                    is HomeComponent.Child.Design -> DesignUi(navigationBarHeight.value)
-                }
-            }
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-            ) {
-                AnimatedVisibility(
-                    visible = bottomBarVisible,
-                    enter = slideInVertically(
-                        initialOffsetY = { it }
-                    ),
-                    exit = slideOutVertically(
-                        targetOffsetY = { it }
-                    )
-                ) {
-                    BottomBar(
-                        current = currentChild,
-                        onPageSelected = component::onPageSelected,
-                        navigationBarHeight = navigationBarHeight,
-                        debug = debug
-                    )
-                }
+                BottomBar(
+                    current = currentChild,
+                    onPageSelected = component::onPageSelected,
+                    navigationBarHeight = navigationBarHeight,
+                    debug = debug
+                )
             }
         }
     }

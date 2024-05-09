@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityOptionsCompat
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
+import ru.kvf.core.utils.L
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaMap
@@ -168,6 +169,7 @@ private fun Content(
     selectedMediaDates: MediaDateSet,
     editMode: Boolean
 ) {
+    L.d("mediamap size = ${media.data.values.size}")
     Box {
         DefaultContainer(
             titleRes = R.string.media,
@@ -176,7 +178,8 @@ private fun Content(
             onGridCountClick = onGridCountClick,
             onReverseClick = onReverseClick
         ) {
-            val mediaMap = remember(sortReversed) { if (sortReversed) reversedMedia else media }
+            val mediaMap =
+                remember(sortReversed, media) { if (sortReversed) reversedMedia else media }
             MediaListWithDate(
                 media = mediaMap,
                 favoriteMediaIds = favoriteMediaIds,

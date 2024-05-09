@@ -9,7 +9,7 @@ import ru.kvf.feature.media.MediaListComponent
 import ru.kvf.feature.settings.SettingsListComponent
 
 interface HomeComponent {
-    val state: StateFlow<HomeState>
+    val edgeToEdgeEnable: StateFlow<Boolean>
 
     enum class Page {
         Media, Folders, Favorite, Settings, Design

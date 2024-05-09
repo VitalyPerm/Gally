@@ -6,15 +6,13 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.lifecycle.doOnPause
 import com.arkivanov.essenty.lifecycle.doOnResume
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.Serializable
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.usecase.EdgeToEdgeUseCase
 import ru.kvf.core.domain.usecase.LoadMediaUseCase
-import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.createFavoriteComponent
@@ -43,20 +41,11 @@ class RealHomeComponent(
             childFactory = ::child
         )
 
-    override val state = MutableStateFlow(HomeState())
+    override val edgeToEdgeEnable = edgeToEdgeUseCase.getEnabled()
+        .stateIn(componentScope, SharingStarted.Eagerly, false)
 
     init {
-        componentScope.collectFlow(edgeToEdgeUseCase.getEnabled()) { edgeToEdgeEnable ->
-            state.update { state.value.copy(edgeToEdgeEnable = edgeToEdgeEnable) }
-        }
-
-        lifecycle.doOnPause { state.update { state.value.copy(loading = true) } }
-        lifecycle.doOnResume {
-            componentScope.safeLaunch {
-                loadMediaUseCase()
-                state.update { state.value.copy(loading = false) }
-            }
-        }
+        lifecycle.doOnResume { componentScope.safeLaunch { loadMediaUseCase() } }
     }
 
     private fun child(config: Config, componentContext: ComponentContext): HomeComponent.Child =
