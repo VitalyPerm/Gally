@@ -10,6 +10,7 @@ import ru.kvf.core.data.usecase.GetMediaUseCaseImpl
 import ru.kvf.core.data.usecase.GetSortedMediaUseCaseImpl
 import ru.kvf.core.data.usecase.GetTrashMediaUseCaseImpl
 import ru.kvf.core.data.usecase.GridCellsCountChangeUseCaseImpl
+import ru.kvf.core.data.usecase.InitialLoadedUseCaseImpl
 import ru.kvf.core.data.usecase.LoadMediaUseCaseImpl
 import ru.kvf.core.data.usecase.MediaSortByUseCaseImpl
 import ru.kvf.core.data.usecase.PerformHapticFeedBackUseCaseImpl
@@ -30,6 +31,7 @@ import ru.kvf.core.domain.usecase.GetMediaUseCase
 import ru.kvf.core.domain.usecase.GetSortedMediaUseCase
 import ru.kvf.core.domain.usecase.GetTrashMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
+import ru.kvf.core.domain.usecase.InitialLoadedUseCase
 import ru.kvf.core.domain.usecase.LoadMediaUseCase
 import ru.kvf.core.domain.usecase.MediaSortByUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
@@ -45,7 +47,7 @@ import ru.kvf.core.message.MessageComponent
 import ru.kvf.core.message.RealMessageComponent
 
 val coreModule = module {
-    single<MediaRepository> { MediaRepositoryImpl(get()) }
+    single<MediaRepository> { MediaRepositoryImpl(get(), get()) }
     single<FavoriteRepository> { FavoriteRepositoryImpl(get()) }
     single<GetFavoriteFoldersIdsUseCase> { GetFavoriteFoldersIdsUseCaseImpl(get()) }
     single<GetFavoriteFoldersUseCase> { GetFavoriteFoldersUseCaseImpl(get(), get()) }
@@ -66,4 +68,5 @@ val coreModule = module {
     single<ThemeUseCase> { ThemeUseCaseImpl(get()) }
     single<GetTrashMediaUseCase> { GetTrashMediaUseCaseImpl(get()) }
     single<MessageComponent> { RealMessageComponent(get()) }
+    single<InitialLoadedUseCase> { InitialLoadedUseCaseImpl() }
 }

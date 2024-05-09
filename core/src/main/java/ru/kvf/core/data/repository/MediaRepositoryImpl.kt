@@ -13,9 +13,11 @@ import kotlinx.coroutines.withContext
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MimeType
 import ru.kvf.core.domain.repository.MediaRepository
+import ru.kvf.core.domain.usecase.InitialLoadedUseCase
 
 class MediaRepositoryImpl(
     private val context: Context,
+    private val initialLoadedUseCase: InitialLoadedUseCase
 ) : MediaRepository {
 
     private companion object {
@@ -57,6 +59,10 @@ class MediaRepositoryImpl(
         ).let(::getMedia)
 
         mediaFlow.update { media.sortedByDescending { it.timeStamp } }
+
+        if (initialLoadedUseCase.isLoading) {
+            initialLoadedUseCase.isLoading = false
+        }
     }
 
     private fun getMedia(cursor: Cursor?) = mutableListOf<Media>().apply {

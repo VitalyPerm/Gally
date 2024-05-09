@@ -6,15 +6,12 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.lifecycle.doOnResume
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.Serializable
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.usecase.EdgeToEdgeUseCase
-import ru.kvf.core.domain.usecase.LoadMediaUseCase
 import ru.kvf.core.utils.coroutineScope
-import ru.kvf.core.utils.safeLaunch
 import ru.kvf.createFavoriteComponent
 import ru.kvf.createFoldersListComponent
 import ru.kvf.createMediaListComponent
@@ -26,7 +23,6 @@ class RealHomeComponent(
     componentContext: ComponentContext,
     private val onOutput: (HomeComponent.Output) -> Unit,
     private val componentFactory: ComponentFactory,
-    private val loadMediaUseCase: LoadMediaUseCase,
     edgeToEdgeUseCase: EdgeToEdgeUseCase,
 ) : ComponentContext by componentContext, HomeComponent {
     private val navigation = StackNavigation<Config>()
@@ -43,10 +39,6 @@ class RealHomeComponent(
 
     override val edgeToEdgeEnable = edgeToEdgeUseCase.getEnabled()
         .stateIn(componentScope, SharingStarted.Eagerly, false)
-
-    init {
-        lifecycle.doOnResume { componentScope.safeLaunch { loadMediaUseCase() } }
-    }
 
     private fun child(config: Config, componentContext: ComponentContext): HomeComponent.Child =
         when (config) {

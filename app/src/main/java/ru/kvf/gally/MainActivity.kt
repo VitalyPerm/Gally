@@ -18,7 +18,9 @@ import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.arkivanov.decompose.defaultComponentContext
+import org.koin.android.ext.android.inject
 import ru.kvf.core.ComponentFactory
+import ru.kvf.core.domain.usecase.InitialLoadedUseCase
 import ru.kvf.core.koin
 import ru.kvf.core.widgets.GrantPermissionScreen
 import ru.kvf.gally.root.RootUi
@@ -30,9 +32,12 @@ class MainActivity : ComponentActivity() {
         private const val READ_VIDEO_PERMISSION = Manifest.permission.READ_MEDIA_VIDEO
     }
     private var permissionGranted by mutableStateOf(false)
+    private val initialLoadedUseCase by inject<InitialLoadedUseCase>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        installSplashScreen().apply {
+            setKeepOnScreenCondition { initialLoadedUseCase.isLoading }
+        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
             navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)

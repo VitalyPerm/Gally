@@ -33,6 +33,7 @@ fun ComponentFactory.createRootComponent(
     get(),
     get(),
     get(),
+    get(),
 )
 
 fun ComponentFactory.createHomeComponent(
@@ -41,7 +42,6 @@ fun ComponentFactory.createHomeComponent(
 ): HomeComponent = RealHomeComponent(
     componentContext,
     output,
-    get(),
     get(),
     get(),
 )

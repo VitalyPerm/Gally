@@ -6,6 +6,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.lifecycle.doOnResume
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -13,10 +14,12 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.entities.ThemeType
+import ru.kvf.core.domain.usecase.LoadMediaUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
 import ru.kvf.core.domain.usecase.ThemeUseCase
 import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.coroutineScope
+import ru.kvf.core.utils.safeLaunch
 import ru.kvf.createMediaListComponent
 import ru.kvf.createTrashComponent
 import ru.kvf.gally.createHomeComponent
@@ -27,6 +30,7 @@ class RealRootComponent(
     private val componentFactory: ComponentFactory,
     themeUseCase: ThemeUseCase,
     performHapticFeedBackUseCase: PerformHapticFeedBackUseCase,
+    private val loadMediaUseCase: LoadMediaUseCase
 ) : ComponentContext by componentContext, RootComponent {
 
     private val navigation = StackNavigation<Config>()
@@ -53,6 +57,7 @@ class RealRootComponent(
         componentScope.collectFlow(performHapticFeedBackUseCase.collect()) {
             componentScope.launch { sideEffect.emit(RootComponent.SideEffect.Vibrate) }
         }
+        lifecycle.doOnResume { componentScope.safeLaunch { loadMediaUseCase() } }
     }
 
     private fun child(config: Config, componentContext: ComponentContext): RootComponent.Child =
