@@ -1,5 +1,6 @@
 package ru.kvf.feature.trash
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -19,6 +20,11 @@ import ru.kvf.feature.mediabsh.MediaBSHUi
 fun TrashUi(component: TrashComponent) {
     val media by component.media.collectAsState()
     val gridCount by component.gridCount.collectAsState()
+    val selectedMediaIds by component.selectedMediaIds.collectAsState()
+
+    BackHandler(enabled = selectedMediaIds.data.isNotEmpty()) {
+        component.onSelectMediaDismiss()
+    }
     DefaultContainer(
         titleRes = R.string.trash,
         onReverseClick = component::onReverseClick,
@@ -37,7 +43,8 @@ fun TrashUi(component: TrashComponent) {
                     onClick = { component.onMediaClick(media.id) },
                     onLongClick = { component.onMediaLongClick(media.id) },
                     cellsCount = 3,
-                    shouldShowFavoriteIcon = false
+                    shouldShowFavoriteIcon = false,
+                    isSelected = media.id in selectedMediaIds.data,
                 )
             }
         }

@@ -199,7 +199,7 @@ private fun Content(
 }
 
 @Composable
-fun BoxScope.MediaSelectModeMenu(
+private fun BoxScope.MediaSelectModeMenu(
     visible: Boolean,
     onShareClick: () -> Unit,
     onTrashClick: () -> Unit,
