@@ -13,6 +13,7 @@ import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MimeType
 import ru.kvf.core.domain.repository.MediaRepository
 import ru.kvf.core.utils.L
+import ru.kvf.core.utils.MediaList
 
 class MediaRepositoryImpl(
     private val context: Context,
@@ -37,7 +38,7 @@ class MediaRepositoryImpl(
     )
 
     override val mediaFlow: MutableStateFlow<List<Media>> = MutableStateFlow(emptyList())
-    override val trashFlow: MutableStateFlow<List<Media>> = MutableStateFlow(emptyList())
+    override val trashFlow: MutableStateFlow<MediaList> = MutableStateFlow(MediaList.EMPTY)
 
     override suspend fun loadMedia(): Unit = withContext(Dispatchers.IO) {
         mediaFlow.value = emptyList()
@@ -81,8 +82,7 @@ class MediaRepositoryImpl(
         )
 
         val trashMedia = getTrashMedia(cursor = imageTrashQuery)
-        L.d("trashMediaSize = ${trashMedia.size}")
-        trashFlow.update { trashMedia }
+        trashFlow.update { MediaList(trashMedia) }
     }
 
     private fun getMedia(cursor: Cursor?, isPhotos: Boolean) = mutableListOf<Media>().apply {
