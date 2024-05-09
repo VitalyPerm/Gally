@@ -68,7 +68,6 @@ fun MediaListUi(
     val sortReversed by component.sortReversed.collectAsState()
     val favoriteMediaIds by component.favoriteMediaIds.collectAsState()
     val selectedMediaDates by component.selectedMediaDates.collectAsState()
-    val mediaToTrashUris by component.mediaToTrashUris.collectAsState()
 
     val mediaListGridState = rememberLazyGridState(
         initialFirstVisibleItemIndex = component.lastPosition
@@ -132,12 +131,6 @@ fun MediaListUi(
         editMode = selectMediaModeEnable?.value ?: false,
         selectedMediaDates = selectedMediaDates,
         onSelectDateClick = component::onSelectDateClick
-    )
-
-    TrashMediaBSH(
-        media = mediaToTrashUris,
-        onDeleteClick = component::onDeleteMediaClick,
-        onDismissClick = component::onDismissTrashMedia
     )
 
     MediaBSHUi(

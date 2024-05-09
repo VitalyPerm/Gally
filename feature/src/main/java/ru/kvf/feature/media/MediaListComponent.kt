@@ -8,7 +8,6 @@ import ru.kvf.core.domain.entities.MediaDate
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaMap
-import ru.kvf.core.utils.UriSet
 import ru.kvf.feature.mediabsh.MediaBSHComponent
 
 interface MediaListComponent {
@@ -20,7 +19,6 @@ interface MediaListComponent {
     val sortReversed: StateFlow<Boolean>
     val gridCellsCount: StateFlow<Int>
     val selectedMediaIds: StateFlow<LongSet>
-    val mediaToTrashUris: StateFlow<UriSet>
     val selectedMediaDates: StateFlow<MediaDateSet>
     val sideEffect: Flow<SideEffect>
     val lastPosition: Int
@@ -30,8 +28,6 @@ interface MediaListComponent {
     fun onReverseClick()
     fun onMediaClick(mediaId: Long)
     fun onMediaLongClick(media: Media)
-    fun onDeleteMediaClick()
-    fun onDismissTrashMedia()
     fun savePosition(position: Int)
     fun onSelectMediaDismiss()
     fun selectModeOnShareClick()

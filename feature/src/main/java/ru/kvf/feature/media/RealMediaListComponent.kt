@@ -28,7 +28,6 @@ import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaList
 import ru.kvf.core.utils.MediaMap
-import ru.kvf.core.utils.UriSet
 import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
@@ -59,7 +58,6 @@ class RealMediaListComponent(
         .stateIn(componentScope, SharingStarted.WhileSubscribed(5000), LongSet.EMPTY)
     override val sortReversed = MutableStateFlow(false)
     override val selectedMediaIds = MutableStateFlow(LongSet.EMPTY)
-    override val mediaToTrashUris = MutableStateFlow(UriSet.EMPTY)
     override val selectedMediaDates = MutableStateFlow(MediaDateSet.EMPTY)
     override var lastPosition = 0
     override val sideEffect = MutableSharedFlow<MediaListComponent.SideEffect>()
@@ -150,9 +148,9 @@ class RealMediaListComponent(
         componentScope.safeLaunch {
             val mediaList = selectedMediaIds.value.data.mapNotNull {
                 allMediaList.find { media -> media.id == it }?.uri
-            }
-            mediaToTrashUris.value = UriSet.from(mediaList.toSet())
+            }.toSet()
             selectedMediaIds.update { LongSet.EMPTY }
+            sideEffect.emit(MediaListComponent.SideEffect.TrashMedia(mediaList))
         }
     }
 
@@ -190,19 +188,6 @@ class RealMediaListComponent(
             }
             MediaDateSet.from(newValue)
         }
-    }
-
-    override fun onDeleteMediaClick() {
-        componentScope.launch {
-            val uris = mediaToTrashUris.value
-            onDismissTrashMedia()
-            sideEffect.emit(MediaListComponent.SideEffect.TrashMedia(uris.data))
-        }
-    }
-
-    override fun onDismissTrashMedia() {
-        mediaToTrashUris.value = UriSet.EMPTY
-        selectedMediaIds.value = LongSet.EMPTY
     }
 
     private fun updateMedia(data: Map<MediaDate, List<Media>>) {
