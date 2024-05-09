@@ -83,7 +83,7 @@ class MediaRepositoryImpl(
                 val mime = MimeType.fromString(it.getString(mimeColumn))
                 val duration =
                     if (mime == MimeType.Video) getDurationString(it.getLong(durationColumn)) else null
-                val contentUri = if (mime == MimeType.Image) {
+                val contentUri = if (mime == MimeType.Photo) {
                     ContentUris.withAppendedId(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         id

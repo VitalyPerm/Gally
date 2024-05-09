@@ -155,6 +155,7 @@ private fun BoxScope.FavoriteIcon(
     isFavorite: Boolean,
     isOptionsVisible: Boolean
 ) {
+
     AnimatedVisibility(isFavorite && isOptionsVisible) {
         Box(
             modifier = Modifier

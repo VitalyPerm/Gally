@@ -6,9 +6,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.kvf.core.domain.entities.MimeType
 import ru.kvf.core.domain.usecase.DeleteMediaUseCase
 import ru.kvf.core.domain.usecase.ShareMediaUseCase
 import ru.kvf.core.domain.usecase.TrashMediaUseCase
@@ -39,12 +43,16 @@ class RealMediaBSHComponent(
     private val componentScope = coroutineScope()
     override val currentMediaIndex = MutableStateFlow(0)
 
-    override val title: StateFlow<String> = combine(media, currentMediaIndex) { all, page ->
-        all.data.getOrNull(page)?.timeStamp?.let { titleTimeFormat.format(it) } ?: ""
+    private val currentMedia = combine(media, currentMediaIndex) { all, page ->
+        all.data.getOrNull(page)
+    }
+
+    override val title: StateFlow<String> = currentMedia.map {
+        it?.timeStamp?.let { time -> titleTimeFormat.format(time) } ?: ""
     }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), "")
 
-    override val deleteDay: StateFlow<String?> = combine(media, currentMediaIndex) { all, page ->
-        all.data.getOrNull(page)?.expiresTimeStamp?.let { deleteDaySdf.format(it.times(1000)) }
+    override val deleteDay: StateFlow<String?> = currentMedia.map {
+        it?.expiresTimeStamp?.let { time -> deleteDaySdf.format(time.times(1000)) }
     }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), null)
 
     override val optionsVisible = MutableStateFlow(true)
@@ -60,6 +68,11 @@ class RealMediaBSHComponent(
     ) { all, page, favoriteIds ->
         all.data.getOrNull(page)?.id in favoriteIds.data
     }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), false)
+
+    init {
+        currentMedia.onEach { if (it?.mimeType == MimeType.Video) optionsVisible.update { false } }
+            .launchIn(componentScope)
+    }
 
     override fun onShareClick() {
         componentScope.safeLaunch {

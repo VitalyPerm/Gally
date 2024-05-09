@@ -3,11 +3,13 @@
 package ru.kvf.core.widgets
 
 import android.annotation.SuppressLint
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.Card
@@ -29,10 +31,13 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 import ru.kvf.core.domain.entities.Media
+import ru.kvf.core.domain.entities.MimeType
+import ru.kvf.core.utils.L
 import ru.kvf.core.utils.MediaList
 import kotlin.math.absoluteValue
 
@@ -67,10 +72,16 @@ private fun PagerContent(
         modifier = modifier
     ) { page ->
         val media = mediaList.data[page]
-        if (media.duration != null) {
-            VideoItem(video = media)
-        } else {
-            PhotoItem(
+        when (media.mimeType) {
+            MimeType.Video -> VideoItem(
+                video = media,
+                onClick = {
+                    L.d("tap!!!")
+                    onTap()
+                }
+            )
+
+            MimeType.Photo -> PhotoItem(
                 pagerState = pagerState,
                 page = page,
                 model = media.uri,
@@ -85,6 +96,7 @@ private fun PagerContent(
 @Composable
 private fun VideoItem(
     video: Media,
+    onClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val exoPlayer = remember(context) {
@@ -100,17 +112,22 @@ private fun VideoItem(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primaryContainer),
+                .background(MaterialTheme.colorScheme.scrim),
             contentAlignment = Alignment.Center
         ) {
             AndroidView(
                 factory = { ctx ->
                     PlayerView(ctx).apply {
                         player = exoPlayer
+                        layoutParams = FrameLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        keepScreenOn = true
+                        resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
                     }
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.clickable(onClick = onClick)
             )
         }
     ) {

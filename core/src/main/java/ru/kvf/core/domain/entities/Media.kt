@@ -18,7 +18,7 @@ data class Media(
 )
 
 fun List<Media>.getMimeType(): String {
-    val hasPhoto = any { it.mimeType == MimeType.Image }
+    val hasPhoto = any { it.mimeType == MimeType.Photo }
     val hasVideo = any { it.mimeType == MimeType.Video }
     return when {
         hasPhoto && hasVideo -> "image/*, video/*"
