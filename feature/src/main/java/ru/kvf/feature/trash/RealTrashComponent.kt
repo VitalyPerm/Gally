@@ -12,22 +12,29 @@ import kotlinx.coroutines.flow.update
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.usecase.GetTrashMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
+import ru.kvf.core.message.MessageComponent
 import ru.kvf.core.utils.Constants
 import ru.kvf.core.utils.MediaList
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.notNegative
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.createMediaBSHComponent
+import ru.kvf.feature.R
 import ru.kvf.feature.mediabsh.MediaBSHComponent
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class RealTrashComponent(
     componentContext: ComponentContext,
     componentFactory: ComponentFactory,
     getTrashMediaUseCase: GetTrashMediaUseCase,
-    private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase
+    private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
+    private val messageComponent: MessageComponent
 ) : ComponentContext by componentContext, TrashComponent {
 
     private val componentScope = coroutineScope()
+    private val daysTillDeleteFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
 
     override val isReversed = MutableStateFlow(false)
 
@@ -48,12 +55,16 @@ class RealTrashComponent(
         .stateIn(componentScope, SharingStarted.Lazily, 1)
 
     override fun onMediaClick(id: Long) {
-        val index =
-            media.value.data.indexOfFirst { it.id == id }.takeIf { it.notNegative() } ?: return
+        val index = media.value.data
+            .indexOfFirst { it.id == id }.takeIf { it.notNegative() } ?: return
         mediaBSHComponent.setup(index)
     }
 
     override fun onMediaLongClick(id: Long) {
+        val expiresTimeStamp = media.value.data.find { it.id == id }?.expiresTimeStamp ?: return
+        val date = Date(expiresTimeStamp.times(1000))
+        val dateString = daysTillDeleteFormat.format(date)
+        messageComponent.showMessage(R.string.trash_days_till_delete, dateString)
     }
 
     override fun onGridCountClick() {

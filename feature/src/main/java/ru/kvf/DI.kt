@@ -105,5 +105,6 @@ fun ComponentFactory.createTrashComponent(
     componentContext,
     get(),
     get(),
+    get(),
     get()
 )

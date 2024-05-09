@@ -41,6 +41,8 @@ import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFavoriteClickUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFavoriteSetUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFolderFavoriteClickUseCase
+import ru.kvf.core.message.MessageComponent
+import ru.kvf.core.message.RealMessageComponent
 
 val coreModule = module {
     single<MediaRepository> { MediaRepositoryImpl(get()) }
@@ -63,4 +65,5 @@ val coreModule = module {
     single<EdgeToEdgeUseCase> { EdgeToEdgeUseCaseImpl(get()) }
     single<ThemeUseCase> { ThemeUseCaseImpl(get()) }
     single<GetTrashMediaUseCase> { GetTrashMediaUseCaseImpl(get()) }
+    single<MessageComponent> { RealMessageComponent(get()) }
 }

@@ -3,7 +3,6 @@ package ru.kvf.core.domain.entities
 import android.annotation.SuppressLint
 import android.content.res.Resources
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import org.koin.java.KoinJavaComponent
 import ru.kvf.core.R
 import java.text.SimpleDateFormat

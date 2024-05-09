@@ -13,7 +13,6 @@ import kotlinx.coroutines.withContext
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MimeType
 import ru.kvf.core.domain.repository.MediaRepository
-import ru.kvf.core.utils.L
 
 class MediaRepositoryImpl(
     private val context: Context,
@@ -103,7 +102,6 @@ class MediaRepositoryImpl(
                     duration = duration,
                     expiresTimeStamp = expiresTimeStamp
                 )
-                L.d("added $id = $isTrashed")
                 add(media)
             }
         }
