@@ -2,7 +2,6 @@ package ru.kvf.feature.trash
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -13,9 +12,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.entities.Media
+import ru.kvf.core.domain.usecase.DeleteMediaUseCase
 import ru.kvf.core.domain.usecase.GetTrashMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
+import ru.kvf.core.domain.usecase.ShareMediaUseCase
+import ru.kvf.core.domain.usecase.TrashMediaUseCase
 import ru.kvf.core.utils.Constants
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaList
@@ -30,7 +32,10 @@ class RealTrashComponent(
     componentFactory: ComponentFactory,
     getTrashMediaUseCase: GetTrashMediaUseCase,
     private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
-    private val hapticFeedBackUseCase: PerformHapticFeedBackUseCase
+    private val hapticFeedBackUseCase: PerformHapticFeedBackUseCase,
+    private val deleteMediaUseCase: DeleteMediaUseCase,
+    private val trashMediaUseCase: TrashMediaUseCase,
+    private val shareMediaUseCase: ShareMediaUseCase
 ) : ComponentContext by componentContext, TrashComponent {
 
     private val componentScope = coroutineScope()
@@ -55,7 +60,6 @@ class RealTrashComponent(
         .stateIn(componentScope, SharingStarted.Lazily, 1)
 
     override val selectedMediaIds = MutableStateFlow(LongSet.EMPTY)
-    override val sideEffect = MutableSharedFlow<TrashComponent.SideEffect>()
 
     override fun onMediaClick(id: Long) {
         if (selectedMediaIds.value.data.isNotEmpty()) {
@@ -102,22 +106,19 @@ class RealTrashComponent(
 
     override fun selectModeOnDeleteClick() {
         componentScope.safeLaunch {
-            val mediaList = getPrepareSelectedMediaList().map { it.uri }.toSet()
-            sideEffect.emit(TrashComponent.SideEffect.DeleteMedia(mediaList))
+            val mediaUri = getPrepareSelectedMediaList().map { it.uri }.toSet()
+            deleteMediaUseCase(mediaUri)
         }
     }
 
     override fun selectModeOnShareClick() {
-        componentScope.launch {
-            val mediaList = getPrepareSelectedMediaList()
-            sideEffect.emit(TrashComponent.SideEffect.ShareMedia(mediaList))
-        }
+        componentScope.safeLaunch { shareMediaUseCase(getPrepareSelectedMediaList()) }
     }
 
     override fun selectModeOnUnTrashClick() {
         componentScope.safeLaunch {
-            val mediaList = getPrepareSelectedMediaList().map { it.uri }.toSet()
-            sideEffect.emit(TrashComponent.SideEffect.UnTrashMedia(mediaList))
+            val uriSet = getPrepareSelectedMediaList().map { it.uri }.toSet()
+            trashMediaUseCase(uriSet, false)
         }
     }
 

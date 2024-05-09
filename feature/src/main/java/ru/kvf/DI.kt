@@ -113,5 +113,8 @@ fun ComponentFactory.createTrashComponent(
     get(),
     get(),
     get(),
+    get(),
+    get(),
+    get(),
     get()
 )

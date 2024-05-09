@@ -1,8 +1,6 @@
 package ru.kvf.feature.trash
 
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -20,14 +18,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityOptionsCompat
 import ru.kvf.core.domain.entities.Media
-import ru.kvf.core.utils.collectOnStart
-import ru.kvf.core.utils.createDeleteMediaRequest
-import ru.kvf.core.utils.createTrashMediaRequest
-import ru.kvf.core.utils.shareMedia
 import ru.kvf.core.widgets.BottomMenuCounter
 import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.MediaItem
@@ -40,26 +32,6 @@ fun TrashUi(component: TrashComponent) {
     val media by component.media.collectAsState()
     val gridCount by component.gridCount.collectAsState()
     val selectedMediaIds by component.selectedMediaIds.collectAsState()
-
-    val ctx = LocalContext.current
-    val intentSenderLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartIntentSenderForResult()
-    ) { _ -> }
-
-    component.sideEffect.collectOnStart {
-        when (it) {
-            is TrashComponent.SideEffect.DeleteMedia -> {
-                val request = ctx.createDeleteMediaRequest(it.uris)
-                intentSenderLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
-            }
-
-            is TrashComponent.SideEffect.ShareMedia -> ctx.shareMedia(it.media)
-            is TrashComponent.SideEffect.UnTrashMedia -> {
-                val request = ctx.createTrashMediaRequest(it.uris, false)
-                intentSenderLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
-            }
-        }
-    }
 
     BackHandler(enabled = selectedMediaIds.data.isNotEmpty()) {
         component.onSelectMediaDismiss()
