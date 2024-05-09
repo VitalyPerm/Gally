@@ -12,6 +12,8 @@ data class Media(
     val timeStamp: Long,
     val date: MediaDate = MediaDate.empty,
     val mimeType: MimeType,
+    val isTrashed: Boolean,
+    val expiresTimeStamp: Long?,
     val duration: String?
 )
 

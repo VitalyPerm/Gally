@@ -8,10 +8,10 @@ import ru.kvf.core.domain.entities.MediaDate
 
 @Immutable
 @JvmInline
-value class MediaMap(val data: Map<MediaDate, List<Media>>) {
+value class MediaMap(val data: Map<MediaDate, MediaList>) {
     companion object {
         val EMPTY = MediaMap(emptyMap())
-        fun from(data: Map<MediaDate, List<Media>>) = MediaMap(data)
+        fun from(data: Map<MediaDate, MediaList>) = MediaMap(data)
     }
 }
 
@@ -57,8 +57,8 @@ value class FolderList(val data: List<Folder>) {
 @JvmInline
 value class MediaList(val data: List<Media>) {
     fun reversed() = MediaList(data.reversed())
-
     companion object {
         val EMPTY = MediaList(emptyList())
+        fun from(data: List<Media>) = MediaList(data)
     }
 }
