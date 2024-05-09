@@ -1,8 +1,8 @@
 package ru.kvf.core.domain.usecase
 
 import kotlinx.coroutines.flow.Flow
-import ru.kvf.core.utils.MediaList
+import ru.kvf.core.domain.entities.Media
 
 interface GetTrashMediaUseCase {
-    operator fun invoke(): Flow<MediaList>
+    operator fun invoke(): Flow<List<Media>>
 }

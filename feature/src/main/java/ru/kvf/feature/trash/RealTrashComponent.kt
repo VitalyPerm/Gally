@@ -3,6 +3,7 @@ package ru.kvf.feature.trash
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.kvf.core.domain.usecase.GetTrashMediaUseCase
 import ru.kvf.core.utils.MediaList
@@ -15,14 +16,12 @@ class RealTrashComponent(
 
     private val componentScope = coroutineScope()
 
-    override val trash: StateFlow<MediaList> = getTrashMediaUseCase()
+    override val trash: StateFlow<MediaList> = getTrashMediaUseCase().map(MediaList::from)
         .stateIn(componentScope, SharingStarted.WhileSubscribed(5000), MediaList.EMPTY)
 
     override fun onMediaClick(id: Long) {
-
     }
 
     override fun onMediaLongClick(id: Long) {
-
     }
 }

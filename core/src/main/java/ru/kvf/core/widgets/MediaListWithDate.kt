@@ -72,7 +72,7 @@ fun MediaListWithDate(
                     }
                 }
             }
-            items(media, key = { item: Media -> item.id }) { item ->
+            items(media.data, key = { item: Media -> item.id }) { item ->
                 MediaItem(
                     model = item.uri,
                     favorite = item.id in favoriteMediaIds.data,

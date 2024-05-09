@@ -25,6 +25,7 @@ import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFavoriteSetUseCase
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
+import ru.kvf.core.utils.MediaList
 import ru.kvf.core.utils.MediaMap
 import ru.kvf.core.utils.UriSet
 import ru.kvf.core.utils.collectFlow
@@ -203,7 +204,9 @@ class RealMediaListComponent(
     }
 
     private fun updateMedia(data: Map<MediaDate, List<Media>>) {
-        mediaMap.value = MediaMap.from(data) to MediaMap.from(data.mapValues { it.value.reversed() }.toSortedMap())
+        val normalMap = MediaMap.from(data.mapValues { MediaList.from(it.value) })
+        val reversedMap = MediaMap.from(data.mapValues { MediaList.from(it.value) }.toSortedMap())
+        mediaMap.update { normalMap to reversedMap }
         allMedia.update { data.values.flatten() }
     }
 
