@@ -23,7 +23,6 @@ import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFavoriteSetUseCase
-import ru.kvf.core.utils.L
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaList
@@ -78,7 +77,6 @@ class RealMediaListComponent(
             }
         } else {
             componentScope.collectFlow(getSortedMediaUseCase()) { value ->
-                L.d("value size = ${value.values.size}")
                 allMediaList = value.values.flatten()
                 mediaDateToIdMap = value.mapValues { it.value.map(Media::id) }
                 updateMedia(value)

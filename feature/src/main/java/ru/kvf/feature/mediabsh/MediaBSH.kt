@@ -22,10 +22,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.HeartBroken
-import androidx.compose.material.icons.filled.RestoreFromTrash
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -53,6 +51,7 @@ import ru.kvf.core.utils.createTrashMediaRequest
 import ru.kvf.core.utils.shareMedia
 import ru.kvf.core.widgets.MediaPager
 import ru.kvf.core.widgets.MediaSelectModeMenuItem
+import ru.kvf.core.widgets.TrashBottomMenu
 import ru.kvf.feature.R
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -293,30 +292,5 @@ private fun StandardBottomMenu(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun TrashBottomMenu(
-    onDeleteClick: () -> Unit,
-    onShareClick: () -> Unit,
-    onUnTrashClick: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
-    ) {
-        MediaSelectModeMenuItem(
-            onClick = onShareClick,
-            imageVector = Icons.Default.Share
-        )
-        MediaSelectModeMenuItem(
-            onClick = onUnTrashClick,
-            imageVector = Icons.Default.RestoreFromTrash
-        )
-        MediaSelectModeMenuItem(
-            onClick = onDeleteClick,
-            imageVector = Icons.Default.DeleteForever
-        )
     }
 }

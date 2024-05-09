@@ -14,7 +14,6 @@ import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MimeType
 import ru.kvf.core.domain.repository.MediaRepository
 import ru.kvf.core.domain.usecase.InitialLoadedUseCase
-import ru.kvf.core.utils.L
 
 class MediaRepositoryImpl(
     private val context: Context,
@@ -39,7 +38,6 @@ class MediaRepositoryImpl(
     override val mediaFlow: MutableStateFlow<List<Media>> = MutableStateFlow(emptyList())
 
     override suspend fun loadMedia(): Unit = withContext(Dispatchers.IO) {
-        L.d("loadmedia called")
         val bundle = Bundle().apply {
             putInt(MediaStore.QUERY_ARG_MATCH_TRASHED, MediaStore.MATCH_INCLUDE)
         }

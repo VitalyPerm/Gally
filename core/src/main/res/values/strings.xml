@@ -12,4 +12,5 @@
     <string name="grant_permission_title">Для работы приложения необходимо дать доступ фото</string>
     <string name="grant_permission_btn_ok">Хорошо</string>
     <string name="success">Успешно</string>
+    <string name="selected_items_count">Выбрано %d</string>
 </resources>

@@ -2,6 +2,7 @@ package ru.kvf.feature.trash
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.kvf.core.ComponentFactory
+import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.usecase.GetTrashMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
@@ -53,6 +55,7 @@ class RealTrashComponent(
         .stateIn(componentScope, SharingStarted.Lazily, 1)
 
     override val selectedMediaIds = MutableStateFlow(LongSet.EMPTY)
+    override val sideEffect = MutableSharedFlow<TrashComponent.SideEffect>()
 
     override fun onMediaClick(id: Long) {
         if (selectedMediaIds.value.data.isNotEmpty()) {
@@ -95,5 +98,32 @@ class RealTrashComponent(
 
     override fun onSelectMediaDismiss() {
         selectedMediaIds.update { LongSet.EMPTY }
+    }
+
+    override fun selectModeOnDeleteClick() {
+        componentScope.safeLaunch {
+            val mediaList = getPrepareSelectedMediaList().map { it.uri }.toSet()
+            sideEffect.emit(TrashComponent.SideEffect.DeleteMedia(mediaList))
+        }
+    }
+
+    override fun selectModeOnShareClick() {
+        componentScope.launch {
+            val mediaList = getPrepareSelectedMediaList()
+            sideEffect.emit(TrashComponent.SideEffect.ShareMedia(mediaList))
+        }
+    }
+
+    override fun selectModeOnUnTrashClick() {
+        componentScope.safeLaunch {
+            val mediaList = getPrepareSelectedMediaList().map { it.uri }.toSet()
+            sideEffect.emit(TrashComponent.SideEffect.UnTrashMedia(mediaList))
+        }
+    }
+
+    private fun getPrepareSelectedMediaList(): List<Media> {
+        return selectedMediaIds.value.data.mapNotNull {
+            media.value.data.find { media -> media.id == it }
+        }.also { selectedMediaIds.update { LongSet.EMPTY } }
     }
 }

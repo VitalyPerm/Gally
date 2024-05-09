@@ -12,20 +12,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.HeartBroken
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -38,18 +33,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityOptionsCompat
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
-import ru.kvf.core.utils.L
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaMap
 import ru.kvf.core.utils.collectSideEffect
 import ru.kvf.core.utils.createTrashMediaRequest
 import ru.kvf.core.utils.shareMedia
+import ru.kvf.core.widgets.BottomMenuCounter
 import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.MediaListWithDate
 import ru.kvf.core.widgets.MediaSelectModeMenuItem
@@ -73,7 +67,7 @@ fun MediaListUi(
         initialFirstVisibleItemIndex = component.lastPosition
     )
     val ctx = LocalContext.current
-    val deleteMediaLauncher = rememberLauncherForActivityResult(
+    val intentSenderLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
     ) { _ -> }
 
@@ -101,7 +95,7 @@ fun MediaListUi(
 
             is MediaListComponent.SideEffect.TrashMedia -> {
                 val request = ctx.createTrashMediaRequest(it.uris, true)
-                deleteMediaLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
+                intentSenderLauncher.launch(request, ActivityOptionsCompat.makeTaskLaunchBehind())
             }
 
             is MediaListComponent.SideEffect.ShareMedia -> {
@@ -162,7 +156,6 @@ private fun Content(
     selectedMediaDates: MediaDateSet,
     editMode: Boolean
 ) {
-    L.d("mediamap size = ${media.data.values.size}")
     Box {
         DefaultContainer(
             titleRes = R.string.media,
@@ -222,34 +215,7 @@ private fun BoxScope.MediaSelectModeMenu(
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 48.dp)
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
-
-                Row(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(
-                        onClick = onCloseClick,
-                        modifier = Modifier
-                            .padding(start = 8.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Close",
-                            modifier = Modifier
-                                .size(36.dp)
-                        )
-                    }
-
-                    Text(
-                        text = stringResource(R.string.selected_items_count, count),
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .padding(vertical = 16.dp)
-                    )
-                }
-
+                BottomMenuCounter(onCloseClick, selectedMediaCount)
                 Spacer(modifier = Modifier.height(16.dp))
 
                 SelectModeMenuItems(
