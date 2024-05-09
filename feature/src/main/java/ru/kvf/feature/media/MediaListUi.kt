@@ -36,7 +36,7 @@ import ru.kvf.core.domain.entities.MediaDate
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaMap
-import ru.kvf.core.utils.observe
+import ru.kvf.core.utils.collectOnStart
 import ru.kvf.core.widgets.BottomMenuCounter
 import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.MediaListWithDate
@@ -77,7 +77,7 @@ fun MediaListUi(
         selectMediaModeEnable?.value = selectedMediaIds.data.isNotEmpty()
     }
 
-    component.scrollUp.observe {
+    component.scrollUp.collectOnStart {
         mediaListGridState.animateScrollToItem(0)
     }
 
