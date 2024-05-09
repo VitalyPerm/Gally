@@ -8,15 +8,12 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.doOnPause
 import com.arkivanov.essenty.lifecycle.doOnResume
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.usecase.EdgeToEdgeUseCase
 import ru.kvf.core.domain.usecase.LoadMediaUseCase
-import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
 import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
@@ -33,7 +30,6 @@ class RealHomeComponent(
     private val componentFactory: ComponentFactory,
     private val loadMediaUseCase: LoadMediaUseCase,
     edgeToEdgeUseCase: EdgeToEdgeUseCase,
-    performHapticFeedBackUseCase: PerformHapticFeedBackUseCase,
 ) : ComponentContext by componentContext, HomeComponent {
     private val navigation = StackNavigation<Config>()
     private val componentScope = coroutineScope()
@@ -48,15 +44,10 @@ class RealHomeComponent(
         )
 
     override val state = MutableStateFlow(HomeState())
-    override val sideEffect = MutableSharedFlow<RootSideEffect>()
 
     init {
         componentScope.collectFlow(edgeToEdgeUseCase.getEnabled()) { edgeToEdgeEnable ->
             state.update { state.value.copy(edgeToEdgeEnable = edgeToEdgeEnable) }
-        }
-
-        componentScope.collectFlow(performHapticFeedBackUseCase.collect()) {
-            componentScope.launch { sideEffect.emit(RootSideEffect.Vibrate) }
         }
 
         lifecycle.doOnPause { state.update { state.value.copy(loading = true) } }

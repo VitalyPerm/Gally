@@ -30,10 +30,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.stack.Children
@@ -54,7 +52,6 @@ fun HomeUi(
     component: HomeComponent
 ) {
     val state by component.state.collectAsState()
-    val haptic = LocalHapticFeedback.current
     val stackState by component.childStack.subscribeAsState()
     val currentChild = remember(stackState) { stackState.active.instance }
     val navigationBarHeight = remember { mutableStateOf(0.dp) }
@@ -62,14 +59,6 @@ fun HomeUi(
     val editModeEnable = remember { mutableStateOf(false) }
     var bottomBarVisible by remember { mutableStateOf(true) }
     val debug = remember { BuildConfig.DEBUG }
-
-    LaunchedEffect(Unit) {
-        component.sideEffect.collect {
-            when (it) {
-                RootSideEffect.Vibrate -> haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-            }
-        }
-    }
 
     LaunchedEffect(isScrollInProgress.value, state.edgeToEdgeEnable) {
         if (state.edgeToEdgeEnable.not()) return@LaunchedEffect

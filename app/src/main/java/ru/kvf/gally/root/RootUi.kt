@@ -2,8 +2,11 @@ package ru.kvf.gally.root
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
@@ -18,6 +21,16 @@ fun RootUi(
     component: RootComponent
 ) {
     val theme by component.theme.collectAsState()
+    val haptic = LocalHapticFeedback.current
+
+    LaunchedEffect(Unit) {
+        component.sideEffect.collect {
+            when (it) {
+                RootComponent.SideEffect.Vibrate ->
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+            }
+        }
+    }
 
     GallyTheme(
         darkTheme = when (theme) {

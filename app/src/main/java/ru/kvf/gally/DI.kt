@@ -29,19 +29,19 @@ val appModule = module {
 fun ComponentFactory.createRootComponent(
     componentContext: ComponentContext
 ): RootComponent = RealRootComponent(
-    componentContext = componentContext,
-    componentFactory = get(),
-    themeUseCase = get(),
+    componentContext,
+    get(),
+    get(),
+    get(),
 )
 
 fun ComponentFactory.createHomeComponent(
     componentContext: ComponentContext,
     output: (HomeComponent.Output) -> Unit
 ): HomeComponent = RealHomeComponent(
-    componentContext = componentContext,
-    onOutput = output,
-    componentFactory = get(),
-    loadMediaUseCase = get(),
-    edgeToEdgeUseCase = get(),
-    performHapticFeedBackUseCase = get()
+    componentContext,
+    output,
+    get(),
+    get(),
+    get(),
 )

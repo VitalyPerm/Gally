@@ -2,7 +2,6 @@ package ru.kvf.gally.home
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.feature.favorite.FavoriteComponent
 import ru.kvf.feature.folders.FoldersListComponent
@@ -11,7 +10,6 @@ import ru.kvf.feature.settings.SettingsListComponent
 
 interface HomeComponent {
     val state: StateFlow<HomeState>
-    val sideEffect: SharedFlow<RootSideEffect>
 
     enum class Page {
         Media, Folders, Favorite, Settings, Design

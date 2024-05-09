@@ -6,12 +6,16 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.entities.ThemeType
+import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
 import ru.kvf.core.domain.usecase.ThemeUseCase
+import ru.kvf.core.utils.collectFlow
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.createMediaListComponent
 import ru.kvf.createTrashComponent
@@ -22,6 +26,7 @@ class RealRootComponent(
     componentContext: ComponentContext,
     private val componentFactory: ComponentFactory,
     themeUseCase: ThemeUseCase,
+    performHapticFeedBackUseCase: PerformHapticFeedBackUseCase,
 ) : ComponentContext by componentContext, RootComponent {
 
     private val navigation = StackNavigation<Config>()
@@ -33,6 +38,8 @@ class RealRootComponent(
         ThemeType.System
     )
 
+    override val sideEffect = MutableSharedFlow<RootComponent.SideEffect>()
+
     override val childStack: Value<ChildStack<*, RootComponent.Child>> =
         childStack(
             source = navigation,
@@ -41,6 +48,12 @@ class RealRootComponent(
             handleBackButton = true,
             childFactory = ::child
         )
+
+    init {
+        componentScope.collectFlow(performHapticFeedBackUseCase.collect()) {
+            componentScope.launch { sideEffect.emit(RootComponent.SideEffect.Vibrate) }
+        }
+    }
 
     private fun child(config: Config, componentContext: ComponentContext): RootComponent.Child =
         when (config) {
