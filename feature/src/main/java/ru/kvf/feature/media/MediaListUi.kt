@@ -47,7 +47,7 @@ import ru.kvf.feature.mediabsh.MediaBSHUi
 @Composable
 fun MediaListUi(
     component: MediaListComponent,
-    isScrollInProgress: MutableState<Boolean>? = null,
+    isScrollDown: MutableState<Boolean>? = null,
     selectMediaModeEnable: MutableState<Boolean>? = null
 ) {
     val selectedMediaIds by component.selectedMediaIds.collectAsState()
@@ -63,10 +63,6 @@ fun MediaListUi(
 
     BackHandler(enabled = selectedMediaIds.data.isNotEmpty()) {
         component.onSelectMediaDismiss()
-    }
-
-    LaunchedEffect(mediaListGridState.isScrollInProgress) {
-        isScrollInProgress?.value = mediaListGridState.isScrollInProgress
     }
 
     DisposableEffect(Unit) {
@@ -101,7 +97,8 @@ fun MediaListUi(
         selectModeOnDisFavoriteClick = component::selectModeOnDisFavoriteClick,
         editMode = selectMediaModeEnable?.value ?: false,
         selectedMediaDates = selectedMediaDates,
-        onSelectDateClick = component::onSelectDateClick
+        onSelectDateClick = component::onSelectDateClick,
+        isScrollDown = isScrollDown
     )
 
     MediaBSHUi(
@@ -131,7 +128,8 @@ private fun Content(
     selectModeOnDisFavoriteClick: () -> Unit,
     onSelectDateClick: (MediaDate) -> Unit,
     selectedMediaDates: MediaDateSet,
-    editMode: Boolean
+    editMode: Boolean,
+    isScrollDown: MutableState<Boolean>? = null,
 ) {
     Box {
         DefaultContainer(
@@ -139,7 +137,8 @@ private fun Content(
             titleString = folderName,
             gridCount = cellsCount,
             onGridCountClick = onGridCountClick,
-            onReverseClick = onReverseClick
+            onReverseClick = onReverseClick,
+            isScrollDown = isScrollDown
         ) {
             val mediaMap =
                 remember(sortReversed, media) { if (sortReversed) reversedMedia else media }

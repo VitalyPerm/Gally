@@ -81,7 +81,7 @@ fun HomeUi(
             when (val child = it.instance) {
                 is HomeComponent.Child.Media -> ru.kvf.feature.media.MediaListUi(
                     component = child.component,
-                    isScrollInProgress = isScrollInProgress,
+                    isScrollDown = isScrollInProgress,
                     selectMediaModeEnable = editModeEnable
                 )
 

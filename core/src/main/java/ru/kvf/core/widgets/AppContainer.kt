@@ -19,7 +19,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -32,12 +37,18 @@ fun DefaultContainer(
     @StringRes titleRes: Int? = null,
     titleString: String? = null,
     onTrashClick: (() -> Unit)? = null,
+    isScrollDown: MutableState<Boolean>? = null,
     onReverseClick: () -> Unit,
     onGridCountClick: () -> Unit,
     gridCount: Int,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val topAppBarState = rememberTopAppBarState()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(state = topAppBarState)
+    val scrollDown by remember {
+        derivedStateOf { topAppBarState.collapsedFraction > 0f }
+    }
+    isScrollDown?.value = scrollDown
     val title = titleString ?: titleRes?.let { stringResource(it) } ?: ""
     Column(
         modifier = modifier
