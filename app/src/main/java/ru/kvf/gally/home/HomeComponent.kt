@@ -1,7 +1,6 @@
 package ru.kvf.gally.home
 
 import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.feature.favorite.FavoriteComponent
 import ru.kvf.feature.folders.FoldersListComponent
@@ -9,8 +8,8 @@ import ru.kvf.feature.media.MediaListComponent
 import ru.kvf.feature.settings.SettingsListComponent
 
 interface HomeComponent {
-    val childStack: Value<ChildStack<*, Child>>
-    val title: Value<String>
+    val childStack: StateFlow<ChildStack<*, Child>>
+    val title: StateFlow<String>
     val animatedTopBar: StateFlow<Boolean>
     val animatedBottomBar: StateFlow<Boolean>
 

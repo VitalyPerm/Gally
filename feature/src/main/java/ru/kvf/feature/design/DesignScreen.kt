@@ -19,14 +19,12 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.kvf.feature.R
 
@@ -34,9 +32,7 @@ private val pages = listOf(R.string.colors, R.string.typo, R.string.shape)
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun DesignUi(
-    navBarPadding: Dp
-) {
+fun DesignUi() {
     val pagerState = rememberPagerState {
         pages.size
     }
@@ -45,15 +41,12 @@ fun DesignUi(
         modifier = Modifier
             .fillMaxSize()
             .padding(2.dp)
-            .padding(bottom = navBarPadding + 6.dp)
     ) {
-        TopAppBar(
-            title = {
-                Text(
-                    text = stringResource(pages[pagerState.currentPage]),
-                    style = MaterialTheme.typography.titleLarge
-                )
-            },
+        Text(
+            text = stringResource(pages[pagerState.currentPage]),
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier
+                .padding(16.dp)
         )
         HorizontalPager(
             state = pagerState,

@@ -11,16 +11,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
 import ru.kvf.core.utils.FolderList
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.widgets.MediaItem
 
 @Composable
-fun FoldersListUi(
-    component: FoldersListComponent,
-    navBarPadding: Dp
-) {
+fun FoldersListUi(component: FoldersListComponent) {
     val folders by component.folders.collectAsState()
     val favoriteFolderIds by component.favoriteFolderIds.collectAsState()
     val gridCellsCount by component.gridCellsCount.collectAsState()

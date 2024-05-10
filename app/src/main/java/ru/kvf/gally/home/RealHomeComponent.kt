@@ -6,15 +6,16 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.value.Value
-import com.arkivanov.decompose.value.operator.map
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.Serializable
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.usecase.EdgeToEdgeUseCase
 import ru.kvf.core.utils.coroutineScope
+import ru.kvf.core.utils.toStateFlow
 import ru.kvf.createFavoriteComponent
 import ru.kvf.createFoldersListComponent
 import ru.kvf.createMediaListComponent
@@ -33,25 +34,23 @@ class RealHomeComponent(
     private val navigation = StackNavigation<Config>()
     private val componentScope = coroutineScope()
 
-    override val childStack: Value<ChildStack<*, HomeComponent.Child>> =
+    override val childStack: StateFlow<ChildStack<*, HomeComponent.Child>> =
         childStack(
             source = navigation,
             serializer = Config.serializer(),
             initialConfiguration = Config.Media,
             handleBackButton = true,
             childFactory = ::child
-        )
+        ).toStateFlow(lifecycle)
 
-    private val edgeToEdgeEnable = edgeToEdgeUseCase.getEnabled()
+    override val animatedTopBar = edgeToEdgeUseCase.getEnabled()
         .stateIn(componentScope, SharingStarted.Eagerly, false)
 
-    override val animatedBottomBar: StateFlow<Boolean>
-        get() = TODO("Not yet implemented")
+    override val animatedBottomBar = combine(childStack, animatedTopBar) { stack, animated ->
+        animated && stack.active.instance is HomeComponent.Child.Media
+    }.stateIn(componentScope, SharingStarted.Eagerly, false)
 
-    override val animatedTopBar: StateFlow<Boolean>
-        get() = TODO("Not yet implemented")
-
-    override val title = childStack.map {
+    override val title: StateFlow<String> = childStack.map {
         resources.getString(
             when (it.active.instance) {
                 HomeComponent.Child.Design -> CoreR.string.design
@@ -61,7 +60,7 @@ class RealHomeComponent(
                 is HomeComponent.Child.Settings -> CoreR.string.settings
             }
         )
-    }
+    }.stateIn(componentScope, SharingStarted.Eagerly, "")
 
     private fun child(config: Config, componentContext: ComponentContext): HomeComponent.Child =
         when (config) {

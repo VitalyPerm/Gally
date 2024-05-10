@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+
 package ru.kvf.gally.home
 
 import androidx.compose.animation.AnimatedVisibility
@@ -24,9 +26,9 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,14 +37,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
-import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import ru.kvf.core.widgets.GridCountIcon
 import ru.kvf.core.widgets.ReverseIcon
 import ru.kvf.core.widgets.TrashIcon
@@ -58,34 +55,38 @@ import ru.kvf.gally.BuildConfig
 fun HomeUi(
     component: HomeComponent
 ) {
-    val edgeToEdgeEnable by component.edgeToEdgeEnable.collectAsState()
-    val stackState by component.childStack.subscribeAsState()
-    val currentChild = remember(stackState) { stackState.active.instance }
-    val navigationBarHeight = remember { mutableStateOf(0.dp) }
+    val childStack by component.childStack.collectAsState()
+    val animatedTopBar by component.animatedTopBar.collectAsState()
+    val animatedBottomBar by component.animatedBottomBar.collectAsState()
+
+    val currentChild = remember(childStack) { childStack.active.instance }
     val editModeEnable = remember { mutableStateOf(false) }
     var bottomBarVisible by remember { mutableStateOf(true) }
     val debug = remember { BuildConfig.DEBUG }
-    val title by component.title.subscribeAsState()
+    val title by component.title.collectAsState()
 
     LaunchedEffect(editModeEnable.value) {
         bottomBarVisible = editModeEnable.value.not()
     }
 
-    val animBarsEnable = remember(editModeEnable, currentChild) {
-        edgeToEdgeEnable && currentChild is HomeComponent.Child.Media
+    val topBarScrollBehavior =
+        if (animatedTopBar) TopAppBarDefaults.enterAlwaysScrollBehavior() else null
+    val bottomBarScrollBehavior =
+        if (animatedBottomBar) BottomAppBarDefaults.exitAlwaysScrollBehavior() else null
+
+    val topBarNestedScroll = remember(topBarScrollBehavior) {
+        if (topBarScrollBehavior == null) {
+            Modifier
+        } else {
+            Modifier.nestedScroll(topBarScrollBehavior.nestedScrollConnection)
+        }
     }
 
-    val topBarScrollBehavior =
-        if (edgeToEdgeEnable) TopAppBarDefaults.enterAlwaysScrollBehavior() else null
-    val bottomBarScrollBehavior =
-        if (edgeToEdgeEnable) BottomAppBarDefaults.exitAlwaysScrollBehavior() else null
-    val nestedScrollModifier = remember(animBarsEnable) {
-        if (topBarScrollBehavior != null && bottomBarScrollBehavior != null && animBarsEnable) {
+    val bottomBarNestedScroll = remember(bottomBarScrollBehavior) {
+        if (bottomBarScrollBehavior == null) {
             Modifier
-                .nestedScroll(topBarScrollBehavior.nestedScrollConnection)
-                .nestedScroll(bottomBarScrollBehavior.nestedScrollConnection)
         } else {
-            Modifier
+            Modifier.nestedScroll(bottomBarScrollBehavior.nestedScrollConnection)
         }
     }
 
@@ -93,17 +94,13 @@ fun HomeUi(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primaryContainer)
-            .then(nestedScrollModifier)
+            .then(topBarNestedScroll)
+            .then(bottomBarNestedScroll)
     ) {
-        TopAppBar(
-            title = { Text(text = title, style = MaterialTheme.typography.titleLarge) },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.inversePrimary
-            ),
+        TopBar(
+            title = title,
             scrollBehavior = topBarScrollBehavior,
-            actions = {
-                TitleActions(currentChild)
-            }
+            currentChild = currentChild
         )
 
         Box(
@@ -111,8 +108,8 @@ fun HomeUi(
                 .weight(1f)
         ) {
             Children(
-                stack = component.childStack,
-                animation = stackAnimation(slide(orientation = Orientation.Vertical))
+                stack = childStack,
+                animation = stackAnimation(slide(orientation = Orientation.Horizontal))
             ) {
                 when (val child = it.instance) {
                     is HomeComponent.Child.Media -> MediaListUi(
@@ -120,18 +117,14 @@ fun HomeUi(
                         selectMediaModeEnable = editModeEnable
                     )
 
-                    is HomeComponent.Child.Folders -> FoldersListUi(
-                        child.component,
-                        navigationBarHeight.value
-                    )
+                    is HomeComponent.Child.Folders -> FoldersListUi(child.component)
 
                     is HomeComponent.Child.Favorite -> FavoriteUi(
                         component = child.component,
-                        navBarPadding = navigationBarHeight.value
                     )
 
                     is HomeComponent.Child.Settings -> SettingsListUi(child.component)
-                    is HomeComponent.Child.Design -> DesignUi(navigationBarHeight.value)
+                    is HomeComponent.Child.Design -> DesignUi()
                 }
             }
         }
@@ -139,12 +132,29 @@ fun HomeUi(
         BottomBar(
             current = currentChild,
             onPageSelected = component::onPageSelected,
-            navigationBarHeight = navigationBarHeight,
             debug = debug,
             visible = bottomBarVisible,
             bottomBarScrollBehavior = bottomBarScrollBehavior
         )
     }
+}
+
+@Composable
+fun TopBar(
+    title: String,
+    scrollBehavior: TopAppBarScrollBehavior?,
+    currentChild: HomeComponent.Child
+) {
+    TopAppBar(
+        title = { Text(text = title, style = MaterialTheme.typography.titleLarge) },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.inversePrimary
+        ),
+        scrollBehavior = scrollBehavior,
+        actions = {
+            TitleActions(currentChild)
+        }
+    )
 }
 
 @Composable
@@ -178,19 +188,13 @@ private fun TitleActions(instance: HomeComponent.Child) {
 private fun BottomBar(
     current: HomeComponent.Child,
     onPageSelected: (HomeComponent.Page) -> Unit,
-    navigationBarHeight: MutableState<Dp>,
     debug: Boolean,
     visible: Boolean,
     bottomBarScrollBehavior: BottomAppBarScrollBehavior?
 ) {
-    val ld = LocalDensity.current
     AnimatedVisibility(visible) {
         BottomAppBar(
             containerColor = MaterialTheme.colorScheme.inversePrimary,
-            modifier = Modifier
-                .onSizeChanged {
-                    with(ld) { navigationBarHeight.value = it.height.toDp() }
-                },
             scrollBehavior = bottomBarScrollBehavior
         ) {
             NavBarItem(

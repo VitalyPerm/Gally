@@ -32,17 +32,13 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.kvf.feature.favorite.folders.FavoriteFoldersUi
 import ru.kvf.feature.favorite.media.FavoriteMediaUi
 import ru.kvf.core.R as CoreR
 
 @Composable
-fun FavoriteUi(
-    component: FavoriteComponent,
-    navBarPadding: Dp
-) {
+fun FavoriteUi(component: FavoriteComponent) {
     val pagerState = rememberPagerState { Pages.entries.size }
     val gridCellsCount by component.gridCellsCount.collectAsState()
     val isReversed by component.isReversed.collectAsState()
