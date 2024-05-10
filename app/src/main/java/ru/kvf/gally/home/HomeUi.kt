@@ -71,18 +71,23 @@ fun HomeUi(
         bottomBarVisible = editModeEnable.value.not()
     }
 
+    val animBarsEnable = remember(editModeEnable, currentChild) {
+        edgeToEdgeEnable && currentChild is HomeComponent.Child.Media
+    }
+
     val topBarScrollBehavior =
         if (edgeToEdgeEnable) TopAppBarDefaults.enterAlwaysScrollBehavior() else null
     val bottomBarScrollBehavior =
         if (edgeToEdgeEnable) BottomAppBarDefaults.exitAlwaysScrollBehavior() else null
-    val nestedScrollModifier =
-        if (topBarScrollBehavior != null && bottomBarScrollBehavior != null) {
+    val nestedScrollModifier = remember(animBarsEnable) {
+        if (topBarScrollBehavior != null && bottomBarScrollBehavior != null && animBarsEnable) {
             Modifier
                 .nestedScroll(topBarScrollBehavior.nestedScrollConnection)
                 .nestedScroll(bottomBarScrollBehavior.nestedScrollConnection)
         } else {
             Modifier
         }
+    }
 
     Column(
         modifier = Modifier
@@ -146,7 +151,11 @@ fun HomeUi(
 private fun TitleActions(instance: HomeComponent.Child) {
     when (instance) {
         HomeComponent.Child.Design -> {}
-        is HomeComponent.Child.Favorite -> {}
+        is HomeComponent.Child.Favorite -> {
+            val gridCellsCount by instance.component.gridCellsCount.collectAsState()
+            GridCountIcon(count = gridCellsCount, onClick = instance.component::onGridCountClick)
+            ReverseIcon(instance.component::onReverseClick)
+        }
         is HomeComponent.Child.Folders -> {
             val gridCellsCount by instance.component.gridCellsCount.collectAsState()
             GridCountIcon(count = gridCellsCount, onClick = instance.component::onGridCountClick)
