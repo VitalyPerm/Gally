@@ -72,7 +72,7 @@ class RealFolderDetailsComponent(
     private var mediaDateToIdMap: Map<MediaDate, List<Long>> = emptyMap()
 
     init {
-        componentScope.collectSafe(getFolderMediaUseCase.sorted(folderName)) { media ->
+        componentScope.collectSafe(getFolderMediaUseCase(folderName)) { media ->
             allMediaList = media.values.flatten()
             mediaDateToIdMap = media.mapValues { it.value.map(Media::id) }
             updateMedia(media)

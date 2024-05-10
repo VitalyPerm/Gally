@@ -2,7 +2,6 @@ package ru.kvf.core.data.usecase
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
 import ru.kvf.core.domain.usecase.GetFolderMediaUseCase
@@ -16,13 +15,8 @@ class GetFolderMediaUseCaseImpl(
     private val getMediaUseCase: GetMediaUseCase,
     private val mediaSortByUseCase: MediaSortByUseCase
 ) : GetFolderMediaUseCase {
-    override fun invoke(
-        folderName: String
-    ): Flow<List<Media>> = getMediaUseCase().map { media ->
-        media.filter { it.folder == folderName }
-    }
 
-    override fun sorted(folderName: String): Flow<Map<MediaDate, List<Media>>> =
+    override fun invoke(folderName: String): Flow<Map<MediaDate, List<Media>>> =
         combine(getMediaUseCase(), mediaSortByUseCase.get()) { media, sortBy ->
             media.filter { it.folder == folderName }.map { data ->
                 data.copy(
@@ -34,6 +28,6 @@ class GetFolderMediaUseCaseImpl(
                     )
                 )
             }
-                .groupBy(Media::date).toSortedMap(reverseOrder())
+                .groupBy(Media::date).toSortedMap(Comparator.reverseOrder())
         }
 }
