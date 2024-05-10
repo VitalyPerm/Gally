@@ -27,6 +27,6 @@ class GetSortedMediaUseCaseImpl(
                         sortBy.toCalendarSort()
                     )
                 )
-            }.groupBy(Media::date).toSortedMap(Comparator.reverseOrder())
+            }.groupBy(Media::date).toSortedMap(reverseOrder()).mapValues { it.value.reversed() }
         }
 }

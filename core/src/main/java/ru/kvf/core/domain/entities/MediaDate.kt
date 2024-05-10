@@ -63,9 +63,9 @@ class MediaDate(
 }
 
 @SuppressLint("ConstantLocale")
-private val sdfDaily = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+private val sdfDaily = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
 @SuppressLint("ConstantLocale")
-private val sdfMonthly = SimpleDateFormat("MMM yy", Locale.getDefault())
+private val sdfMonthly = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
 private val today = MediaDate(Calendar.getInstance())
 private val yesterday = MediaDate(
     Calendar.getInstance().apply {
