@@ -3,7 +3,7 @@ package ru.kvf.gally.home
 import com.arkivanov.decompose.router.stack.ChildStack
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.feature.favorite.FavoriteComponent
-import ru.kvf.feature.folders.FoldersListComponent
+import ru.kvf.feature.folders.list.FoldersListComponent
 import ru.kvf.feature.media.MediaListComponent
 import ru.kvf.feature.settings.SettingsListComponent
 

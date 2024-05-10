@@ -1,4 +1,4 @@
-package ru.kvf.feature.folders
+package ru.kvf.feature.folders.list
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells

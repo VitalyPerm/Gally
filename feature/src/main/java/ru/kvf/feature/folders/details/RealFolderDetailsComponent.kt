@@ -1,4 +1,4 @@
-package ru.kvf.feature.media
+package ru.kvf.feature.folders.details
 
 import android.content.Context
 import coil.imageLoader
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
-import ru.kvf.core.domain.usecase.GetSortedMediaUseCase
+import ru.kvf.core.domain.usecase.GetFolderMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
 import ru.kvf.core.domain.usecase.ShareMediaUseCase
@@ -34,9 +34,10 @@ import ru.kvf.core.utils.safeLaunch
 import ru.kvf.createMediaBSHComponent
 import ru.kvf.feature.mediabsh.MediaBSHComponent
 
-class RealMediaListComponent(
+class RealFolderDetailsComponent(
     componentContext: ComponentContext,
-    getSortedMediaUseCase: GetSortedMediaUseCase,
+    override val folderName: String,
+    getFolderMediaUseCase: GetFolderMediaUseCase,
     getFavoriteMediaIdsUseCase: GetFavoriteMediaIdsUseCase,
     private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
     private val handleFavoriteSetUseCase: HandleFavoriteSetUseCase,
@@ -45,8 +46,7 @@ class RealMediaListComponent(
     private val hapticFeedBackUseCase: PerformHapticFeedBackUseCase,
     private val shareMediaUseCase: ShareMediaUseCase,
     private val trashMediaUseCase: TrashMediaUseCase
-) : ComponentContext by componentContext, MediaListComponent {
-
+) : ComponentContext by componentContext, FolderDetailsComponent {
     private val componentScope = coroutineScope()
 
     override val gridCellsCount = gridCellsCountChangeUseCase
@@ -72,10 +72,10 @@ class RealMediaListComponent(
     private var mediaDateToIdMap: Map<MediaDate, List<Long>> = emptyMap()
 
     init {
-        componentScope.collectSafe(getSortedMediaUseCase()) { value ->
-            allMediaList = value.values.flatten()
-            mediaDateToIdMap = value.mapValues { it.value.map(Media::id) }
-            updateMedia(value)
+        componentScope.collectSafe(getFolderMediaUseCase.sorted(folderName)) { media ->
+            allMediaList = media.values.flatten()
+            mediaDateToIdMap = media.mapValues { it.value.map(Media::id) }
+            updateMedia(media)
         }
     }
 
@@ -112,7 +112,9 @@ class RealMediaListComponent(
         }
     }
 
-    override fun savePosition(position: Int) { lastPosition = position }
+    override fun savePosition(position: Int) {
+        lastPosition = position
+    }
 
     override fun onMediaLongClick(media: Media) {
         if (selectedMediaIds.value.data.isNotEmpty()) return
@@ -200,6 +202,7 @@ class RealMediaListComponent(
             checkAllMediaOfDaySelected(id)
         }
     }
+
     private fun checkAllMediaOfDaySelected(id: Long) {
         componentScope.safeLaunch(Dispatchers.Default) {
             val dateToCheck = allMediaList.find { it.id == id }?.date ?: return@safeLaunch

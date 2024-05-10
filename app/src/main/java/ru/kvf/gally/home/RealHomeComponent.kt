@@ -21,7 +21,7 @@ import ru.kvf.createFoldersListComponent
 import ru.kvf.createMediaListComponent
 import ru.kvf.createSettingsListComponent
 import ru.kvf.feature.favorite.FavoriteComponent
-import ru.kvf.feature.folders.FoldersListComponent
+import ru.kvf.feature.folders.list.FoldersListComponent
 import ru.kvf.core.R as CoreR
 
 class RealHomeComponent(

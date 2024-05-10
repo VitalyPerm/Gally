@@ -1,13 +1,22 @@
 package ru.kvf.core.widgets
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.HeartBroken
 import androidx.compose.material.icons.filled.RestoreFromTrash
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
@@ -104,6 +113,77 @@ fun BottomMenuCounter(
             modifier = Modifier
                 .padding(end = 16.dp)
                 .padding(vertical = 16.dp)
+        )
+    }
+}
+
+@Composable
+fun BoxScope.MediaSelectModeMenu(
+    visible: Boolean,
+    onShareClick: () -> Unit,
+    onTrashClick: () -> Unit,
+    onFavoriteClick: () -> Unit,
+    onDisFavoriteClick: () -> Unit,
+    selectedMediaCount: Int,
+    onCloseClick: () -> Unit
+) {
+    var count by remember { mutableIntStateOf(0) }
+    LaunchedEffect(selectedMediaCount) {
+        if (selectedMediaCount > 0) count = selectedMediaCount
+    }
+    Box(
+        modifier = Modifier
+            .align(Alignment.BottomCenter)
+    ) {
+        AnimatedVisibility(visible) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 48.dp)
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                BottomMenuCounter(onCloseClick, selectedMediaCount)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                MediaListSelectModeMenuItems(
+                    onShareClick = onShareClick,
+                    onTrashClick = onTrashClick,
+                    onFavoriteClick = onFavoriteClick,
+                    onDisFavoriteClick = onDisFavoriteClick
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MediaListSelectModeMenuItems(
+    onShareClick: () -> Unit,
+    onTrashClick: () -> Unit,
+    onFavoriteClick: () -> Unit,
+    onDisFavoriteClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+    ) {
+        MediaSelectModeMenuItem(
+            onClick = onShareClick,
+            imageVector = Icons.Default.Share
+        )
+
+        MediaSelectModeMenuItem(
+            onClick = onTrashClick,
+            imageVector = Icons.Default.Delete
+        )
+
+        MediaSelectModeMenuItem(
+            onClick = onFavoriteClick,
+            imageVector = Icons.Default.Favorite
+        )
+
+        MediaSelectModeMenuItem(
+            onClick = onDisFavoriteClick,
+            imageVector = Icons.Default.HeartBroken
         )
     }
 }

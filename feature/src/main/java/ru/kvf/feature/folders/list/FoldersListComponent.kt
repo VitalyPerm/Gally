@@ -1,4 +1,4 @@
-package ru.kvf.feature.folders
+package ru.kvf.feature.folders.list
 
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.core.utils.FolderList

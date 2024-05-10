@@ -19,6 +19,7 @@ import ru.kvf.core.theme.GallyTheme
 import ru.kvf.core.utils.createDeleteMediaRequest
 import ru.kvf.core.utils.createTrashMediaRequest
 import ru.kvf.core.utils.shareMedia
+import ru.kvf.feature.folders.details.FolderDetailsUi
 import ru.kvf.feature.media.MediaListUi
 import ru.kvf.feature.trash.TrashUi
 import ru.kvf.gally.home.HomeUi
@@ -74,13 +75,15 @@ fun RootUi(
                     is RootComponent.Child.FolderMediaList -> localScale()
                     is RootComponent.Child.Home -> scale()
                     is RootComponent.Child.Trash -> localScale()
+                    is RootComponent.Child.FolderDetails -> localScale()
                 }
             }
         ) {
             when (val child = it.instance) {
-                is RootComponent.Child.Home -> HomeUi(component = child.component)
-                is RootComponent.Child.FolderMediaList -> MediaListUi(component = child.component)
-                is RootComponent.Child.Trash -> TrashUi(component = child.component)
+                is RootComponent.Child.Home -> HomeUi(child.component)
+                is RootComponent.Child.FolderMediaList -> MediaListUi(child.component)
+                is RootComponent.Child.Trash -> TrashUi(child.component)
+                is RootComponent.Child.FolderDetails -> FolderDetailsUi(child.component)
             }
         }
     }

@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.ThemeType
+import ru.kvf.feature.folders.details.FolderDetailsComponent
 import ru.kvf.feature.media.MediaListComponent
 import ru.kvf.feature.trash.TrashComponent
 import ru.kvf.gally.home.HomeComponent
@@ -21,6 +22,7 @@ interface RootComponent {
         class Home(val component: HomeComponent) : Child
         class FolderMediaList(val component: MediaListComponent) : Child
         class Trash(val component: TrashComponent) : Child
+        class FolderDetails(val component: FolderDetailsComponent) : Child
     }
 
     sealed interface SideEffect {

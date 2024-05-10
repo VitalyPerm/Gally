@@ -43,7 +43,7 @@ import ru.kvf.core.widgets.ReverseIcon
 import ru.kvf.core.widgets.TrashIcon
 import ru.kvf.feature.design.DesignUi
 import ru.kvf.feature.favorite.FavoriteUi
-import ru.kvf.feature.folders.FoldersListUi
+import ru.kvf.feature.folders.list.FoldersListUi
 import ru.kvf.feature.media.MediaListUi
 import ru.kvf.feature.settings.SettingsListUi
 import ru.kvf.gally.BuildConfig
@@ -172,7 +172,7 @@ private fun TitleActions(instance: HomeComponent.Child) {
             ReverseIcon(instance.component::onReverseClick)
         }
 
-        is HomeComponent.Child.Settings -> {}
+        is HomeComponent.Child.Settings -> Unit
     }
 }
 

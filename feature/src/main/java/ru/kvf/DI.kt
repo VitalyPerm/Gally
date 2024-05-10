@@ -14,8 +14,10 @@ import ru.kvf.feature.favorite.folders.FavoriteFoldersComponent
 import ru.kvf.feature.favorite.folders.RealFavoriteFoldersComponent
 import ru.kvf.feature.favorite.media.FavoriteMediaComponent
 import ru.kvf.feature.favorite.media.RealFavoriteMediaComponent
-import ru.kvf.feature.folders.FoldersListComponent
-import ru.kvf.feature.folders.RealFoldersListComponent
+import ru.kvf.feature.folders.details.FolderDetailsComponent
+import ru.kvf.feature.folders.details.RealFolderDetailsComponent
+import ru.kvf.feature.folders.list.FoldersListComponent
+import ru.kvf.feature.folders.list.RealFoldersListComponent
 import ru.kvf.feature.media.MediaListComponent
 import ru.kvf.feature.media.RealMediaListComponent
 import ru.kvf.feature.mediabsh.MediaBSHComponent
@@ -34,8 +36,23 @@ fun ComponentFactory.createMediaListComponent(
     folderName: String? = null,
 ): MediaListComponent = RealMediaListComponent(
     componentContext,
-    folderName,
     get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get()
+)
+
+fun ComponentFactory.createFolderDetailsComponent(
+    componentContext: ComponentContext,
+    folderName: String,
+): FolderDetailsComponent = RealFolderDetailsComponent(
+    componentContext,
+    folderName,
     get(),
     get(),
     get(),

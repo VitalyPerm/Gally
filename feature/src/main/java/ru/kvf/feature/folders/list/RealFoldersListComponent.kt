@@ -1,4 +1,4 @@
-package ru.kvf.feature.folders
+package ru.kvf.feature.folders.list
 
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.flow.MutableStateFlow

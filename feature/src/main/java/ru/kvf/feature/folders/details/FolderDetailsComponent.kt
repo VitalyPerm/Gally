@@ -1,4 +1,4 @@
-package ru.kvf.feature.media
+package ru.kvf.feature.folders.details
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -9,7 +9,7 @@ import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaMap
 import ru.kvf.feature.mediabsh.MediaBSHComponent
 
-interface MediaListComponent {
+interface FolderDetailsComponent {
 
     val mediaBSHComponent: MediaBSHComponent
 
@@ -21,6 +21,7 @@ interface MediaListComponent {
     val selectedMediaDates: StateFlow<MediaDateSet>
     val scrollUp: Flow<Unit>
     val lastPosition: Int
+    val folderName: String
 
     fun onGridCountClick()
     fun onReverseClick()
