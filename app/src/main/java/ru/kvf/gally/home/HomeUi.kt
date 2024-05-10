@@ -28,12 +28,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -58,16 +56,11 @@ fun HomeUi(
     val childStack by component.childStack.collectAsState()
     val animatedTopBar by component.animatedTopBar.collectAsState()
     val animatedBottomBar by component.animatedBottomBar.collectAsState()
+    val title by component.title.collectAsState()
 
     val currentChild = remember(childStack) { childStack.active.instance }
     val editModeEnable = remember { mutableStateOf(false) }
-    var bottomBarVisible by remember { mutableStateOf(true) }
     val debug = remember { BuildConfig.DEBUG }
-    val title by component.title.collectAsState()
-
-    LaunchedEffect(editModeEnable.value) {
-        bottomBarVisible = editModeEnable.value.not()
-    }
 
     val topBarScrollBehavior =
         if (animatedTopBar) TopAppBarDefaults.enterAlwaysScrollBehavior() else null
@@ -133,7 +126,7 @@ fun HomeUi(
             current = currentChild,
             onPageSelected = component::onPageSelected,
             debug = debug,
-            visible = bottomBarVisible,
+            editModeEnable = editModeEnable.value,
             bottomBarScrollBehavior = bottomBarScrollBehavior
         )
     }
@@ -189,10 +182,10 @@ private fun BottomBar(
     current: HomeComponent.Child,
     onPageSelected: (HomeComponent.Page) -> Unit,
     debug: Boolean,
-    visible: Boolean,
+    editModeEnable: Boolean,
     bottomBarScrollBehavior: BottomAppBarScrollBehavior?
 ) {
-    AnimatedVisibility(visible) {
+    AnimatedVisibility(!editModeEnable) {
         BottomAppBar(
             containerColor = MaterialTheme.colorScheme.inversePrimary,
             scrollBehavior = bottomBarScrollBehavior
