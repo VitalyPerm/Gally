@@ -9,6 +9,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.operator.map
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.Serializable
 import ru.kvf.core.ComponentFactory
@@ -41,8 +42,14 @@ class RealHomeComponent(
             childFactory = ::child
         )
 
-    override val edgeToEdgeEnable = edgeToEdgeUseCase.getEnabled()
+    private val edgeToEdgeEnable = edgeToEdgeUseCase.getEnabled()
         .stateIn(componentScope, SharingStarted.Eagerly, false)
+
+    override val animatedBottomBar: StateFlow<Boolean>
+        get() = TODO("Not yet implemented")
+
+    override val animatedTopBar: StateFlow<Boolean>
+        get() = TODO("Not yet implemented")
 
     override val title = childStack.map {
         resources.getString(

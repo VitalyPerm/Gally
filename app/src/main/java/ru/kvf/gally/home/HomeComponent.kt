@@ -9,14 +9,14 @@ import ru.kvf.feature.media.MediaListComponent
 import ru.kvf.feature.settings.SettingsListComponent
 
 interface HomeComponent {
-    val edgeToEdgeEnable: StateFlow<Boolean>
+    val childStack: Value<ChildStack<*, Child>>
     val title: Value<String>
+    val animatedTopBar: StateFlow<Boolean>
+    val animatedBottomBar: StateFlow<Boolean>
 
     enum class Page {
         Media, Folders, Favorite, Settings, Design
     }
-
-    val childStack: Value<ChildStack<*, Child>>
 
     fun onPageSelected(page: Page)
 
