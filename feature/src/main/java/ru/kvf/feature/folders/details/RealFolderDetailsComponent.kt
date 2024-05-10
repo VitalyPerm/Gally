@@ -50,7 +50,7 @@ class RealFolderDetailsComponent(
     private val componentScope = coroutineScope()
 
     override val gridCellsCount = gridCellsCountChangeUseCase
-        .get(GridCellsCountChangeUseCase.Screen.MediaList)
+        .get(GridCellsCountChangeUseCase.Screen.FoldersDetails)
         .stateIn(componentScope, SharingStarted.Lazily, 1)
 
     override val mediaMap = MutableStateFlow(MediaMap.EMPTY to MediaMap.EMPTY)
@@ -84,7 +84,7 @@ class RealFolderDetailsComponent(
             val value = if (gridCellsCount.value == 4) 1 else gridCellsCount.value + 1
             gridCellsCountChangeUseCase.set(
                 value = value,
-                screen = GridCellsCountChangeUseCase.Screen.MediaList
+                screen = GridCellsCountChangeUseCase.Screen.FoldersDetails
             )
         }
     }

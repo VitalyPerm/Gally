@@ -70,14 +70,7 @@ fun RootUi(
     ) {
         Children(
             stack = component.childStack,
-            animation = stackAnimation { child ->
-                when (child.instance) {
-                    is RootComponent.Child.FolderMediaList -> localScale()
-                    is RootComponent.Child.Home -> scale()
-                    is RootComponent.Child.Trash -> localScale()
-                    is RootComponent.Child.FolderDetails -> localScale()
-                }
-            }
+            animation = stackAnimation(scale())
         ) {
             when (val child = it.instance) {
                 is RootComponent.Child.Home -> HomeUi(child.component)
@@ -88,8 +81,3 @@ fun RootUi(
         }
     }
 }
-
-private fun localScale() = scale(
-    frontFactor = 1.5f,
-    backFactor = 0.7f
-)
