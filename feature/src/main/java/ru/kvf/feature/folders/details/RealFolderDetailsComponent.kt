@@ -64,7 +64,7 @@ class RealFolderDetailsComponent(
 
     private val allMedia = MutableStateFlow(MediaList.EMPTY)
     override val mediaBSHComponent: MediaBSHComponent = componentFactory.createMediaBSHComponent(
-        componentContext = childContext("mediaListBSH"),
+        componentContext = childContext("folderDetailsBSH"),
         media = allMedia
     )
 
