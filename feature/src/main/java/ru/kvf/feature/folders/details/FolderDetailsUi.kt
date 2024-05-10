@@ -79,10 +79,7 @@ fun FolderDetailsUi(component: FolderDetailsComponent) {
         onSelectDateClick = component::onSelectDateClick,
     )
 
-    MediaBSHUi(
-        component = component.mediaBSHComponent,
-        isReversed = sortReversed
-    )
+    MediaBSHUi(component.mediaBSHComponent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

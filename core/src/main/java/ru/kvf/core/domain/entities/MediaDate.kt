@@ -54,16 +54,21 @@ class MediaDate(
             else -> sdfDaily.format(date.time)
         }
     } else {
-        sdfMonthly.format(date.time)
+        if (isUnknown()) {
+            resources.getString(R.string.date_unknown)
+        } else {
+            sdfMonthly.format(date.time)
+        }
     }
 
     private fun isToday() = this == today
     private fun isYesterday() = this == yesterday
-    private fun isUnknown() = date.time.time == 0L
+    private fun isUnknown() = date.time.time < 1_000_000_000_000
 }
 
 @SuppressLint("ConstantLocale")
 private val sdfDaily = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+
 @SuppressLint("ConstantLocale")
 private val sdfMonthly = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
 private val today = MediaDate(Calendar.getInstance())

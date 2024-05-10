@@ -50,7 +50,6 @@ import ru.kvf.feature.R
 @Composable
 fun MediaBSHUi(
     component: MediaBSHComponent,
-    isReversed: Boolean = false,
 ) {
     val media by component.media.collectAsState()
     val currentMediaIndex by component.currentMediaIndex.collectAsState()
@@ -86,7 +85,6 @@ fun MediaBSHUi(
                     MediaPager(
                         media = media,
                         pagerState = pagerState,
-                        reversePager = isReversed,
                         onTap = component::onTap
                     )
 
@@ -155,7 +153,6 @@ private fun BoxScope.FavoriteIcon(
     isFavorite: Boolean,
     isOptionsVisible: Boolean
 ) {
-
     AnimatedVisibility(isFavorite && isOptionsVisible) {
         Box(
             modifier = Modifier

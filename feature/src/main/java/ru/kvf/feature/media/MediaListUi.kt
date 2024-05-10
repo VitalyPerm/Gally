@@ -73,10 +73,7 @@ fun MediaListUi(
         onSelectDateClick = component::onSelectDateClick,
     )
 
-    MediaBSHUi(
-        component = component.mediaBSHComponent,
-        isReversed = sortReversed
-    )
+    MediaBSHUi(component.mediaBSHComponent)
 }
 
 @Composable
@@ -125,4 +122,3 @@ private fun Content(
         )
     }
 }
-

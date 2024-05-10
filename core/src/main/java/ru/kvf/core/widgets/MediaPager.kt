@@ -46,14 +46,12 @@ fun MediaPager(
     modifier: Modifier = Modifier,
     media: MediaList,
     pagerState: PagerState,
-    reversePager: Boolean = false,
     onTap: () -> Unit = { },
 ) {
     PagerContent(
         mediaList = media,
         pagerState = pagerState,
         modifier = modifier,
-        reversePager = reversePager,
         onTap = onTap,
     )
 }
@@ -62,13 +60,11 @@ fun MediaPager(
 private fun PagerContent(
     modifier: Modifier = Modifier,
     mediaList: MediaList,
-    reversePager: Boolean = false,
     pagerState: PagerState,
     onTap: () -> Unit,
 ) {
     HorizontalPager(
         state = pagerState,
-        reverseLayout = reversePager,
         modifier = modifier
     ) { page ->
         val media = mediaList.data[page]

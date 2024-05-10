@@ -14,6 +14,7 @@ import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MimeType
 import ru.kvf.core.domain.repository.MediaRepository
 import ru.kvf.core.domain.usecase.InitialLoadedUseCase
+import ru.kvf.core.utils.L
 
 class MediaRepositoryImpl(
     private val context: Context,
@@ -106,6 +107,7 @@ class MediaRepositoryImpl(
                     duration = duration,
                     expiresTimeStamp = expiresTimeStamp
                 )
+                L.d("id = $id timestamp = $timeStamp")
                 add(media)
             }
         }
