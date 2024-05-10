@@ -7,17 +7,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.RestoreFromTrash
-import androidx.compose.material.icons.filled.WifiProtectedSetup
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -26,10 +17,8 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun DefaultContainer(
@@ -56,59 +45,18 @@ fun DefaultContainer(
             .background(MaterialTheme.colorScheme.primaryContainer)
             .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
-        TopAppBar(
-            title = { Text(text = title, style = MaterialTheme.typography.titleLarge) },
-            actions = {
-                GridCountIcon(count = gridCount, onClick = onGridCountClick)
-                ReverseIcon(onReverseClick)
-                onTrashClick?.let { TrashIcon(it) }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.inversePrimary
-            ),
-            scrollBehavior = scrollBehavior,
-        )
+//        TopAppBar(
+//            title = { Text(text = title, style = MaterialTheme.typography.titleLarge) },
+//            actions = {
+//                GridCountIcon(count = gridCount, onClick = onGridCountClick)
+//                ReverseIcon(onReverseClick)
+//                onTrashClick?.let { TrashIcon(it) }
+//            },
+//            colors = TopAppBarDefaults.topAppBarColors(
+//                containerColor = MaterialTheme.colorScheme.inversePrimary
+//            ),
+//            scrollBehavior = scrollBehavior,
+//        )
         content()
-    }
-}
-
-@Composable
-private fun ReverseIcon(
-    onClick: () -> Unit
-) {
-    IconButton(onClick = onClick) {
-        Icon(
-            imageVector = Icons.Filled.WifiProtectedSetup,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onPrimary
-        )
-    }
-}
-
-@Composable
-fun TrashIcon(onClick: () -> Unit) {
-    IconButton(onClick = onClick) {
-        Icon(
-            imageVector = Icons.Filled.RestoreFromTrash,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onPrimary
-        )
-    }
-}
-
-@Composable
-private fun GridCountIcon(
-    count: Int,
-    onClick: () -> Unit
-) {
-    TextButton(onClick = onClick) {
-        Text(
-            text = count.toString(),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier
-                .clip(MaterialTheme.shapes.extraLarge)
-                .background(MaterialTheme.colorScheme.onPrimary)
-                .padding(horizontal = 10.dp, vertical = 4.dp)
-        )
     }
 }

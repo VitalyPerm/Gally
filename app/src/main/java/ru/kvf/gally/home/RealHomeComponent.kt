@@ -1,11 +1,13 @@
 package ru.kvf.gally.home
 
+import android.content.res.Resources
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.decompose.value.operator.map
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.Serializable
@@ -18,12 +20,14 @@ import ru.kvf.createMediaListComponent
 import ru.kvf.createSettingsListComponent
 import ru.kvf.feature.favorite.FavoriteComponent
 import ru.kvf.feature.folders.FoldersListComponent
+import ru.kvf.gally.R
 
 class RealHomeComponent(
     componentContext: ComponentContext,
     private val onOutput: (HomeComponent.Output) -> Unit,
     private val componentFactory: ComponentFactory,
     edgeToEdgeUseCase: EdgeToEdgeUseCase,
+    resources: Resources
 ) : ComponentContext by componentContext, HomeComponent {
     private val navigation = StackNavigation<Config>()
     private val componentScope = coroutineScope()
@@ -39,6 +43,18 @@ class RealHomeComponent(
 
     override val edgeToEdgeEnable = edgeToEdgeUseCase.getEnabled()
         .stateIn(componentScope, SharingStarted.Eagerly, false)
+
+    override val title = childStack.map {
+        resources.getString(
+            when (it.active.instance) {
+                HomeComponent.Child.Design -> R.string.design
+                is HomeComponent.Child.Favorite -> R.string.favorite
+                is HomeComponent.Child.Folders -> R.string.folders
+                is HomeComponent.Child.Media -> R.string.media
+                is HomeComponent.Child.Settings -> R.string.settings
+            }
+        )
+    }
 
     private fun child(config: Config, componentContext: ComponentContext): HomeComponent.Child =
         when (config) {

@@ -38,16 +38,13 @@ import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaMap
 import ru.kvf.core.utils.collectOnStart
 import ru.kvf.core.widgets.BottomMenuCounter
-import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.MediaListWithDate
 import ru.kvf.core.widgets.MediaSelectModeMenuItem
-import ru.kvf.feature.R
 import ru.kvf.feature.mediabsh.MediaBSHUi
 
 @Composable
 fun MediaListUi(
     component: MediaListComponent,
-    isScrollDown: MutableState<Boolean>? = null,
     selectMediaModeEnable: MutableState<Boolean>? = null
 ) {
     val selectedMediaIds by component.selectedMediaIds.collectAsState()
@@ -98,7 +95,6 @@ fun MediaListUi(
         editMode = selectMediaModeEnable?.value ?: false,
         selectedMediaDates = selectedMediaDates,
         onSelectDateClick = component::onSelectDateClick,
-        isScrollDown = isScrollDown
     )
 
     MediaBSHUi(
@@ -129,31 +125,21 @@ private fun Content(
     onSelectDateClick: (MediaDate) -> Unit,
     selectedMediaDates: MediaDateSet,
     editMode: Boolean,
-    isScrollDown: MutableState<Boolean>? = null,
 ) {
     Box {
-        DefaultContainer(
-            titleRes = R.string.media,
-            titleString = folderName,
-            gridCount = cellsCount,
-            onGridCountClick = onGridCountClick,
-            onReverseClick = onReverseClick,
-            isScrollDown = isScrollDown
-        ) {
-            val mediaMap =
-                remember(sortReversed, media) { if (sortReversed) reversedMedia else media }
-            MediaListWithDate(
-                media = mediaMap,
-                favoriteMediaIds = favoriteMediaIds,
-                gridState = gridState,
-                cellsCount = cellsCount,
-                onMediaClick = onMediaClick,
-                onMediaLongClick = onMediaLongClick,
-                selectedMediaIds = selectedMediaIds,
-                selectedMediaDates = selectedMediaDates,
-                onSelectDateClick = onSelectDateClick
-            )
-        }
+        val mediaMap =
+            remember(sortReversed, media) { if (sortReversed) reversedMedia else media }
+        MediaListWithDate(
+            media = mediaMap,
+            favoriteMediaIds = favoriteMediaIds,
+            gridState = gridState,
+            cellsCount = cellsCount,
+            onMediaClick = onMediaClick,
+            onMediaLongClick = onMediaLongClick,
+            selectedMediaIds = selectedMediaIds,
+            selectedMediaDates = selectedMediaDates,
+            onSelectDateClick = onSelectDateClick
+        )
 
         MediaSelectModeMenu(
             visible = editMode,

@@ -1,8 +1,11 @@
 package ru.kvf
 
+import android.content.Context
+import android.content.res.Resources
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.core.component.get
+import org.koin.dsl.module
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.utils.MediaList
 import ru.kvf.feature.favorite.FavoriteComponent
@@ -21,6 +24,10 @@ import ru.kvf.feature.settings.RealSettingsListComponent
 import ru.kvf.feature.settings.SettingsListComponent
 import ru.kvf.feature.trash.RealTrashComponent
 import ru.kvf.feature.trash.TrashComponent
+
+val featureModule = module {
+    single<Resources> { get<Context>().resources }
+}
 
 fun ComponentFactory.createMediaListComponent(
     componentContext: ComponentContext,

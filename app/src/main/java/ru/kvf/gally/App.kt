@@ -12,6 +12,7 @@ import org.koin.core.context.startKoin
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.KoinProvider
 import ru.kvf.core.coreModule
+import ru.kvf.featureModule
 
 class App : Application(), KoinProvider, ImageLoaderFactory {
 
@@ -22,7 +23,7 @@ class App : Application(), KoinProvider, ImageLoaderFactory {
         super.onCreate()
         koin = startKoin {
             androidContext(this@App)
-            modules(listOf(appModule, coreModule))
+            modules(listOf(appModule, coreModule, featureModule))
         }.koin.apply {
             declare(ComponentFactory(this))
         }

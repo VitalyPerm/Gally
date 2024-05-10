@@ -1,7 +1,6 @@
 package ru.kvf.feature.folders
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -15,9 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import ru.kvf.core.utils.FolderList
 import ru.kvf.core.utils.LongSet
-import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.core.widgets.MediaItem
-import ru.kvf.feature.R
 
 @Composable
 fun FoldersListUi(
@@ -28,24 +25,14 @@ fun FoldersListUi(
     val favoriteFolderIds by component.favoriteFolderIds.collectAsState()
     val gridCellsCount by component.gridCellsCount.collectAsState()
     val foldersListGridState = rememberLazyGridState()
-
-    DefaultContainer(
-        titleRes = R.string.folders,
-        gridCount = gridCellsCount,
-        onGridCountClick = component::onGridCountClick,
-        onReverseClick = component::onReverseClick,
-        onTrashClick = component::onTrashClick,
-        modifier = Modifier.padding(bottom = navBarPadding)
-    ) {
-        FoldersList(
-            folders = folders,
-            onFolderClick = component::onFolderClick,
-            onFolderLongClick = component::onFolderLongClick,
-            gridState = foldersListGridState,
-            cellsCount = gridCellsCount,
-            favoriteFolderIds = favoriteFolderIds
-        )
-    }
+    FoldersList(
+        folders = folders,
+        onFolderClick = component::onFolderClick,
+        onFolderLongClick = component::onFolderLongClick,
+        gridState = foldersListGridState,
+        cellsCount = gridCellsCount,
+        favoriteFolderIds = favoriteFolderIds
+    )
 }
 
 @Composable

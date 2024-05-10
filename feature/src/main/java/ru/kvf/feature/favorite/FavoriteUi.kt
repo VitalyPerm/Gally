@@ -33,7 +33,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.kvf.core.widgets.DefaultContainer
 import ru.kvf.feature.R
 import ru.kvf.feature.favorite.folders.FavoriteFoldersUi
 import ru.kvf.feature.favorite.media.FavoriteMediaUi
@@ -47,30 +46,22 @@ fun FavoriteUi(
     val gridCellsCount by component.gridCellsCount.collectAsState()
     val isReversed by component.isReversed.collectAsState()
 
-    DefaultContainer(
-        titleRes = R.string.favorite,
-        modifier = Modifier
-            .padding(bottom = navBarPadding),
-        onReverseClick = component::onReverseClick,
-        gridCount = gridCellsCount,
-        onGridCountClick = component::onGridCountClick
-    ) {
-        Spacer(modifier = Modifier.height(8.dp))
-        TabRow(pagerState)
-        Spacer(modifier = Modifier.height(8.dp))
-        HorizontalPager(state = pagerState) {
-            when (Pages.fromIndex(it)) {
-                Pages.Media -> FavoriteMediaUi(
-                    component = component.favoriteMediaComponent,
-                    gridCellsCount = gridCellsCount,
-                    isReversed = isReversed
-                )
-                Pages.Folders -> FavoriteFoldersUi(
-                    component = component.favoriteFoldersComponent,
-                    cellsCount = gridCellsCount,
-                    isReversed = isReversed
-                )
-            }
+    Spacer(modifier = Modifier.height(8.dp))
+    TabRow(pagerState)
+    Spacer(modifier = Modifier.height(8.dp))
+    HorizontalPager(state = pagerState) {
+        when (Pages.fromIndex(it)) {
+            Pages.Media -> FavoriteMediaUi(
+                component = component.favoriteMediaComponent,
+                gridCellsCount = gridCellsCount,
+                isReversed = isReversed
+            )
+
+            Pages.Folders -> FavoriteFoldersUi(
+                component = component.favoriteFoldersComponent,
+                cellsCount = gridCellsCount,
+                isReversed = isReversed
+            )
         }
     }
 }
@@ -134,8 +125,8 @@ private enum class Pages {
     Media, Folders;
 
     fun getString() = when (this) {
-        Media -> R.string.media
-        Folders -> R.string.folders
+        Media -> R.string.colors
+        Folders -> R.string.colors
     }
 
     companion object {

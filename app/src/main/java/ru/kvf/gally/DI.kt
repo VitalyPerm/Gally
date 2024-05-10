@@ -47,4 +47,5 @@ fun ComponentFactory.createHomeComponent(
     output,
     get(),
     get(),
+    get(),
 )
