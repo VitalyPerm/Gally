@@ -13,20 +13,29 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.widgets.BottomMenuCounter
-import ru.kvf.core.widgets.DefaultContainer
+import ru.kvf.core.widgets.GridCountIcon
 import ru.kvf.core.widgets.MediaItem
+import ru.kvf.core.widgets.ReverseIcon
 import ru.kvf.core.widgets.TrashBottomMenu
 import ru.kvf.feature.R
 import ru.kvf.feature.mediabsh.MediaBSHUi
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrashUi(component: TrashComponent) {
     val media by component.media.collectAsState()
@@ -36,13 +45,30 @@ fun TrashUi(component: TrashComponent) {
     BackHandler(enabled = selectedMediaIds.data.isNotEmpty()) {
         component.onSelectMediaDismiss()
     }
+
+    val appBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Box {
-        DefaultContainer(
-            titleRes = R.string.trash,
-            onReverseClick = component::onReverseClick,
-            onGridCountClick = component::onGridCountClick,
-            gridCount = gridCount
+        Column(
+            modifier = Modifier
+                .nestedScroll(appBarScrollBehavior.nestedScrollConnection)
         ) {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.trash),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
+                actions = {
+                    GridCountIcon(count = gridCount, onClick = component::onGridCountClick)
+                    ReverseIcon(component::onReverseClick)
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.inversePrimary
+                ),
+                scrollBehavior = appBarScrollBehavior
+            )
+
             LazyVerticalGrid(
                 state = rememberLazyGridState(),
                 columns = GridCells.Fixed(gridCount),

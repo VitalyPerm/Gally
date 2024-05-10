@@ -20,7 +20,7 @@ import ru.kvf.createMediaListComponent
 import ru.kvf.createSettingsListComponent
 import ru.kvf.feature.favorite.FavoriteComponent
 import ru.kvf.feature.folders.FoldersListComponent
-import ru.kvf.gally.R
+import ru.kvf.core.R as CoreR
 
 class RealHomeComponent(
     componentContext: ComponentContext,
@@ -47,11 +47,11 @@ class RealHomeComponent(
     override val title = childStack.map {
         resources.getString(
             when (it.active.instance) {
-                HomeComponent.Child.Design -> R.string.design
-                is HomeComponent.Child.Favorite -> R.string.favorite
-                is HomeComponent.Child.Folders -> R.string.folders
-                is HomeComponent.Child.Media -> R.string.media
-                is HomeComponent.Child.Settings -> R.string.settings
+                HomeComponent.Child.Design -> CoreR.string.design
+                is HomeComponent.Child.Favorite -> CoreR.string.favorite
+                is HomeComponent.Child.Folders -> CoreR.string.folders
+                is HomeComponent.Child.Media -> CoreR.string.media
+                is HomeComponent.Child.Settings -> CoreR.string.settings
             }
         )
     }

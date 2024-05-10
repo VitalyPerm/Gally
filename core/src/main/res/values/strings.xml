@@ -13,4 +13,9 @@
     <string name="grant_permission_btn_ok">Хорошо</string>
     <string name="success">Успешно</string>
     <string name="selected_items_count">Выбрано %d</string>
+    <string name="design">Дизайн</string>
+    <string name="favorite">Избранное</string>
+    <string name="folders">Папки</string>
+    <string name="media">Медиа</string>
+    <string name="settings">Настройки</string>
 </resources>

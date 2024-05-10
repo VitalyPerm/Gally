@@ -1,8 +1,3 @@
 <resources>
     <string name="app_name">Gally</string>
-    <string name="design">Дизайн</string>
-    <string name="favorite">Избранное</string>
-    <string name="folders">Папки</string>
-    <string name="media">Медиа</string>
-    <string name="settings">Настройки</string>
 </resources>
