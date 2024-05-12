@@ -12,7 +12,6 @@ pluginManagement {
         id("com.android.application") version androidPluginVersion
         id("org.jetbrains.kotlin.android") version kotlinVersion
         kotlin("plugin.serialization") version kotlinVersion
-        kotlin("plugin.parcelize") version kotlinVersion
         id("com.android.library") version "8.2.0"
     }
 }

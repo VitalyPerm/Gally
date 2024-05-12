@@ -1,6 +1,9 @@
 package ru.kvf.feature.mediabsh
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.essenty.lifecycle.doOnCreate
+import com.arkivanov.essenty.lifecycle.doOnDestroy
+import com.arkivanov.essenty.lifecycle.doOnResume
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -12,12 +15,14 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 import ru.kvf.core.domain.entities.MimeType
 import ru.kvf.core.domain.usecase.DeleteMediaUseCase
 import ru.kvf.core.domain.usecase.ShareMediaUseCase
 import ru.kvf.core.domain.usecase.TrashMediaUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFavoriteClickUseCase
+import ru.kvf.core.utils.L
 import ru.kvf.core.utils.MediaList
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
@@ -38,10 +43,13 @@ class RealMediaBSHComponent(
 
     private companion object {
         const val TITLE_TIME_FORMAT = "dd MMMM yyyy HH:mm"
+        const val STATE_KEY = "MEDIA_BSH_STATE_KEY"
     }
 
     private val componentScope = coroutineScope()
-    override val currentMediaIndex = MutableStateFlow(0)
+    private var state: State =
+        stateKeeper.consume(STATE_KEY, strategy = State.serializer()) ?: State()
+    override val currentMediaIndex = MutableStateFlow(state.index)
 
     private val currentMedia = combine(media, currentMediaIndex) { all, page ->
         all.data.getOrNull(page)
@@ -56,7 +64,7 @@ class RealMediaBSHComponent(
     }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), null)
 
     override val optionsVisible = MutableStateFlow(true)
-    override val visible = MutableStateFlow(false)
+    override val visible = MutableStateFlow(state.visible)
     override val setIndex = MutableSharedFlow<Int>()
     private val titleTimeFormat = SimpleDateFormat(TITLE_TIME_FORMAT, Locale.getDefault())
     private val deleteDaySdf =
@@ -72,7 +80,21 @@ class RealMediaBSHComponent(
     init {
         currentMedia.onEach { if (it?.mimeType == MimeType.Video) optionsVisible.update { false } }
             .launchIn(componentScope)
+
+        stateKeeper.register(STATE_KEY, strategy = State.serializer()) { state }
+        doOnCreate { L.d("doOnCreate state = $state") }
+        doOnResume { L.d("doOnResume state = $state") }
+        doOnDestroy { L.d("doOnDestroy state = $state") }
+        L.d("mediaBsh init")
+        combine(currentMediaIndex, visible) { index, visible ->
+            state = State(visible, index)
+            L.d("set state = $state")
+        }
+            .launchIn(componentScope)
     }
+
+    @Serializable
+    private data class State(val visible: Boolean = false, val index: Int = 0)
 
     override fun onShareClick() {
         componentScope.safeLaunch {
