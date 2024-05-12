@@ -1,9 +1,6 @@
 package ru.kvf.feature.mediabsh
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.essenty.lifecycle.doOnCreate
-import com.arkivanov.essenty.lifecycle.doOnDestroy
-import com.arkivanov.essenty.lifecycle.doOnResume
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,7 +19,6 @@ import ru.kvf.core.domain.usecase.ShareMediaUseCase
 import ru.kvf.core.domain.usecase.TrashMediaUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFavoriteClickUseCase
-import ru.kvf.core.utils.L
 import ru.kvf.core.utils.MediaList
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
@@ -82,14 +78,7 @@ class RealMediaBSHComponent(
             .launchIn(componentScope)
 
         stateKeeper.register(STATE_KEY, strategy = State.serializer()) { state }
-        doOnCreate { L.d("doOnCreate state = $state") }
-        doOnResume { L.d("doOnResume state = $state") }
-        doOnDestroy { L.d("doOnDestroy state = $state") }
-        L.d("mediaBsh init")
-        combine(currentMediaIndex, visible) { index, visible ->
-            state = State(visible, index)
-            L.d("set state = $state")
-        }
+        combine(currentMediaIndex, visible) { index, visible -> state = State(visible, index) }
             .launchIn(componentScope)
     }
 
