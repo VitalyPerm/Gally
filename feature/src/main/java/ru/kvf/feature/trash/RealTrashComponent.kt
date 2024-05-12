@@ -18,7 +18,6 @@ import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
 import ru.kvf.core.domain.usecase.ShareMediaUseCase
 import ru.kvf.core.domain.usecase.TrashMediaUseCase
-import ru.kvf.core.utils.Constants
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaList
 import ru.kvf.core.utils.coroutineScope
@@ -85,12 +84,9 @@ class RealTrashComponent(
     }
 
     override fun onGridCountClick() {
-        val currentCount = gridCount.value
-        val value =
-            if (currentCount == Constants.MAX_GRID_COUNT) Constants.MIN_GRID_COUNT else currentCount + 1
         componentScope.safeLaunch {
             gridCellsCountChangeUseCase.set(
-                value = value,
+                value = gridCount.value,
                 screen = GridCellsCountChangeUseCase.Screen.Trash
             )
         }

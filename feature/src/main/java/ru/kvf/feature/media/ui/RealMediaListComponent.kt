@@ -24,6 +24,7 @@ import ru.kvf.core.domain.usecase.ShareMediaUseCase
 import ru.kvf.core.domain.usecase.TrashMediaUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFavoriteSetUseCase
+import ru.kvf.core.utils.L
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaList
@@ -86,13 +87,13 @@ class RealMediaListComponent(
             mediaDateToIdMap = value.mapValues { it.value.map(Media::id) }
             updateMedia(value)
         }
+        L.d("medialist init")
     }
 
     override fun onGridCountClick() {
         componentScope.safeLaunch {
-            val value = if (gridCellsCount.value == 4) 1 else gridCellsCount.value + 1
             gridCellsCountChangeUseCase.set(
-                value = value,
+                value = gridCellsCount.value,
                 screen = GridCellsCountChangeUseCase.Screen.MediaList
             )
         }

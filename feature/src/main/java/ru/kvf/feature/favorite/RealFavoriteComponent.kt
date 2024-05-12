@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
-import ru.kvf.core.utils.Constants
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.createFavoriteFoldersComponent
@@ -44,11 +43,9 @@ class RealFavoriteComponent(
     }
 
     override fun onGridCountClick() {
-        val currentCount = gridCellsCount.value
-        val value = if (currentCount == Constants.MAX_GRID_COUNT) Constants.MIN_GRID_COUNT else currentCount + 1
         componentScope.safeLaunch {
             gridCellsCountChangeUseCase.set(
-                value = value,
+                value = gridCellsCount.value,
                 screen = GridCellsCountChangeUseCase.Screen.Favorite
             )
         }

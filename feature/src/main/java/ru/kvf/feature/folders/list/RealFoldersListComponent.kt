@@ -11,7 +11,6 @@ import ru.kvf.core.domain.usecase.GetFoldersUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteFoldersIdsUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFolderFavoriteClickUseCase
-import ru.kvf.core.utils.Constants
 import ru.kvf.core.utils.FolderList
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.coroutineScope
@@ -41,11 +40,9 @@ class RealFoldersListComponent(
         .stateIn(componentScope, SharingStarted.WhileSubscribed(5000), LongSet.EMPTY)
 
     override fun onGridCountClick() {
-        val currentCount = gridCellsCount.value
-        val value = if (currentCount == Constants.MAX_GRID_COUNT) Constants.MIN_GRID_COUNT else currentCount + 1
         componentScope.safeLaunch {
             gridCellsCountChangeUseCase.set(
-                value = value,
+                value = gridCellsCount.value,
                 screen = GridCellsCountChangeUseCase.Screen.FoldersList
             )
         }

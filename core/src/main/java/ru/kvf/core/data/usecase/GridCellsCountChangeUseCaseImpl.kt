@@ -17,8 +17,9 @@ class GridCellsCountChangeUseCaseImpl(
     }
 
     override suspend fun set(value: Int, screen: GridCellsCountChangeUseCase.Screen) {
+        val newValue = if (value == 4) 1 else value + 1
         dataStore.edit {
-            it[intPreferencesKey(screen.key)] = value
+            it[intPreferencesKey(screen.key)] = newValue
         }
     }
 }

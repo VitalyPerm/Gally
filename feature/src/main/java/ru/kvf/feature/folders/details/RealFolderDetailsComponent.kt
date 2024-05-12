@@ -81,9 +81,8 @@ class RealFolderDetailsComponent(
 
     override fun onGridCountClick() {
         componentScope.safeLaunch {
-            val value = if (gridCellsCount.value == 4) 1 else gridCellsCount.value + 1
             gridCellsCountChangeUseCase.set(
-                value = value,
+                value = gridCellsCount.value,
                 screen = GridCellsCountChangeUseCase.Screen.FoldersDetails
             )
         }
