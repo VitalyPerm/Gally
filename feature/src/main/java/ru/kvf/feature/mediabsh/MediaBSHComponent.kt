@@ -8,7 +8,7 @@ interface MediaBSHComponent {
 
     val media: StateFlow<MediaList>
     val currentMediaIndex: StateFlow<Int>
-    val title: StateFlow<String>
+    val title: StateFlow<String?>
     val deleteDay: StateFlow<String?>
     val optionsVisible: StateFlow<Boolean>
     val isFavorite: StateFlow<Boolean>

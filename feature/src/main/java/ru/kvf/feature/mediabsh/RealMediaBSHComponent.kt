@@ -47,9 +47,9 @@ class RealMediaBSHComponent(
         all.data.getOrNull(page)
     }
 
-    override val title: StateFlow<String> = currentMedia.map {
-        it?.timeStamp?.let { time -> titleTimeFormat.format(time) } ?: ""
-    }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), "")
+    override val title: StateFlow<String?> = currentMedia.map { media ->
+        media?.timeStamp?.takeIf { it > 0 }?.let { time -> titleTimeFormat.format(time) }
+    }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), null)
 
     override val deleteDay: StateFlow<String?> = currentMedia.map {
         it?.expiresTimeStamp?.let { time -> deleteDaySdf.format(time.times(1000)) }

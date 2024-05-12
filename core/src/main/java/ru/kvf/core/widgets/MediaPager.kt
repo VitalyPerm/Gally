@@ -37,7 +37,6 @@ import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MimeType
-import ru.kvf.core.utils.L
 import ru.kvf.core.utils.MediaList
 import kotlin.math.absoluteValue
 
@@ -72,7 +71,6 @@ private fun PagerContent(
             MimeType.Video -> VideoItem(
                 video = media,
                 onClick = {
-                    L.d("tap!!!")
                     onTap()
                 }
             )

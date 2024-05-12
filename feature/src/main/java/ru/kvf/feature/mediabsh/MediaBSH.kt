@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -117,7 +116,7 @@ fun MediaBSHUi(
 
 @Composable
 private fun BoxScope.Title(
-    name: String,
+    name: String?,
     isOptionsVisible: Boolean,
 ) {
     Box(
@@ -126,23 +125,24 @@ private fun BoxScope.Title(
             .padding(top = 48.dp)
     ) {
         AnimatedVisibility(isOptionsVisible) {
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .background(
-                        MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
-                        MaterialTheme.shapes.medium
-                    ),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimary,
+            name?.let {
+                Box(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
-                )
+                        .background(
+                            MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                            MaterialTheme.shapes.medium
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                    )
+                }
             }
         }
     }

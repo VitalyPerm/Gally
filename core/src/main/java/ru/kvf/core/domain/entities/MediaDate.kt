@@ -63,7 +63,7 @@ class MediaDate(
 
     private fun isToday() = this == today
     private fun isYesterday() = this == yesterday
-    private fun isUnknown() = date.time.time < 1_000_000_000_000
+    private fun isUnknown() = date.time.time == 0L
 }
 
 @SuppressLint("ConstantLocale")

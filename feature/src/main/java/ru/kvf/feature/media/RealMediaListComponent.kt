@@ -24,6 +24,7 @@ import ru.kvf.core.domain.usecase.ShareMediaUseCase
 import ru.kvf.core.domain.usecase.TrashMediaUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFavoriteSetUseCase
+import ru.kvf.core.utils.L
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaList
@@ -74,6 +75,9 @@ class RealMediaListComponent(
     init {
         componentScope.collectSafe(getSortedMediaUseCase()) { value ->
             allMediaList = value.values.flatten()
+            allMediaList.sortedByDescending { it.timeStamp }.forEach {
+                L.d("id = ${it.id} time = ${it.timeStamp}")
+            }
             mediaDateToIdMap = value.mapValues { it.value.map(Media::id) }
             updateMedia(value)
         }
