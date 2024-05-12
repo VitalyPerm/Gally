@@ -1,4 +1,4 @@
-package ru.kvf.feature.media
+package ru.kvf.feature.media.ui
 
 import android.content.Context
 import coil.imageLoader
@@ -11,20 +11,19 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
-import ru.kvf.core.domain.usecase.GetSortedMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
 import ru.kvf.core.domain.usecase.ShareMediaUseCase
 import ru.kvf.core.domain.usecase.TrashMediaUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFavoriteSetUseCase
-import ru.kvf.core.utils.L
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaList
@@ -33,6 +32,9 @@ import ru.kvf.core.utils.collectSafe
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.createMediaBSHComponent
+import ru.kvf.feature.media.domain.GetSortedMediaUseCase
+import ru.kvf.feature.media.domain.MediaFilter
+import ru.kvf.feature.media.domain.MediaFilterUseCase
 import ru.kvf.feature.mediabsh.MediaBSHComponent
 
 class RealMediaListComponent(
@@ -45,7 +47,8 @@ class RealMediaListComponent(
     private val context: Context,
     private val hapticFeedBackUseCase: PerformHapticFeedBackUseCase,
     private val shareMediaUseCase: ShareMediaUseCase,
-    private val trashMediaUseCase: TrashMediaUseCase
+    private val trashMediaUseCase: TrashMediaUseCase,
+    private val mediaFilterUseCase: MediaFilterUseCase
 ) : ComponentContext by componentContext, MediaListComponent {
 
     private val componentScope = coroutineScope()
@@ -68,6 +71,11 @@ class RealMediaListComponent(
         componentContext = childContext("mediaListBSH"),
         media = allMedia
     )
+    override val videoEnable = mediaFilterUseCase.get().map { it.second }
+        .stateIn(componentScope, SharingStarted.Eagerly, true)
+
+    override val photoEnable = mediaFilterUseCase.get().map { it.first }
+        .stateIn(componentScope, SharingStarted.Eagerly, true)
 
     private var allMediaList: List<Media> = emptyList()
     private var mediaDateToIdMap: Map<MediaDate, List<Long>> = emptyMap()
@@ -75,9 +83,6 @@ class RealMediaListComponent(
     init {
         componentScope.collectSafe(getSortedMediaUseCase()) { value ->
             allMediaList = value.values.flatten()
-            allMediaList.sortedByDescending { it.timeStamp }.forEach {
-                L.d("id = ${it.id} time = ${it.timeStamp}")
-            }
             mediaDateToIdMap = value.mapValues { it.value.map(Media::id) }
             updateMedia(value)
         }
@@ -116,7 +121,9 @@ class RealMediaListComponent(
         }
     }
 
-    override fun savePosition(position: Int) { lastPosition = position }
+    override fun savePosition(position: Int) {
+        lastPosition = position
+    }
 
     override fun onMediaLongClick(media: Media) {
         if (selectedMediaIds.value.data.isNotEmpty()) return
@@ -187,6 +194,14 @@ class RealMediaListComponent(
         }
     }
 
+    override fun onPhotoIconClick() {
+        mediaFilterUseCase.set(MediaFilter.Photo)
+    }
+
+    override fun onVideoIconClick() {
+        mediaFilterUseCase.set(MediaFilter.Video)
+    }
+
     private fun updateMedia(data: Map<MediaDate, List<Media>>) {
         val normalMap = MediaMap.from(data.mapValues { MediaList.from(it.value) })
         val reversedMap = MediaMap.from(data.mapValues { MediaList.from(it.value) }.toSortedMap())
@@ -204,6 +219,7 @@ class RealMediaListComponent(
             checkAllMediaOfDaySelected(id)
         }
     }
+
     private fun checkAllMediaOfDaySelected(id: Long) {
         componentScope.safeLaunch(Dispatchers.Default) {
             val dateToCheck = allMediaList.find { it.id == id }?.date ?: return@safeLaunch

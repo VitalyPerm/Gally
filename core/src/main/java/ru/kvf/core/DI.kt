@@ -7,7 +7,6 @@ import ru.kvf.core.data.usecase.EdgeToEdgeUseCaseImpl
 import ru.kvf.core.data.usecase.GetFolderMediaUseCaseImpl
 import ru.kvf.core.data.usecase.GetFoldersUseCaseImpl
 import ru.kvf.core.data.usecase.GetMediaUseCaseImpl
-import ru.kvf.core.data.usecase.GetSortedMediaUseCaseImpl
 import ru.kvf.core.data.usecase.GetTrashMediaUseCaseImpl
 import ru.kvf.core.data.usecase.GridCellsCountChangeUseCaseImpl
 import ru.kvf.core.data.usecase.InitialLoadedUseCaseImpl
@@ -32,7 +31,6 @@ import ru.kvf.core.domain.usecase.EdgeToEdgeUseCase
 import ru.kvf.core.domain.usecase.GetFolderMediaUseCase
 import ru.kvf.core.domain.usecase.GetFoldersUseCase
 import ru.kvf.core.domain.usecase.GetMediaUseCase
-import ru.kvf.core.domain.usecase.GetSortedMediaUseCase
 import ru.kvf.core.domain.usecase.GetTrashMediaUseCase
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.InitialLoadedUseCase
@@ -68,7 +66,6 @@ val coreModule = module {
     single<MediaSortByUseCase> { MediaSortByUseCaseImpl(get()) }
     single<LoadMediaUseCase> { LoadMediaUseCaseImpl(get()) }
     single<GridCellsCountChangeUseCase> { GridCellsCountChangeUseCaseImpl(get()) }
-    single<GetSortedMediaUseCase> { GetSortedMediaUseCaseImpl(get(), get()) }
     single<GetFolderMediaUseCase> { GetFolderMediaUseCaseImpl(get(), get()) }
     single<EdgeToEdgeUseCase> { EdgeToEdgeUseCaseImpl(get()) }
     single<ThemeUseCase> { ThemeUseCaseImpl(get()) }

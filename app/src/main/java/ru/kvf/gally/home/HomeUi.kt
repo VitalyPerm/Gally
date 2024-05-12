@@ -39,12 +39,14 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ru.kvf.core.widgets.GridCountIcon
+import ru.kvf.core.widgets.PhotoIcon
 import ru.kvf.core.widgets.ReverseIcon
 import ru.kvf.core.widgets.TrashIcon
+import ru.kvf.core.widgets.VideoIcon
 import ru.kvf.feature.design.DesignUi
 import ru.kvf.feature.favorite.FavoriteUi
 import ru.kvf.feature.folders.list.FoldersListUi
-import ru.kvf.feature.media.MediaListUi
+import ru.kvf.feature.media.ui.MediaListUi
 import ru.kvf.feature.settings.SettingsListUi
 import ru.kvf.gally.BuildConfig
 
@@ -109,13 +111,8 @@ fun HomeUi(
                         component = child.component,
                         selectMediaModeEnable = editModeEnable
                     )
-
                     is HomeComponent.Child.Folders -> FoldersListUi(child.component)
-
-                    is HomeComponent.Child.Favorite -> FavoriteUi(
-                        component = child.component,
-                    )
-
+                    is HomeComponent.Child.Favorite -> FavoriteUi(child.component)
                     is HomeComponent.Child.Settings -> SettingsListUi(child.component)
                     is HomeComponent.Child.Design -> DesignUi()
                 }
@@ -168,6 +165,10 @@ private fun TitleActions(instance: HomeComponent.Child) {
 
         is HomeComponent.Child.Media -> {
             val gridCellsCount by instance.component.gridCellsCount.collectAsState()
+            val photoEnable by instance.component.photoEnable.collectAsState()
+            val videoEnable by instance.component.videoEnable.collectAsState()
+            PhotoIcon(onClick = instance.component::onPhotoIconClick, enable = photoEnable)
+            VideoIcon(enable = videoEnable, onClick = instance.component::onVideoIconClick)
             GridCountIcon(count = gridCellsCount, onClick = instance.component::onGridCountClick)
             ReverseIcon(instance.component::onReverseClick)
         }

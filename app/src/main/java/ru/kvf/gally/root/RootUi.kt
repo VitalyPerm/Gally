@@ -20,7 +20,7 @@ import ru.kvf.core.utils.createDeleteMediaRequest
 import ru.kvf.core.utils.createTrashMediaRequest
 import ru.kvf.core.utils.shareMedia
 import ru.kvf.feature.folders.details.FolderDetailsUi
-import ru.kvf.feature.media.MediaListUi
+import ru.kvf.feature.media.ui.MediaListUi
 import ru.kvf.feature.trash.TrashUi
 import ru.kvf.gally.home.HomeUi
 

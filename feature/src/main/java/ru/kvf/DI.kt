@@ -18,8 +18,12 @@ import ru.kvf.feature.folders.details.FolderDetailsComponent
 import ru.kvf.feature.folders.details.RealFolderDetailsComponent
 import ru.kvf.feature.folders.list.FoldersListComponent
 import ru.kvf.feature.folders.list.RealFoldersListComponent
-import ru.kvf.feature.media.MediaListComponent
-import ru.kvf.feature.media.RealMediaListComponent
+import ru.kvf.feature.media.data.GetSortedMediaUseCaseImpl
+import ru.kvf.feature.media.data.MediaFilterUseCaseImpl
+import ru.kvf.feature.media.domain.GetSortedMediaUseCase
+import ru.kvf.feature.media.domain.MediaFilterUseCase
+import ru.kvf.feature.media.ui.MediaListComponent
+import ru.kvf.feature.media.ui.RealMediaListComponent
 import ru.kvf.feature.mediabsh.MediaBSHComponent
 import ru.kvf.feature.mediabsh.RealMediaBSHComponent
 import ru.kvf.feature.settings.RealSettingsListComponent
@@ -29,13 +33,15 @@ import ru.kvf.feature.trash.TrashComponent
 
 val featureModule = module {
     single<Resources> { get<Context>().resources }
+    single<GetSortedMediaUseCase> { GetSortedMediaUseCaseImpl(get(), get(), get()) }
+    single<MediaFilterUseCase> { MediaFilterUseCaseImpl() }
 }
 
 fun ComponentFactory.createMediaListComponent(
     componentContext: ComponentContext,
-    folderName: String? = null,
 ): MediaListComponent = RealMediaListComponent(
     componentContext,
+    get(),
     get(),
     get(),
     get(),

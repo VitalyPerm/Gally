@@ -3,7 +3,9 @@ package ru.kvf.core.widgets
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.RestoreFromTrash
+import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material.icons.filled.WifiProtectedSetup
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,8 +43,8 @@ fun TrashIcon(onClick: () -> Unit) {
 
 @Composable
 fun GridCountIcon(
-    count: Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    count: Int
 ) {
     TextButton(onClick = onClick) {
         Text(
@@ -52,6 +54,34 @@ fun GridCountIcon(
                 .clip(MaterialTheme.shapes.extraLarge)
                 .background(MaterialTheme.colorScheme.onPrimary)
                 .padding(horizontal = 10.dp, vertical = 4.dp)
+        )
+    }
+}
+
+@Composable
+fun PhotoIcon(
+    onClick: () -> Unit,
+    enable: Boolean,
+) {
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = Icons.Default.Photo,
+            contentDescription = null,
+            tint = if (enable) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onPrimary
+        )
+    }
+}
+
+@Composable
+fun VideoIcon(
+    onClick: () -> Unit,
+    enable: Boolean,
+) {
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = Icons.Default.Videocam,
+            contentDescription = null,
+            tint = if (enable) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onPrimary
         )
     }
 }

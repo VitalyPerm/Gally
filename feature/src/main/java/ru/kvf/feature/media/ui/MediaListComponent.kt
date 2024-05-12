@@ -1,4 +1,4 @@
-package ru.kvf.feature.media
+package ru.kvf.feature.media.ui
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,6 +19,8 @@ interface MediaListComponent {
     val gridCellsCount: StateFlow<Int>
     val selectedMediaIds: StateFlow<LongSet>
     val selectedMediaDates: StateFlow<MediaDateSet>
+    val photoEnable: StateFlow<Boolean>
+    val videoEnable: StateFlow<Boolean>
     val scrollUp: Flow<Unit>
     val lastPosition: Int
 
@@ -33,4 +35,6 @@ interface MediaListComponent {
     fun selectModeOnFavoriteClick()
     fun selectModeOnDisFavoriteClick()
     fun onSelectDateClick(mediaDate: MediaDate)
+    fun onPhotoIconClick()
+    fun onVideoIconClick()
 }

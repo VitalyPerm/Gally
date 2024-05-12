@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.ThemeType
 import ru.kvf.feature.folders.details.FolderDetailsComponent
-import ru.kvf.feature.media.MediaListComponent
+import ru.kvf.feature.media.ui.MediaListComponent
 import ru.kvf.feature.trash.TrashComponent
 import ru.kvf.gally.home.HomeComponent
 

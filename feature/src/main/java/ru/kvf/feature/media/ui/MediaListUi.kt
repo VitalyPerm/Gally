@@ -1,4 +1,4 @@
-package ru.kvf.feature.media
+package ru.kvf.feature.media.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
