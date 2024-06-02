@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.feature.favorite.FavoriteComponent
 import ru.kvf.feature.folders.list.FoldersListComponent
 import ru.kvf.feature.media.ui.MediaListComponent
+import ru.kvf.feature.mediadetails.MediaDetailsComponent
 import ru.kvf.feature.settings.SettingsListComponent
 
 interface HomeComponent {
@@ -30,5 +31,9 @@ interface HomeComponent {
     sealed interface Output {
         data class OpenFolderRequested(val name: String) : Output
         data object OpenTrashRequested : Output
+        data class OpenMediaDetailsRequested(
+            val type: MediaDetailsComponent.Type,
+            val mediaId: Long
+        ) : Output
     }
 }

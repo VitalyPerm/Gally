@@ -39,6 +39,7 @@ import ru.kvf.feature.mediabsh.MediaBSHComponent
 
 class RealMediaListComponent(
     componentContext: ComponentContext,
+    private val onOutput: (MediaListComponent.Output.MediaDetailsRequested) -> Unit,
     getSortedMediaUseCase: GetSortedMediaUseCase,
     getFavoriteMediaIdsUseCase: GetFavoriteMediaIdsUseCase,
     private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
@@ -114,8 +115,7 @@ class RealMediaListComponent(
                         .size(Size.ORIGINAL)
                         .build()
                 )
-                val index = allMedia.value.data.indexOf(media)
-                mediaBSHComponent.setup(index)
+                onOutput(MediaListComponent.Output.MediaDetailsRequested(mediaId))
             }
         }
     }

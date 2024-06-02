@@ -26,6 +26,8 @@ import ru.kvf.feature.media.ui.MediaListComponent
 import ru.kvf.feature.media.ui.RealMediaListComponent
 import ru.kvf.feature.mediabsh.MediaBSHComponent
 import ru.kvf.feature.mediabsh.RealMediaBSHComponent
+import ru.kvf.feature.mediadetails.MediaDetailsComponent
+import ru.kvf.feature.mediadetails.RealMediaDetailsComponent
 import ru.kvf.feature.settings.RealSettingsListComponent
 import ru.kvf.feature.settings.SettingsListComponent
 import ru.kvf.feature.trash.RealTrashComponent
@@ -39,8 +41,10 @@ val featureModule = module {
 
 fun ComponentFactory.createMediaListComponent(
     componentContext: ComponentContext,
+    output: (MediaListComponent.Output) -> Unit
 ): MediaListComponent = RealMediaListComponent(
     componentContext,
+    output,
     get(),
     get(),
     get(),
@@ -147,4 +151,20 @@ fun ComponentFactory.createTrashComponent(
     get(),
     get(),
     get()
+)
+
+fun ComponentFactory.createMediaDetailsComponent(
+    componentContext: ComponentContext,
+    type: MediaDetailsComponent.Type,
+    mediaId: Long
+): MediaDetailsComponent = RealMediaDetailsComponent(
+    componentContext,
+    type,
+    mediaId,
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
+    get(),
 )

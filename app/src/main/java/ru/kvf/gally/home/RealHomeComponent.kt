@@ -22,6 +22,8 @@ import ru.kvf.createMediaListComponent
 import ru.kvf.createSettingsListComponent
 import ru.kvf.feature.favorite.FavoriteComponent
 import ru.kvf.feature.folders.list.FoldersListComponent
+import ru.kvf.feature.media.ui.MediaListComponent
+import ru.kvf.feature.mediadetails.MediaDetailsComponent
 import ru.kvf.core.R as CoreR
 
 class RealHomeComponent(
@@ -65,7 +67,7 @@ class RealHomeComponent(
     private fun child(config: Config, componentContext: ComponentContext): HomeComponent.Child =
         when (config) {
             Config.Media -> HomeComponent.Child.Media(
-                componentFactory.createMediaListComponent(componentContext)
+                componentFactory.createMediaListComponent(componentContext, ::mediaListOutput)
             )
 
             Config.Folders -> HomeComponent.Child.Folders(
@@ -112,6 +114,17 @@ class RealHomeComponent(
         when (output) {
             is FavoriteComponent.Output.OpenFolderRequested -> onOutput(
                 HomeComponent.Output.OpenFolderRequested(output.name)
+            )
+        }
+    }
+
+    private fun mediaListOutput(output: MediaListComponent.Output) {
+        when (output) {
+            is MediaListComponent.Output.MediaDetailsRequested -> onOutput(
+                HomeComponent.Output.OpenMediaDetailsRequested(
+                    type = MediaDetailsComponent.Type.All,
+                    mediaId = output.mediaId
+                )
             )
         }
     }

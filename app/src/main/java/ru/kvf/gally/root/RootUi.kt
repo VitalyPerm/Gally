@@ -21,6 +21,7 @@ import ru.kvf.core.utils.createTrashMediaRequest
 import ru.kvf.core.utils.shareMedia
 import ru.kvf.feature.folders.details.FolderDetailsUi
 import ru.kvf.feature.media.ui.MediaListUi
+import ru.kvf.feature.mediadetails.MediaDetailsUi
 import ru.kvf.feature.trash.TrashUi
 import ru.kvf.gally.home.HomeUi
 
@@ -77,6 +78,7 @@ fun RootUi(
                 is RootComponent.Child.FolderMediaList -> MediaListUi(child.component)
                 is RootComponent.Child.Trash -> TrashUi(child.component)
                 is RootComponent.Child.FolderDetails -> FolderDetailsUi(child.component)
+                is RootComponent.Child.MediaDetails -> MediaDetailsUi(child.component)
             }
         }
     }

@@ -24,8 +24,11 @@ import ru.kvf.core.utils.collectSafe
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.createFolderDetailsComponent
+import ru.kvf.createMediaDetailsComponent
 import ru.kvf.createMediaListComponent
 import ru.kvf.createTrashComponent
+import ru.kvf.feature.media.ui.MediaListComponent
+import ru.kvf.feature.mediadetails.MediaDetailsComponent
 import ru.kvf.gally.createHomeComponent
 import ru.kvf.gally.home.HomeComponent
 
@@ -94,7 +97,7 @@ class RealRootComponent(
             )
 
             is Config.MediaList -> RootComponent.Child.FolderMediaList(
-                componentFactory.createMediaListComponent(componentContext)
+                componentFactory.createMediaListComponent(componentContext, ::mediaListOutput)
             )
 
             Config.Trash -> RootComponent.Child.Trash(
@@ -104,16 +107,32 @@ class RealRootComponent(
             is Config.FolderDetails -> RootComponent.Child.FolderDetails(
                 componentFactory.createFolderDetailsComponent(componentContext, config.folderName)
             )
+
+            is Config.MediaDetails -> RootComponent.Child.MediaDetails(
+                componentFactory.createMediaDetailsComponent(
+                    componentContext,
+                    config.type,
+                    config.initialMediaId
+                )
+            )
         }
 
     private fun homeOutput(output: HomeComponent.Output) {
         when (output) {
             is HomeComponent.Output.OpenFolderRequested -> navigation.push(
-                Config.FolderDetails(
-                    output.name
-                )
+                Config.FolderDetails(output.name)
             )
             HomeComponent.Output.OpenTrashRequested -> navigation.push(Config.Trash)
+            is HomeComponent.Output.OpenMediaDetailsRequested -> navigation.push(
+                Config.MediaDetails(output.type, output.mediaId)
+            )
+        }
+    }
+
+    private fun mediaListOutput(output: MediaListComponent.Output) {
+        when (output) {
+            is MediaListComponent.Output.MediaDetailsRequested ->
+                Config.MediaDetails(MediaDetailsComponent.Type.All, output.mediaId)
         }
     }
 
@@ -130,5 +149,11 @@ class RealRootComponent(
 
         @Serializable
         data object Trash : Config
+
+        @Serializable
+        data class MediaDetails(
+            val type: MediaDetailsComponent.Type,
+            val initialMediaId: Long
+        ) : Config
     }
 }

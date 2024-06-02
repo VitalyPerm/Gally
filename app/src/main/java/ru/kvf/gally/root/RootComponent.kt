@@ -9,6 +9,7 @@ import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.ThemeType
 import ru.kvf.feature.folders.details.FolderDetailsComponent
 import ru.kvf.feature.media.ui.MediaListComponent
+import ru.kvf.feature.mediadetails.MediaDetailsComponent
 import ru.kvf.feature.trash.TrashComponent
 import ru.kvf.gally.home.HomeComponent
 
@@ -23,6 +24,7 @@ interface RootComponent {
         class FolderMediaList(val component: MediaListComponent) : Child
         class Trash(val component: TrashComponent) : Child
         class FolderDetails(val component: FolderDetailsComponent) : Child
+        class MediaDetails(val component: MediaDetailsComponent) : Child
     }
 
     sealed interface SideEffect {

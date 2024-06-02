@@ -37,4 +37,8 @@ interface MediaListComponent {
     fun onSelectDateClick(mediaDate: MediaDate)
     fun onPhotoIconClick()
     fun onVideoIconClick()
+
+    sealed interface Output {
+        data class MediaDetailsRequested(val mediaId: Long) : Output
+    }
 }
