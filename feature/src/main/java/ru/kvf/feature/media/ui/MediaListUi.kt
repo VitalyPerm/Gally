@@ -19,7 +19,6 @@ import ru.kvf.core.utils.MediaMap
 import ru.kvf.core.utils.collectOnStart
 import ru.kvf.core.widgets.MediaListWithDate
 import ru.kvf.core.widgets.MediaSelectModeMenu
-import ru.kvf.feature.mediabsh.MediaBSHUi
 
 @Composable
 fun MediaListUi(
@@ -72,8 +71,6 @@ fun MediaListUi(
         selectedMediaDates = selectedMediaDates,
         onSelectDateClick = component::onSelectDateClick,
     )
-
-    MediaBSHUi(component.mediaBSHComponent)
 }
 
 @Composable

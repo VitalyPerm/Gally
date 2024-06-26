@@ -5,7 +5,6 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import coil.size.Size
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.childContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,11 +30,9 @@ import ru.kvf.core.utils.MediaMap
 import ru.kvf.core.utils.collectSafe
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
-import ru.kvf.createMediaBSHComponent
 import ru.kvf.feature.media.domain.GetSortedMediaUseCase
 import ru.kvf.feature.media.domain.MediaFilter
 import ru.kvf.feature.media.domain.MediaFilterUseCase
-import ru.kvf.feature.mediabsh.MediaBSHComponent
 
 class RealMediaListComponent(
     componentContext: ComponentContext,
@@ -68,10 +65,6 @@ class RealMediaListComponent(
     override var lastPosition = 0
 
     private val allMedia = MutableStateFlow(MediaList.EMPTY)
-    override val mediaBSHComponent: MediaBSHComponent = componentFactory.createMediaBSHComponent(
-        componentContext = childContext("mediaListBSH"),
-        media = allMedia
-    )
     override val videoEnable = mediaFilterUseCase.get().map { it.second }
         .stateIn(componentScope, SharingStarted.Eagerly, true)
 

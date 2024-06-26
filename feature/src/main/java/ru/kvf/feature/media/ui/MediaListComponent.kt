@@ -7,11 +7,8 @@ import ru.kvf.core.domain.entities.MediaDate
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaMap
-import ru.kvf.feature.mediabsh.MediaBSHComponent
 
 interface MediaListComponent {
-
-    val mediaBSHComponent: MediaBSHComponent
 
     val mediaMap: StateFlow<Pair<MediaMap, MediaMap>>
     val favoriteMediaIds: StateFlow<LongSet>
