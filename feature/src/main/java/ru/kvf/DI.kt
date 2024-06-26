@@ -142,10 +142,11 @@ fun ComponentFactory.createMediaBSHComponent(
 )
 
 fun ComponentFactory.createTrashComponent(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
+    onOutput: (TrashComponent.Output) -> Unit
 ): TrashComponent = RealTrashComponent(
     componentContext,
-    get(),
+    onOutput,
     get(),
     get(),
     get(),
@@ -162,6 +163,7 @@ fun ComponentFactory.createMediaDetailsComponent(
     componentContext,
     type,
     mediaId,
+    get(),
     get(),
     get(),
     get(),

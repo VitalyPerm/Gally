@@ -33,7 +33,6 @@ import ru.kvf.core.widgets.MediaItem
 import ru.kvf.core.widgets.ReverseIcon
 import ru.kvf.core.widgets.TrashBottomMenu
 import ru.kvf.feature.R
-import ru.kvf.feature.mediabsh.MediaBSHUi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -96,8 +95,6 @@ fun TrashUi(component: TrashComponent) {
             selectedMediaCount = selectedMediaIds.data.size
         )
     }
-
-    MediaBSHUi(component.mediaBSHComponent)
 }
 
 @Composable

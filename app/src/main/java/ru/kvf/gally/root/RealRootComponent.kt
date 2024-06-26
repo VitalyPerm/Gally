@@ -29,6 +29,7 @@ import ru.kvf.createMediaListComponent
 import ru.kvf.createTrashComponent
 import ru.kvf.feature.media.ui.MediaListComponent
 import ru.kvf.feature.mediadetails.MediaDetailsComponent
+import ru.kvf.feature.trash.TrashComponent
 import ru.kvf.gally.createHomeComponent
 import ru.kvf.gally.home.HomeComponent
 
@@ -101,7 +102,7 @@ class RealRootComponent(
             )
 
             Config.Trash -> RootComponent.Child.Trash(
-                componentFactory.createTrashComponent(componentContext)
+                componentFactory.createTrashComponent(componentContext, ::trashOutput)
             )
 
             is Config.FolderDetails -> RootComponent.Child.FolderDetails(
@@ -132,7 +133,18 @@ class RealRootComponent(
     private fun mediaListOutput(output: MediaListComponent.Output) {
         when (output) {
             is MediaListComponent.Output.MediaDetailsRequested ->
-                Config.MediaDetails(MediaDetailsComponent.Type.All, output.mediaId)
+                navigation.push(Config.MediaDetails(MediaDetailsComponent.Type.All, output.mediaId))
+        }
+    }
+
+    private fun trashOutput(output: TrashComponent.Output) {
+        when (output) {
+            is TrashComponent.Output.MediaDetailsRequested -> navigation.push(
+                Config.MediaDetails(
+                    MediaDetailsComponent.Type.Trash,
+                    output.mediaId
+                )
+            )
         }
     }
 

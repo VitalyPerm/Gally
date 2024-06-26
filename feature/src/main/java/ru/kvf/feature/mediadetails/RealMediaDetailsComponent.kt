@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import ru.kvf.core.domain.entities.MimeType
 import ru.kvf.core.domain.usecase.DeleteMediaUseCase
+import ru.kvf.core.domain.usecase.GetTrashMediaUseCase
 import ru.kvf.core.domain.usecase.ShareMediaUseCase
 import ru.kvf.core.domain.usecase.TrashMediaUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
@@ -37,7 +38,8 @@ class RealMediaDetailsComponent(
     private val trashMediaUseCase: TrashMediaUseCase,
     private val deleteMediaUseCase: DeleteMediaUseCase,
     getFavoriteMediaUseCase: GetFavoriteMediaUseCase,
-    getSortedMediaUseCase: GetSortedMediaUseCase
+    getSortedMediaUseCase: GetSortedMediaUseCase,
+    getTrashMediaUseCase: GetTrashMediaUseCase,
 ) : ComponentContext by componentContext, MediaDetailsComponent {
 
     private companion object {
@@ -52,6 +54,7 @@ class RealMediaDetailsComponent(
         }
 
         MediaDetailsComponent.Type.Favorite -> getFavoriteMediaUseCase().map(MediaList::from)
+        MediaDetailsComponent.Type.Trash -> getTrashMediaUseCase().map(MediaList::from)
     }.stateIn(componentScope, SharingStarted.Eagerly, MediaList.EMPTY)
 
     override val currentMediaIndex = MutableStateFlow<Int?>(null)
