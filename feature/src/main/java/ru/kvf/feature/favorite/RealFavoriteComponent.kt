@@ -30,7 +30,7 @@ class RealFavoriteComponent(
         )
 
     override val favoriteMediaComponent: FavoriteMediaComponent =
-        componentFactory.createFavoriteMediaComponent(componentContext)
+        componentFactory.createFavoriteMediaComponent(componentContext, ::favoriteMediaOutput)
 
     override val gridCellsCount = gridCellsCountChangeUseCase
         .get(GridCellsCountChangeUseCase.Screen.Favorite)
@@ -55,6 +55,13 @@ class RealFavoriteComponent(
         when (output) {
             is FavoriteFoldersComponent.Output.OpenFolderRequested ->
                 onOutput(FavoriteComponent.Output.OpenFolderRequested(output.name))
+        }
+    }
+
+    private fun favoriteMediaOutput(output: FavoriteMediaComponent.Output) {
+        when (output) {
+            is FavoriteMediaComponent.Output.MediaDetailsRequested ->
+                onOutput(FavoriteComponent.Output.MediaDetailsRequested(output.mediaId))
         }
     }
 }

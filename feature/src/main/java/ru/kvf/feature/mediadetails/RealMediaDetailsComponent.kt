@@ -17,6 +17,7 @@ import ru.kvf.core.domain.usecase.DeleteMediaUseCase
 import ru.kvf.core.domain.usecase.ShareMediaUseCase
 import ru.kvf.core.domain.usecase.TrashMediaUseCase
 import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaIdsUseCase
+import ru.kvf.core.domain.usecase.favorite.GetFavoriteMediaUseCase
 import ru.kvf.core.domain.usecase.favorite.HandleFavoriteClickUseCase
 import ru.kvf.core.utils.MediaList
 import ru.kvf.core.utils.coroutineScope
@@ -35,6 +36,7 @@ class RealMediaDetailsComponent(
     private val shareMediaUseCase: ShareMediaUseCase,
     private val trashMediaUseCase: TrashMediaUseCase,
     private val deleteMediaUseCase: DeleteMediaUseCase,
+    getFavoriteMediaUseCase: GetFavoriteMediaUseCase,
     getSortedMediaUseCase: GetSortedMediaUseCase
 ) : ComponentContext by componentContext, MediaDetailsComponent {
 
@@ -47,8 +49,11 @@ class RealMediaDetailsComponent(
     override val media = when (type) {
         MediaDetailsComponent.Type.All -> getSortedMediaUseCase().map {
             MediaList.from(it.values.flatten())
-        }.stateIn(componentScope, SharingStarted.Eagerly, MediaList.EMPTY)
-    }
+        }
+
+        MediaDetailsComponent.Type.Favorite -> getFavoriteMediaUseCase().map(MediaList::from)
+    }.stateIn(componentScope, SharingStarted.Eagerly, MediaList.EMPTY)
+
     override val currentMediaIndex = MutableStateFlow<Int?>(null)
 
     private val currentMedia = combine(media, currentMediaIndex) { all, page ->

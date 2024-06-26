@@ -16,5 +16,6 @@ interface FavoriteComponent {
 
     sealed interface Output {
         data class OpenFolderRequested(val name: String) : Output
+        data class MediaDetailsRequested(val mediaId: Long) : Output
     }
 }

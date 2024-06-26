@@ -123,7 +123,7 @@ class RealRootComponent(
                 Config.FolderDetails(output.name)
             )
             HomeComponent.Output.OpenTrashRequested -> navigation.push(Config.Trash)
-            is HomeComponent.Output.OpenMediaDetailsRequested -> navigation.push(
+            is HomeComponent.Output.MediaDetailsRequested -> navigation.push(
                 Config.MediaDetails(output.type, output.mediaId)
             )
         }

@@ -115,13 +115,20 @@ class RealHomeComponent(
             is FavoriteComponent.Output.OpenFolderRequested -> onOutput(
                 HomeComponent.Output.OpenFolderRequested(output.name)
             )
+
+            is FavoriteComponent.Output.MediaDetailsRequested -> onOutput(
+                HomeComponent.Output.MediaDetailsRequested(
+                    type = MediaDetailsComponent.Type.Favorite,
+                    mediaId = output.mediaId
+                )
+            )
         }
     }
 
     private fun mediaListOutput(output: MediaListComponent.Output) {
         when (output) {
             is MediaListComponent.Output.MediaDetailsRequested -> onOutput(
-                HomeComponent.Output.OpenMediaDetailsRequested(
+                HomeComponent.Output.MediaDetailsRequested(
                     type = MediaDetailsComponent.Type.All,
                     mediaId = output.mediaId
                 )

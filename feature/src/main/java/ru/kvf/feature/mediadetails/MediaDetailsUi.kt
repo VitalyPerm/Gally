@@ -1,6 +1,5 @@
 package ru.kvf.feature.mediadetails
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -52,7 +51,6 @@ fun MediaDetailsUi(
     val isOptionsVisible by component.optionsVisible.collectAsState()
     val isFavorite by component.isFavorite.collectAsState()
 
-    Log.d("check___", "curr = $currentMediaIndex")
     currentMediaIndex?.let {
         val pagerState = rememberPagerState(initialPage = it) { media.data.size }
         LaunchedEffect(pagerState) {
@@ -68,11 +66,12 @@ fun MediaDetailsUi(
                 pagerState = pagerState,
                 onTap = component::onTap
             )
-
-            FavoriteIcon(
-                isFavorite = isFavorite,
-                isOptionsVisible = isOptionsVisible
-            )
+            if (component.type != MediaDetailsComponent.Type.Favorite) {
+                FavoriteIcon(
+                    isFavorite = isFavorite,
+                    isOptionsVisible = isOptionsVisible
+                )
+            }
 
             Title(
                 name = title,
@@ -133,12 +132,12 @@ private fun BoxScope.FavoriteIcon(
     isFavorite: Boolean,
     isOptionsVisible: Boolean
 ) {
-    AnimatedVisibility(isFavorite && isOptionsVisible) {
-        Box(
-            modifier = Modifier
-                .padding(24.dp)
-                .align(Alignment.TopEnd)
-        ) {
+    Box(
+        modifier = Modifier
+            .padding(24.dp)
+            .align(Alignment.TopEnd)
+    ) {
+        AnimatedVisibility(isFavorite && isOptionsVisible) {
             Icon(
                 imageVector = Icons.Default.Favorite,
                 contentDescription = null,

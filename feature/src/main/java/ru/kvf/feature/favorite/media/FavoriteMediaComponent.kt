@@ -2,11 +2,8 @@ package ru.kvf.feature.favorite.media
 
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.core.utils.MediaList
-import ru.kvf.feature.mediabsh.MediaBSHComponent
 
 interface FavoriteMediaComponent {
-
-    val mediaBSHComponent: MediaBSHComponent
 
     val media: StateFlow<MediaList>
     val selectedMediaIndex: StateFlow<Int>
@@ -14,4 +11,8 @@ interface FavoriteMediaComponent {
 
     fun onMediaClick(mediaId: Long)
     fun onMediaLongClick(mediaId: Long)
+
+    sealed interface Output {
+        data class MediaDetailsRequested(val mediaId: Long) : Output
+    }
 }

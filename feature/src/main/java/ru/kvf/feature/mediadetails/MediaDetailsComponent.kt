@@ -25,5 +25,6 @@ interface MediaDetailsComponent {
 
     sealed interface Type {
         data object All : Type
+        data object Favorite : Type
     }
 }

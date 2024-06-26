@@ -31,7 +31,7 @@ interface HomeComponent {
     sealed interface Output {
         data class OpenFolderRequested(val name: String) : Output
         data object OpenTrashRequested : Output
-        data class OpenMediaDetailsRequested(
+        data class MediaDetailsRequested(
             val type: MediaDetailsComponent.Type,
             val mediaId: Long
         ) : Output

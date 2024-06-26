@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.utils.MediaList
 import ru.kvf.core.widgets.MediaItem
-import ru.kvf.feature.mediabsh.MediaBSHUi
 
 @Composable
 fun FavoriteMediaUi(
@@ -36,8 +35,6 @@ fun FavoriteMediaUi(
             gridCellsCount = gridCellsCount
         )
     }
-
-    MediaBSHUi(component.mediaBSHComponent)
 }
 
 @Composable

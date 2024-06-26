@@ -96,9 +96,10 @@ fun ComponentFactory.createFavoriteFoldersComponent(
 
 fun ComponentFactory.createFavoriteMediaComponent(
     componentContext: ComponentContext,
+    onOutput: (FavoriteMediaComponent.Output) -> Unit
 ): FavoriteMediaComponent = RealFavoriteMediaComponent(
     componentContext,
-    get(),
+    onOutput,
     get(),
     get()
 )
@@ -161,6 +162,7 @@ fun ComponentFactory.createMediaDetailsComponent(
     componentContext,
     type,
     mediaId,
+    get(),
     get(),
     get(),
     get(),
