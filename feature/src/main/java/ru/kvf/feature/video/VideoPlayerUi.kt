@@ -3,20 +3,22 @@ package ru.kvf.feature.video
 import android.view.View
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.util.UnstableApi
@@ -26,7 +28,10 @@ import androidx.media3.ui.PlayerView
 @Composable
 fun VideoPlayerUi(component: VideoPlayerComponent) {
     var isControllerVisible by remember { mutableStateOf(false) }
-    Box {
+    Box(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.scrim)
+    ) {
         AndroidView(
             modifier = Modifier
                 .fillMaxSize(),
@@ -44,15 +49,24 @@ fun VideoPlayerUi(component: VideoPlayerComponent) {
                 }
             }
         )
-        AnimatedVisibility(isControllerVisible) {
-            Icon(
-                Icons.Rounded.Close,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .clickable(onClick = component::onCloseClick)
-            )
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+        ) {
+            AnimatedVisibility(isControllerVisible) {
+                IconButton(
+                    onClick = component::onCloseClick,
+                    modifier = Modifier
+                ) {
+                    Icon(
+                        Icons.Rounded.Close,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
         }
     }
 }
