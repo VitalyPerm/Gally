@@ -5,7 +5,6 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import coil.size.Size
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.childContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
 import ru.kvf.core.domain.usecase.GetFolderMediaUseCase
@@ -31,21 +29,19 @@ import ru.kvf.core.utils.MediaMap
 import ru.kvf.core.utils.collectSafe
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
-import ru.kvf.createMediaBSHComponent
-import ru.kvf.feature.mediabsh.MediaBSHComponent
 
 class RealFolderDetailsComponent(
     componentContext: ComponentContext,
+    private val onOutput: (FolderDetailsComponent.Output) -> Unit,
     override val folderName: String,
     getFolderMediaUseCase: GetFolderMediaUseCase,
     getFavoriteMediaIdsUseCase: GetFavoriteMediaIdsUseCase,
     private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
     private val handleFavoriteSetUseCase: HandleFavoriteSetUseCase,
-    componentFactory: ComponentFactory,
     private val context: Context,
     private val hapticFeedBackUseCase: PerformHapticFeedBackUseCase,
     private val shareMediaUseCase: ShareMediaUseCase,
-    private val trashMediaUseCase: TrashMediaUseCase
+    private val trashMediaUseCase: TrashMediaUseCase,
 ) : ComponentContext by componentContext, FolderDetailsComponent {
     private val componentScope = coroutineScope()
 
@@ -63,10 +59,6 @@ class RealFolderDetailsComponent(
     override var lastPosition = 0
 
     private val allMedia = MutableStateFlow(MediaList.EMPTY)
-    override val mediaBSHComponent: MediaBSHComponent = componentFactory.createMediaBSHComponent(
-        componentContext = childContext("folderDetailsBSH"),
-        media = allMedia
-    )
 
     private var allMediaList: List<Media> = emptyList()
     private var mediaDateToIdMap: Map<MediaDate, List<Long>> = emptyMap()
@@ -105,8 +97,7 @@ class RealFolderDetailsComponent(
                         .size(Size.ORIGINAL)
                         .build()
                 )
-                val index = allMedia.value.data.indexOf(media)
-                mediaBSHComponent.setup(index)
+                onOutput(FolderDetailsComponent.Output.MediaDetailsRequested(mediaId, folderName))
             }
         }
     }

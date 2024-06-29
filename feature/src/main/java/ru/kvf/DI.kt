@@ -3,11 +3,9 @@ package ru.kvf
 import android.content.Context
 import android.content.res.Resources
 import com.arkivanov.decompose.ComponentContext
-import kotlinx.coroutines.flow.StateFlow
 import org.koin.core.component.get
 import org.koin.dsl.module
 import ru.kvf.core.ComponentFactory
-import ru.kvf.core.utils.MediaList
 import ru.kvf.feature.favorite.FavoriteComponent
 import ru.kvf.feature.favorite.RealFavoriteComponent
 import ru.kvf.feature.favorite.folders.FavoriteFoldersComponent
@@ -24,8 +22,6 @@ import ru.kvf.feature.media.domain.GetSortedMediaUseCase
 import ru.kvf.feature.media.domain.MediaFilterUseCase
 import ru.kvf.feature.media.ui.MediaListComponent
 import ru.kvf.feature.media.ui.RealMediaListComponent
-import ru.kvf.feature.mediabsh.MediaBSHComponent
-import ru.kvf.feature.mediabsh.RealMediaBSHComponent
 import ru.kvf.feature.mediadetails.MediaDetailsComponent
 import ru.kvf.feature.mediadetails.RealMediaDetailsComponent
 import ru.kvf.feature.settings.RealSettingsListComponent
@@ -59,11 +55,12 @@ fun ComponentFactory.createMediaListComponent(
 
 fun ComponentFactory.createFolderDetailsComponent(
     componentContext: ComponentContext,
+    output: (FolderDetailsComponent.Output) -> Unit,
     folderName: String,
 ): FolderDetailsComponent = RealFolderDetailsComponent(
     componentContext,
+    output,
     folderName,
-    get(),
     get(),
     get(),
     get(),
@@ -126,21 +123,6 @@ fun ComponentFactory.createSettingsListComponent(
     get()
 )
 
-fun ComponentFactory.createMediaBSHComponent(
-    componentContext: ComponentContext,
-    media: StateFlow<MediaList>,
-    isTrash: Boolean = false
-): MediaBSHComponent = RealMediaBSHComponent(
-    componentContext,
-    isTrash = isTrash,
-    media,
-    get(),
-    get(),
-    get(),
-    get(),
-    get(),
-)
-
 fun ComponentFactory.createTrashComponent(
     componentContext: ComponentContext,
     onOutput: (TrashComponent.Output) -> Unit
@@ -163,6 +145,7 @@ fun ComponentFactory.createMediaDetailsComponent(
     componentContext,
     type,
     mediaId,
+    get(),
     get(),
     get(),
     get(),

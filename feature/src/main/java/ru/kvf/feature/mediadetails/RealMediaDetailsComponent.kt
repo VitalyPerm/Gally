@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import ru.kvf.core.domain.entities.MimeType
 import ru.kvf.core.domain.usecase.DeleteMediaUseCase
+import ru.kvf.core.domain.usecase.GetFolderMediaUseCase
 import ru.kvf.core.domain.usecase.GetTrashMediaUseCase
 import ru.kvf.core.domain.usecase.ShareMediaUseCase
 import ru.kvf.core.domain.usecase.TrashMediaUseCase
@@ -40,6 +41,7 @@ class RealMediaDetailsComponent(
     getFavoriteMediaUseCase: GetFavoriteMediaUseCase,
     getSortedMediaUseCase: GetSortedMediaUseCase,
     getTrashMediaUseCase: GetTrashMediaUseCase,
+    getFolderMediaUseCase: GetFolderMediaUseCase,
 ) : ComponentContext by componentContext, MediaDetailsComponent {
 
     private companion object {
@@ -55,6 +57,9 @@ class RealMediaDetailsComponent(
 
         MediaDetailsComponent.Type.Favorite -> getFavoriteMediaUseCase().map(MediaList::from)
         MediaDetailsComponent.Type.Trash -> getTrashMediaUseCase().map(MediaList::from)
+        is MediaDetailsComponent.Type.Folder -> getFolderMediaUseCase(type.name).map {
+            MediaList.from(it.values.flatten())
+        }
     }.stateIn(componentScope, SharingStarted.Eagerly, MediaList.EMPTY)
 
     override val currentMediaIndex = MutableStateFlow<Int?>(null)
@@ -67,11 +72,11 @@ class RealMediaDetailsComponent(
 
     override val title: StateFlow<String?> = currentMedia.map { media ->
         media?.timeStamp?.takeIf { it > 0 }?.let { time -> titleTimeFormat.format(time) }
-    }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), null)
+    }.stateIn(componentScope, SharingStarted.Eagerly, null)
 
     override val deleteDay: StateFlow<String?> = currentMedia.map {
         it?.expiresTimeStamp?.let { time -> deleteDaySdf.format(time.times(1000)) }
-    }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), null)
+    }.stateIn(componentScope, SharingStarted.Eagerly, null)
 
     override val optionsVisible = MutableStateFlow(true)
     private val titleTimeFormat = SimpleDateFormat(TITLE_TIME_FORMAT, Locale.getDefault())

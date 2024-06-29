@@ -27,6 +27,7 @@ import ru.kvf.createFolderDetailsComponent
 import ru.kvf.createMediaDetailsComponent
 import ru.kvf.createMediaListComponent
 import ru.kvf.createTrashComponent
+import ru.kvf.feature.folders.details.FolderDetailsComponent
 import ru.kvf.feature.media.ui.MediaListComponent
 import ru.kvf.feature.mediadetails.MediaDetailsComponent
 import ru.kvf.feature.trash.TrashComponent
@@ -106,7 +107,11 @@ class RealRootComponent(
             )
 
             is Config.FolderDetails -> RootComponent.Child.FolderDetails(
-                componentFactory.createFolderDetailsComponent(componentContext, config.folderName)
+                componentFactory.createFolderDetailsComponent(
+                    componentContext,
+                    ::folderDetailsOutput,
+                    config.folderName
+                )
             )
 
             is Config.MediaDetails -> RootComponent.Child.MediaDetails(
@@ -142,6 +147,17 @@ class RealRootComponent(
             is TrashComponent.Output.MediaDetailsRequested -> navigation.push(
                 Config.MediaDetails(
                     MediaDetailsComponent.Type.Trash,
+                    output.mediaId
+                )
+            )
+        }
+    }
+
+    private fun folderDetailsOutput(output: FolderDetailsComponent.Output) {
+        when (output) {
+            is FolderDetailsComponent.Output.MediaDetailsRequested -> navigation.push(
+                Config.MediaDetails(
+                    MediaDetailsComponent.Type.Folder(output.folderName),
                     output.mediaId
                 )
             )

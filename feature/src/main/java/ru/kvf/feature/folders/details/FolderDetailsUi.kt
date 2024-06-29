@@ -29,7 +29,6 @@ import ru.kvf.core.widgets.GridCountIcon
 import ru.kvf.core.widgets.MediaListWithDate
 import ru.kvf.core.widgets.MediaSelectModeMenu
 import ru.kvf.core.widgets.ReverseIcon
-import ru.kvf.feature.mediabsh.MediaBSHUi
 
 @Composable
 fun FolderDetailsUi(component: FolderDetailsComponent) {
@@ -78,8 +77,6 @@ fun FolderDetailsUi(component: FolderDetailsComponent) {
         selectedMediaDates = selectedMediaDates,
         onSelectDateClick = component::onSelectDateClick,
     )
-
-    MediaBSHUi(component.mediaBSHComponent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

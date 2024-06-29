@@ -27,5 +27,6 @@ interface MediaDetailsComponent {
         data object All : Type
         data object Favorite : Type
         data object Trash : Type
+        data class Folder(val name: String) : Type
     }
 }

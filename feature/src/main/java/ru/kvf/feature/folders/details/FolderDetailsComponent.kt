@@ -7,11 +7,8 @@ import ru.kvf.core.domain.entities.MediaDate
 import ru.kvf.core.utils.LongSet
 import ru.kvf.core.utils.MediaDateSet
 import ru.kvf.core.utils.MediaMap
-import ru.kvf.feature.mediabsh.MediaBSHComponent
 
 interface FolderDetailsComponent {
-
-    val mediaBSHComponent: MediaBSHComponent
 
     val mediaMap: StateFlow<Pair<MediaMap, MediaMap>>
     val favoriteMediaIds: StateFlow<LongSet>
@@ -34,4 +31,8 @@ interface FolderDetailsComponent {
     fun selectModeOnFavoriteClick()
     fun selectModeOnDisFavoriteClick()
     fun onSelectDateClick(mediaDate: MediaDate)
+
+    sealed interface Output {
+        data class MediaDetailsRequested(val mediaId: Long, val folderName: String) : Output
+    }
 }
