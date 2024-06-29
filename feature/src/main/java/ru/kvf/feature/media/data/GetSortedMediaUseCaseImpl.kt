@@ -1,5 +1,6 @@
 package ru.kvf.feature.media.data
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import ru.kvf.core.domain.entities.Media
@@ -25,6 +26,7 @@ class GetSortedMediaUseCaseImpl(
             mediaSortByUseCase.get(),
             mediaFilterUseCase.get()
         ) { media, sortBy, (photo, video) ->
+            Log.d("check___", "photo = $photo, video = $video")
             val filtered = media.filter {
                 when {
                     photo && video -> true

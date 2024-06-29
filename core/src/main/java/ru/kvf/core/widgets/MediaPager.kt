@@ -111,6 +111,7 @@ private fun VideoItem(
             Icon(
                 imageVector = Icons.Default.PlayCircle,
                 contentDescription = null,
+                tint = MaterialTheme.colorScheme.surfaceVariant,
                 modifier = Modifier
                     .size(64.dp)
             )

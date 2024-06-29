@@ -67,7 +67,7 @@ fun PhotoIcon(
         Icon(
             imageVector = Icons.Default.Photo,
             contentDescription = null,
-            tint = if (enable) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onPrimary
+            tint = if (enable) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
         )
     }
 }
@@ -81,7 +81,7 @@ fun VideoIcon(
         Icon(
             imageVector = Icons.Default.Videocam,
             contentDescription = null,
-            tint = if (enable) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onPrimary
+            tint = if (enable) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
         )
     }
 }
