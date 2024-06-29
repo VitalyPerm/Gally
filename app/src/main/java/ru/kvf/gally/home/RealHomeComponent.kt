@@ -133,6 +133,10 @@ class RealHomeComponent(
                     mediaId = output.mediaId
                 )
             )
+
+            is MediaListComponent.Output.VideoRequested -> onOutput(
+                HomeComponent.Output.VideoRequested(output.mediaId)
+            )
         }
     }
 

@@ -14,9 +14,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.kvf.core.ComponentFactory
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
+import ru.kvf.core.domain.entities.MimeType
 import ru.kvf.core.domain.usecase.GridCellsCountChangeUseCase
 import ru.kvf.core.domain.usecase.PerformHapticFeedBackUseCase
 import ru.kvf.core.domain.usecase.ShareMediaUseCase
@@ -36,12 +36,11 @@ import ru.kvf.feature.media.domain.MediaFilterUseCase
 
 class RealMediaListComponent(
     componentContext: ComponentContext,
-    private val onOutput: (MediaListComponent.Output.MediaDetailsRequested) -> Unit,
+    private val onOutput: (MediaListComponent.Output) -> Unit,
     getSortedMediaUseCase: GetSortedMediaUseCase,
     getFavoriteMediaIdsUseCase: GetFavoriteMediaIdsUseCase,
     private val gridCellsCountChangeUseCase: GridCellsCountChangeUseCase,
     private val handleFavoriteSetUseCase: HandleFavoriteSetUseCase,
-    componentFactory: ComponentFactory,
     private val context: Context,
     private val hapticFeedBackUseCase: PerformHapticFeedBackUseCase,
     private val shareMediaUseCase: ShareMediaUseCase,
@@ -108,7 +107,11 @@ class RealMediaListComponent(
                         .size(Size.ORIGINAL)
                         .build()
                 )
-                onOutput(MediaListComponent.Output.MediaDetailsRequested(mediaId))
+                val output = when (media.mimeType) {
+                    MimeType.Video -> MediaListComponent.Output.VideoRequested(mediaId)
+                    MimeType.Photo -> MediaListComponent.Output.MediaDetailsRequested(mediaId)
+                }
+                onOutput(output)
             }
         }
     }

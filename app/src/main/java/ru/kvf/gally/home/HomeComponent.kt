@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.feature.favorite.FavoriteComponent
 import ru.kvf.feature.folders.list.FoldersListComponent
 import ru.kvf.feature.media.ui.MediaListComponent
+import ru.kvf.feature.media.ui.MediaListComponent.Output
 import ru.kvf.feature.mediadetails.MediaDetailsComponent
 import ru.kvf.feature.settings.SettingsListComponent
 
@@ -35,5 +36,6 @@ interface HomeComponent {
             val type: MediaDetailsComponent.Type,
             val mediaId: Long
         ) : Output
+        data class VideoRequested(val mediaId: Long) : Output
     }
 }

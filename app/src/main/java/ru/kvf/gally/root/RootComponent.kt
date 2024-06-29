@@ -11,6 +11,7 @@ import ru.kvf.feature.folders.details.FolderDetailsComponent
 import ru.kvf.feature.media.ui.MediaListComponent
 import ru.kvf.feature.mediadetails.MediaDetailsComponent
 import ru.kvf.feature.trash.TrashComponent
+import ru.kvf.feature.video.VideoPlayerComponent
 import ru.kvf.gally.home.HomeComponent
 
 interface RootComponent {
@@ -25,6 +26,7 @@ interface RootComponent {
         class Trash(val component: TrashComponent) : Child
         class FolderDetails(val component: FolderDetailsComponent) : Child
         class MediaDetails(val component: MediaDetailsComponent) : Child
+        class VideoPlayer(val component: VideoPlayerComponent) : Child
     }
 
     sealed interface SideEffect {

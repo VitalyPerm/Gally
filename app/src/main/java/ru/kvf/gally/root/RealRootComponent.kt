@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.doOnResume
@@ -27,10 +28,12 @@ import ru.kvf.createFolderDetailsComponent
 import ru.kvf.createMediaDetailsComponent
 import ru.kvf.createMediaListComponent
 import ru.kvf.createTrashComponent
+import ru.kvf.createVideoPlayerComponent
 import ru.kvf.feature.folders.details.FolderDetailsComponent
 import ru.kvf.feature.media.ui.MediaListComponent
 import ru.kvf.feature.mediadetails.MediaDetailsComponent
 import ru.kvf.feature.trash.TrashComponent
+import ru.kvf.feature.video.VideoPlayerComponent
 import ru.kvf.gally.createHomeComponent
 import ru.kvf.gally.home.HomeComponent
 
@@ -121,6 +124,14 @@ class RealRootComponent(
                     config.initialMediaId
                 )
             )
+
+            is Config.VideoPlayer -> RootComponent.Child.VideoPlayer(
+                componentFactory.createVideoPlayerComponent(
+                    componentContext,
+                    ::videoPlayerOutput,
+                    config.mediaId
+                )
+            )
         }
 
     private fun homeOutput(output: HomeComponent.Output) {
@@ -132,6 +143,8 @@ class RealRootComponent(
             is HomeComponent.Output.MediaDetailsRequested -> navigation.push(
                 Config.MediaDetails(output.type, output.mediaId)
             )
+
+            is HomeComponent.Output.VideoRequested -> navigation.push(Config.VideoPlayer(output.mediaId))
         }
     }
 
@@ -139,6 +152,8 @@ class RealRootComponent(
         when (output) {
             is MediaListComponent.Output.MediaDetailsRequested ->
                 navigation.push(Config.MediaDetails(MediaDetailsComponent.Type.All, output.mediaId))
+
+            is MediaListComponent.Output.VideoRequested -> {}
         }
     }
 
@@ -164,6 +179,12 @@ class RealRootComponent(
         }
     }
 
+    private fun videoPlayerOutput(output: VideoPlayerComponent.Output) {
+        when (output) {
+            VideoPlayerComponent.Output.CloseRequested -> navigation.pop()
+        }
+    }
+
     @Serializable
     private sealed interface Config {
         @Serializable
@@ -183,5 +204,8 @@ class RealRootComponent(
             val type: MediaDetailsComponent.Type,
             val initialMediaId: Long
         ) : Config
+
+        @Serializable
+        data class VideoPlayer(val mediaId: Long) : Config
     }
 }

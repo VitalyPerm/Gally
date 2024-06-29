@@ -2,6 +2,7 @@ package ru.kvf
 
 import android.content.Context
 import android.content.res.Resources
+import androidx.media3.exoplayer.ExoPlayer
 import com.arkivanov.decompose.ComponentContext
 import org.koin.core.component.get
 import org.koin.dsl.module
@@ -28,11 +29,14 @@ import ru.kvf.feature.settings.RealSettingsListComponent
 import ru.kvf.feature.settings.SettingsListComponent
 import ru.kvf.feature.trash.RealTrashComponent
 import ru.kvf.feature.trash.TrashComponent
+import ru.kvf.feature.video.RealVideoPlayerComponent
+import ru.kvf.feature.video.VideoPlayerComponent
 
 val featureModule = module {
     single<Resources> { get<Context>().resources }
     single<GetSortedMediaUseCase> { GetSortedMediaUseCaseImpl(get(), get(), get()) }
     single<MediaFilterUseCase> { MediaFilterUseCaseImpl() }
+    factory<ExoPlayer> { ExoPlayer.Builder(get<Context>()).build() }
 }
 
 fun ComponentFactory.createMediaListComponent(
@@ -41,7 +45,6 @@ fun ComponentFactory.createMediaListComponent(
 ): MediaListComponent = RealMediaListComponent(
     componentContext,
     output,
-    get(),
     get(),
     get(),
     get(),
@@ -154,4 +157,16 @@ fun ComponentFactory.createMediaDetailsComponent(
     get(),
     get(),
     get(),
+)
+
+fun ComponentFactory.createVideoPlayerComponent(
+    componentContext: ComponentContext,
+    output: (VideoPlayerComponent.Output) -> Unit,
+    mediaId: Long
+): VideoPlayerComponent = RealVideoPlayerComponent(
+    componentContext,
+    output,
+    mediaId,
+    get(),
+    get()
 )

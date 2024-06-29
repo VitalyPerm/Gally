@@ -37,5 +37,6 @@ interface MediaListComponent {
 
     sealed interface Output {
         data class MediaDetailsRequested(val mediaId: Long) : Output
+        data class VideoRequested(val mediaId: Long) : Output
     }
 }
