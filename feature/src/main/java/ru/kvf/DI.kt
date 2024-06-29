@@ -142,10 +142,12 @@ fun ComponentFactory.createTrashComponent(
 
 fun ComponentFactory.createMediaDetailsComponent(
     componentContext: ComponentContext,
+    output: (MediaDetailsComponent.Output) -> Unit,
     type: MediaDetailsComponent.Type,
     mediaId: Long
 ): MediaDetailsComponent = RealMediaDetailsComponent(
     componentContext,
+    output,
     type,
     mediaId,
     get(),

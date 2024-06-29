@@ -14,7 +14,7 @@ interface MediaDetailsComponent {
     val isFavorite: StateFlow<Boolean>
     val isTrash: Boolean
 
-    fun onTap()
+    fun onMediaClick()
     fun onShareClick()
     fun onTrashClick()
     fun onUnTrashClick()
@@ -22,11 +22,16 @@ interface MediaDetailsComponent {
     fun onPageChanged(page: Int)
     fun trashedSuccess()
     fun onDeleteClick()
+    fun onPlayVideoClick()
 
     sealed interface Type {
         data object All : Type
         data object Favorite : Type
         data object Trash : Type
         data class Folder(val name: String) : Type
+    }
+
+    sealed interface Output {
+        data class VideoPlayerRequested(val videoId: Long) : Output
     }
 }

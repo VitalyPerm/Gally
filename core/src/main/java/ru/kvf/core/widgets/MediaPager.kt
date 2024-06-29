@@ -3,36 +3,33 @@
 package ru.kvf.core.widgets
 
 import android.annotation.SuppressLint
-import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.ScaleFactor
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.media3.common.C
-import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
+import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.ui.AspectRatioFrameLayout
-import androidx.media3.ui.PlayerView
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 import ru.kvf.core.domain.entities.Media
@@ -45,13 +42,15 @@ fun MediaPager(
     modifier: Modifier = Modifier,
     media: MediaList,
     pagerState: PagerState,
-    onTap: () -> Unit = { },
+    onClick: () -> Unit = { },
+    onPlayVideoClick: () -> Unit,
 ) {
     PagerContent(
         mediaList = media,
         pagerState = pagerState,
         modifier = modifier,
-        onTap = onTap,
+        onClick = onClick,
+        onPlayVideoClick = onPlayVideoClick
     )
 }
 
@@ -60,7 +59,8 @@ private fun PagerContent(
     modifier: Modifier = Modifier,
     mediaList: MediaList,
     pagerState: PagerState,
-    onTap: () -> Unit,
+    onClick: () -> Unit,
+    onPlayVideoClick: () -> Unit,
 ) {
     HorizontalPager(
         state = pagerState,
@@ -70,16 +70,15 @@ private fun PagerContent(
         when (media.mimeType) {
             MimeType.Video -> VideoItem(
                 video = media,
-                onClick = {
-                    onTap()
-                }
+                onClick = onClick,
+                onPlayClick = onPlayVideoClick
             )
 
             MimeType.Photo -> PhotoItem(
                 pagerState = pagerState,
                 page = page,
                 model = media.uri,
-                onTap = { onTap() }
+                onTap = { onClick() }
             )
         }
     }
@@ -91,42 +90,43 @@ private fun PagerContent(
 private fun VideoItem(
     video: Media,
     onClick: () -> Unit,
+    onPlayClick: () -> Unit,
 ) {
-    val context = LocalContext.current
-    val exoPlayer = remember(context) {
-        ExoPlayer.Builder(context)
-            .build().apply {
-                videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
-                repeatMode = Player.REPEAT_MODE_ONE
-                setMediaItem(MediaItem.fromUri(video.uri))
-                prepare()
-            }
-    }
-    DisposableEffect(
-        Box(
+    Box {
+        ImageWithLoader(
+            model = video.uri,
+            contentScale = ContentScale.Fit,
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.scrim),
-            contentAlignment = Alignment.Center
+                .background(MaterialTheme.colorScheme.scrim)
+                .clickable(onClick = onClick)
+        )
+
+        IconButton(
+            onClick = onPlayClick,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .size(64.dp)
         ) {
-            AndroidView(
-                factory = { ctx ->
-                    PlayerView(ctx).apply {
-                        player = exoPlayer
-                        layoutParams = FrameLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
-                        )
-                        keepScreenOn = true
-                        resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
-                    }
-                },
-                modifier = Modifier.clickable(onClick = onClick)
+            Icon(
+                imageVector = Icons.Default.PlayCircle,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(64.dp)
             )
         }
-    ) {
-        onDispose {
-            exoPlayer.release()
+
+        video.duration?.let {
+            Text(
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                text = it,
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(32.dp)
+                    .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
+                    .padding(horizontal = 3.dp, vertical = 4.dp)
+            )
         }
     }
 }

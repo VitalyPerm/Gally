@@ -120,6 +120,7 @@ class RealRootComponent(
             is Config.MediaDetails -> RootComponent.Child.MediaDetails(
                 componentFactory.createMediaDetailsComponent(
                     componentContext,
+                    ::mediaDetailsOutput,
                     config.type,
                     config.initialMediaId
                 )
@@ -182,6 +183,13 @@ class RealRootComponent(
     private fun videoPlayerOutput(output: VideoPlayerComponent.Output) {
         when (output) {
             VideoPlayerComponent.Output.CloseRequested -> navigation.pop()
+        }
+    }
+
+    private fun mediaDetailsOutput(output: MediaDetailsComponent.Output) {
+        when (output) {
+            is MediaDetailsComponent.Output.VideoPlayerRequested ->
+                navigation.push(Config.VideoPlayer(output.videoId))
         }
     }
 

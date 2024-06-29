@@ -1,18 +1,14 @@
 package ru.kvf.feature.mediadetails
 
-import android.util.Log
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import ru.kvf.core.domain.entities.MimeType
 import ru.kvf.core.domain.usecase.DeleteMediaUseCase
 import ru.kvf.core.domain.usecase.GetFolderMediaUseCase
 import ru.kvf.core.domain.usecase.GetTrashMediaUseCase
@@ -31,6 +27,7 @@ import java.util.Locale
 
 class RealMediaDetailsComponent(
     componentContext: ComponentContext,
+    private val onOutput: (MediaDetailsComponent.Output) -> Unit,
     override val type: MediaDetailsComponent.Type,
     private val initialMediaId: Long,
     getFavoriteMediaIdsUseCase: GetFavoriteMediaIdsUseCase,
@@ -91,14 +88,10 @@ class RealMediaDetailsComponent(
     }.stateIn(componentScope, SharingStarted.WhileSubscribed(5000), false)
 
     init {
-        currentMedia.onEach { if (it?.mimeType == MimeType.Video) optionsVisible.update { false } }
-            .launchIn(componentScope)
-
         componentScope.safeLaunch {
             media.firstOrNull { it.data.isNotEmpty() }?.data
                 ?.indexOfFirst { it.id == initialMediaId }?.let { index ->
                     currentMediaIndex.update { index }
-                    Log.d("check___", "set $index")
                 }
         }
     }
@@ -109,7 +102,7 @@ class RealMediaDetailsComponent(
         }
     }
 
-    override fun onTap() {
+    override fun onMediaClick() {
         optionsVisible.update { it.not() }
     }
 
@@ -147,6 +140,12 @@ class RealMediaDetailsComponent(
 
     override fun trashedSuccess() {
         // todo подумать что делать после удаления (MessageComponent)
+    }
+
+    override fun onPlayVideoClick() {
+        getCurrentMedia()?.id?.let {
+            onOutput(MediaDetailsComponent.Output.VideoPlayerRequested(it))
+        }
     }
 
     private fun getCurrentMedia() = currentMediaIndex.value?.let { media.value.data[it] }

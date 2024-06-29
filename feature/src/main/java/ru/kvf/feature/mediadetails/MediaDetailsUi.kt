@@ -64,7 +64,8 @@ fun MediaDetailsUi(
             MediaPager(
                 media = media,
                 pagerState = pagerState,
-                onTap = component::onTap
+                onClick = component::onMediaClick,
+                onPlayVideoClick = component::onPlayVideoClick
             )
             if (component.type != MediaDetailsComponent.Type.Favorite) {
                 FavoriteIcon(
