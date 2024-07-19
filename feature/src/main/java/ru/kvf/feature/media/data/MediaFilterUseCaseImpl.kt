@@ -11,19 +11,28 @@ class MediaFilterUseCaseImpl : MediaFilterUseCase {
         const val DEBOUNCE = 1000L
     }
 
-    private var lastSet = 0L
+    private var lastSetVideo = 0L
+    private var lastSetPhoto = 0L
 
-    private val flow = MutableStateFlow(true to true)
+    private val flow = MutableStateFlow(MediaFilter())
 
-    override fun get(): Flow<Pair<Boolean, Boolean>> = flow
+    override fun get(): Flow<MediaFilter> = flow
 
-    override fun set(filter: MediaFilter) {
+    override fun changeVideo() {
         val now = System.currentTimeMillis()
-        if ((now - lastSet) < DEBOUNCE) return
-        when (filter) {
-            MediaFilter.Video -> flow.update { it.copy(second = !it.second) }
-            MediaFilter.Photo -> flow.update { it.copy(first = !it.first) }
+        if ((now - lastSetVideo) < DEBOUNCE) return
+        flow.update { lastData ->
+            lastData.copy(video = !lastData.video)
         }
-        lastSet = now
+        lastSetVideo = now
+    }
+
+    override fun changePhoto() {
+        val now = System.currentTimeMillis()
+        if ((now - lastSetPhoto) < DEBOUNCE) return
+        flow.update { lastData ->
+            lastData.copy(photo = !lastData.photo)
+        }
+        lastSetPhoto = now
     }
 }

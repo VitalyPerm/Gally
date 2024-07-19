@@ -15,7 +15,10 @@ data class Media(
     val isTrashed: Boolean,
     val expiresTimeStamp: Long?,
     val duration: String?
-)
+) {
+    fun isPhoto() = mimeType == MimeType.Photo
+    fun isVideo() = mimeType == MimeType.Video
+}
 
 fun List<Media>.getMimeType(): String {
     val hasPhoto = any { it.mimeType == MimeType.Photo }

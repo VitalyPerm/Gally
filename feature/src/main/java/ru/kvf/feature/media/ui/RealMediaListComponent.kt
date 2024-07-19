@@ -31,7 +31,6 @@ import ru.kvf.core.utils.collectSafe
 import ru.kvf.core.utils.coroutineScope
 import ru.kvf.core.utils.safeLaunch
 import ru.kvf.feature.media.domain.GetSortedMediaUseCase
-import ru.kvf.feature.media.domain.MediaFilter
 import ru.kvf.feature.media.domain.MediaFilterUseCase
 
 class RealMediaListComponent(
@@ -64,10 +63,10 @@ class RealMediaListComponent(
     override var lastPosition = 0
 
     private val allMedia = MutableStateFlow(MediaList.EMPTY)
-    override val videoEnable = mediaFilterUseCase.get().map { it.second }
+    override val videoEnable = mediaFilterUseCase.get().map { it.video }
         .stateIn(componentScope, SharingStarted.Eagerly, true)
 
-    override val photoEnable = mediaFilterUseCase.get().map { it.first }
+    override val photoEnable = mediaFilterUseCase.get().map { it.photo }
         .stateIn(componentScope, SharingStarted.Eagerly, true)
 
     private var allMediaList: List<Media> = emptyList()
@@ -190,11 +189,11 @@ class RealMediaListComponent(
     }
 
     override fun onPhotoIconClick() {
-        mediaFilterUseCase.set(MediaFilter.Photo)
+        mediaFilterUseCase.changePhoto()
     }
 
     override fun onVideoIconClick() {
-        mediaFilterUseCase.set(MediaFilter.Video)
+        mediaFilterUseCase.changeVideo()
     }
 
     private fun updateMedia(data: Map<MediaDate, List<Media>>) {

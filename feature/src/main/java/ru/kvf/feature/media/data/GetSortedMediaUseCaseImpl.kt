@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import ru.kvf.core.domain.entities.Media
 import ru.kvf.core.domain.entities.MediaDate
-import ru.kvf.core.domain.entities.MimeType
 import ru.kvf.core.domain.usecase.GetMediaUseCase
 import ru.kvf.core.domain.usecase.MediaSortByUseCase
 import ru.kvf.core.utils.toCalendarSort
@@ -25,17 +24,17 @@ class GetSortedMediaUseCaseImpl(
             getMediaUseCase(),
             mediaSortByUseCase.get(),
             mediaFilterUseCase.get()
-        ) { media, sortBy, (photo, video) ->
-            Log.d("check___", "photo = $photo, video = $video")
-            val filtered = media.filter {
+        ) { media, sortBy, filter ->
+            Log.d("check___", "filter = $filter")
+            media.filter {
                 when {
-                    photo && video -> true
-                    !photo && !video -> false
-                    photo -> it.mimeType == MimeType.Photo
-                    else -> it.mimeType == MimeType.Video
+                    filter.all() -> true
+                    filter.nothing() -> false
+                    filter.onlyPhoto() -> it.isPhoto()
+                    filter.onlyVideo() -> it.isVideo()
+                    else -> true
                 }
-            }
-            filtered.map {
+            }.map {
                 it.copy(
                     date = MediaDate(
                         Calendar.getInstance().apply {
