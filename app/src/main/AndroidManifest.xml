@@ -14,6 +14,7 @@
         android:roundIcon="@drawable/ic_launcher_gallery"
         android:supportsRtl="true"
         android:largeHeap="true"
+        android:enableOnBackInvokedCallback="true"
         android:theme="@style/Splash">
         <activity
             android:name=".MainActivity"

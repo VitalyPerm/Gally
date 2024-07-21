@@ -68,6 +68,10 @@ class RealRootComponent(
             childFactory = ::child
         )
 
+    override fun onBackClicked() {
+        navigation.pop()
+    }
+
     init {
         componentScope.collectSafe(performHapticFeedBackUseCase.collect()) {
             componentScope.launch { sideEffect.emit(RootComponent.SideEffect.Vibrate) }

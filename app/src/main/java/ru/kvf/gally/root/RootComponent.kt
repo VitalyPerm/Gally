@@ -3,6 +3,7 @@ package ru.kvf.gally.root
 import android.net.Uri
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackHandlerOwner
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import ru.kvf.core.domain.entities.Media
@@ -14,11 +15,13 @@ import ru.kvf.feature.trash.TrashComponent
 import ru.kvf.feature.video.VideoPlayerComponent
 import ru.kvf.gally.home.HomeComponent
 
-interface RootComponent {
+interface RootComponent : BackHandlerOwner {
 
     val theme: StateFlow<ThemeType>
     val childStack: Value<ChildStack<*, Child>>
     val sideEffect: Flow<SideEffect>
+
+    fun onBackClicked()
 
     sealed interface Child {
         class Home(val component: HomeComponent) : Child

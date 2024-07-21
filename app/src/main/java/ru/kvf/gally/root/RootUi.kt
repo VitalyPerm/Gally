@@ -11,7 +11,9 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.core.app.ActivityOptionsCompat
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ru.kvf.core.domain.entities.ThemeType
@@ -26,6 +28,7 @@ import ru.kvf.feature.trash.TrashUi
 import ru.kvf.feature.video.VideoPlayerUi
 import ru.kvf.gally.home.HomeUi
 
+@OptIn(ExperimentalDecomposeApi::class)
 @Composable
 fun RootUi(
     component: RootComponent
@@ -72,7 +75,11 @@ fun RootUi(
     ) {
         Children(
             stack = component.childStack,
-            animation = stackAnimation(scale())
+            animation = predictiveBackAnimation(
+                backHandler = component.backHandler,
+                fallbackAnimation = stackAnimation(scale()),
+                onBack = component::onBackClicked
+            )
         ) {
             when (val child = it.instance) {
                 is RootComponent.Child.Home -> HomeUi(child.component)
